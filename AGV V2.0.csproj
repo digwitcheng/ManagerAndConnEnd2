@@ -95,7 +95,6 @@
     <Compile Include="DataBase\Sql.cs" />
     <Compile Include="DataBase\SqlHelper.cs" />
     <Compile Include="DataBase\SqlManager.cs" />
-    <Compile Include="git2017test.cs" />
     <Compile Include="Network\AgvNetwork\AgvInfo.cs" />
     <Compile Include="Network\Manager\AgvServerManager.cs" />
     <Compile Include="Network\AgvNetwork\CurrentLocation.cs" />
