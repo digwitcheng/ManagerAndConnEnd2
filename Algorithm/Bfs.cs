@@ -25,34 +25,34 @@ namespace AGV_V1._0.Algorithm
                     w++;
                 }
             }
-            close[beginX, beginY].vis = true;
+            close[beginX, beginY].Node.isSearched = true;
 
             while (r != f)
             {
                 p = q[f];
-                f = (f + 1) % AstarUtil.MaxLength;
-                curX = p.node.x;
-                curY = p.node.y;
+                f = (f + 1) % SearchUtil.MaxLength;
+                curX = p.Node.x;
+                curY = p.Node.y;
                 for (i = 0; i < 8; i++)
                 {
-                    if ((p.node.adjoinNodeCount & (1 << i)) == 0)
+                    if ((p.Node.adjoinNodeCount & (1 << i)) == 0)
                     {
                         continue;
                     }
-                    surX = curX + (int)AstarUtil.dir[i].X;
-                    surY = curY + (int)AstarUtil.dir[i].Y;
+                    surX = curX + (int)SearchUtil.dir[i].X;
+                    surY = curY + (int)SearchUtil.dir[i].Y;
                     if (surX < 0 || surY < 0)
                     {
                         Console.WriteLine("走出场地外");
                         continue;
                     }
-                    if (!close[surX, surY].vis)
+                    if (!close[surX, surY].Node.isSearched)
                     {
-                        close[surX, surY].from = p;
-                        close[surX, surY].vis = true;
+                        close[surX, surY].From = p;
+                        close[surX, surY].Node.isSearched = true;
                         close[surX, surY].G = p.G + 1;
                         q[r] = close[surX, surY];
-                        r = (r + 1) % AstarUtil.MaxLength;
+                        r = (r + 1) % SearchUtil.MaxLength;
                     }
                 }
                 times++;

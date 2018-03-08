@@ -8,14 +8,10 @@ using System.Threading.Tasks;
 
 namespace AGV_V1._0.Algorithm
 {
-    /// <summary>
-    /// f=g+h  预计花费=起点到当前点+当前点到终点的预计
-    /// </summary>
-    class Astar
+    class Dijkstra
     {
-       
         public const int SWERVE_COST = 3;
-        public static int Search(Close [,]close,Node[,] graph,int beginX,int beginY,Direction beginDir)
+        public static int Search(Close[,] close, Node[,] graph, int beginX, int beginY, Direction beginDir)
         {    // A*算法遍历
             //int times = 0; 
             int i, curX, curY, nextX, nextY;
@@ -23,11 +19,11 @@ namespace AGV_V1._0.Algorithm
             Close curPoint = new Close();
 
 
-             List<Close> open = new List<Close>();
-             SearchUtil.AsatrPush(open, close, beginX, beginY, 0);
+            List<Close> open = new List<Close>();
+            SearchUtil.AsatrPush(open, close, beginX, beginY, 0);
             int times = 0;
             while (open.Count > 0)
-            {    
+            {
                 times++;
                 curPoint = SearchUtil.shift(open);
                 curX = curPoint.Node.x;
@@ -92,13 +88,12 @@ namespace AGV_V1._0.Algorithm
                 }
                 if (curPoint.H == 0)
                 {
-            System.Console.WriteLine("astar times:"+times);
+            System.Console.WriteLine("Dijsktra times:"+times);
                     return SearchUtil.Sequential;
                 }
             }
             return SearchUtil.NoSolution; //无结果
         }
-
 
     }
 }

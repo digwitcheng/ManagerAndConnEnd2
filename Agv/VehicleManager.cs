@@ -74,7 +74,7 @@ namespace AGV_V1._0
                     vehicles[vnum].Arrive = true;
                     vFinished.Add(vehicles[vnum]);
                     vehicles[vnum].Route.Clear();
-                    string str = string.Format("小车" + vnum + ":({0}，{1})->({2}，{3})没有搜索到路径，", vehicles[vnum].BeginX, vehicles[vnum].BeginY, vehicles[vnum].EndX, vehicles[vnum].EndY);
+                    string str = string.Format("小车" + vnum + ":{0},{1}->{2},{3}没有搜索到路径，", vehicles[vnum].BeginX, vehicles[vnum].BeginY, vehicles[vnum].EndX, vehicles[vnum].EndY);
                     OnShowMessage(this, new MessageEventArgs(str));
                     continue;
                 }

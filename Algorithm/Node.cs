@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Agv.PathPlanning 
 {
-    struct Node
+    class Node
     {
         public int x;               //节点的横坐标    
         public int y;               //节点的纵坐标
         public bool node_Type;      //节点可不可达,true表示可达，false表示不可达  
         public int adjoinNodeCount;  //邻接点的个数
-        public int value;           //节点的值
-        public Direction direction; //当前节点的方向
+        public Direction direction; //搜索到当前节点时的方向
+        public bool isSearched;     //节点是否被搜索过
 
 
         public int traCongesIntensity;//traffic congestion intensity 节点拥堵程度
@@ -26,6 +26,8 @@ namespace Agv.PathPlanning
         public int downDifficulty;
         public int leftDifficulty;
         public int rightDifficulty;
+
+
 
     }
 }

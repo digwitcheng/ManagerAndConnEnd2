@@ -8,37 +8,39 @@ namespace Agv.PathPlanning
 {
     class Close
     {
-       public  Node node;
+       private  Node node;
 
         internal Node Node
         {
             get { return node; }
             set { node = value; }
         }
-      public   bool vis;
-
       
-      public   Close from;
+       private   Close from;
 
         internal Close From
         {
             get { return from; }
             set { from = value; }
         }
-      public   float F, G;
+        private  float f,g,h;  
 
-        public float G1
+        public float G
         {
-            get { return G; }
-            set { G = value; }
+            get { return g; }
+            set { g = value; }
         }
 
-        public float F1
+        public float F
         {
-            get { return F; }
-            set { F = value; }
+            get { return f; }
+            set { f = value; }
         }
-      public   int H;
+       public float H
+        {
+            get { return h; }
+            set { h = value; }
+        }
 
       
     }
