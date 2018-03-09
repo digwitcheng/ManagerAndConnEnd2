@@ -63,14 +63,14 @@ namespace Agv.PathPlanning
                     graph[i, j] = new Node { };
                     graph[i, j].x = i; //地图坐标X
                     graph[i, j].y = j; //地图坐标Y
-                    graph[i, j].node_Type = true;// elc.mapnode[i, j].IsAbleCross;    // 节点可到达性
+                    graph[i, j].node_Type =  elc.mapnode[i, j].IsAbleCross;    // 节点可到达性
                     graph[i, j].adjoinNodeCount = 0; //邻接节点个数
 
-                    graph[i, j].traCongesIntensity = 0;// elc.mapnode[i, j].TraCongesIntensity;
-                    graph[i, j].leftDifficulty = 0;// elc.mapnode[i, j].LeftDifficulty;
-                    graph[i, j].rightDifficulty = 0;// elc.mapnode[i, j].RightDifficulty;
-                    graph[i, j].upDifficulty = 0;// elc.mapnode[i, j].UpDifficulty;
-                    graph[i, j].downDifficulty = 0;//elc.mapnode[i, j].DownDifficulty;
+                    graph[i, j].traCongesIntensity =  elc.mapnode[i, j].TraCongesIntensity;
+                    graph[i, j].leftDifficulty =  elc.mapnode[i, j].LeftDifficulty;
+                    graph[i, j].rightDifficulty =  elc.mapnode[i, j].RightDifficulty;
+                    graph[i, j].upDifficulty =  elc.mapnode[i, j].UpDifficulty;
+                    graph[i, j].downDifficulty = elc.mapnode[i, j].DownDifficulty;
 
                 }
             }
@@ -169,9 +169,9 @@ namespace Agv.PathPlanning
             initClose(close, beginX, beginY, endX, endY);
             close[beginX, beginY].Node.isSearched = true;
 
-            int result = Astar.Search(close, graph, beginX, beginY, beginDir);
-           // int result = Dijkstra.Search(close, graph, beginX, beginY, beginDir);
-            // int result = Bfs.Search(close, graph, beginX, beginY,Height,Width);
+           //int result = Astar.Search(close, graph, beginX, beginY, beginDir);
+           //  int result = Dijkstra.Search(close, graph, beginX, beginY, beginDir);
+           int result = Bfs.Search(close, graph, beginX, beginY,Height,Width);
 
             Close p, t, q = null;
             switch (result)

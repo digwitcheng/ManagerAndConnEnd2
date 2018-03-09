@@ -32,11 +32,12 @@ namespace AGV_V1._0.Algorithm
                 curPoint = SearchUtil.shift(open);
                 curX = curPoint.Node.x;
                 curY = curPoint.Node.y;
+                bool isFirstDirection = false;
 
                 if (curPoint.From == null)
                 {
                     curPoint.Node.direction = beginDir;
-
+                    isFirstDirection=true;
                 }
                 else
                 {
@@ -80,7 +81,11 @@ namespace AGV_V1._0.Algorithm
                                 tempPassDifficulty = graph[curX, curY].upDifficulty;
                                 break;
                         }
-                        int directionCost = (tempDir == curPoint.Node.direction) ? 0 : 1;
+                        int directionCost = (tempDir == curPoint.Node.direction) ? 0 :2;
+                        if (directionCost == 2 && isFirstDirection == true)
+                        {
+                            directionCost--;
+                        }
                         //  curPoint.node.stopTime = 1+directionCost * 2; 
                         int tempTraConges = graph[curX, curY].traCongesIntensity;
 

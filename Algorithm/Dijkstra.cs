@@ -20,7 +20,7 @@ namespace AGV_V1._0.Algorithm
 
 
             List<Close> open = new List<Close>();
-            SearchUtil.AsatrPush(open, close, beginX, beginY, 0);
+            SearchUtil.DijkstraPush(open, close, beginX, beginY, 0);
             int times = 0;
             while (open.Count > 0)
             {
@@ -28,11 +28,12 @@ namespace AGV_V1._0.Algorithm
                 curPoint = SearchUtil.shift(open);
                 curX = curPoint.Node.x;
                 curY = curPoint.Node.y;
+                bool isFirstDirection = false;
 
                 if (curPoint.From == null)
                 {
                     curPoint.Node.direction = beginDir;
-
+                    isFirstDirection = true;
                 }
                 else
                 {
@@ -76,19 +77,23 @@ namespace AGV_V1._0.Algorithm
                                 tempPassDifficulty = graph[curX, curY].upDifficulty;
                                 break;
                         }
-                        int directionCost = (tempDir == curPoint.Node.direction) ? 0 : 1;
+                        int directionCost = (tempDir == curPoint.Node.direction) ? 0 : 2;
+                        if (directionCost == 2 && isFirstDirection == true)
+                        {
+                            directionCost--;
+                        }
                         //  curPoint.node.stopTime = 1+directionCost * 2; 
                         int tempTraConges = graph[curX, curY].traCongesIntensity;
 
 
                         //curPoint.searchDir = close[surX, surY].searchDir;
                         surG = curPoint.G + (float)(Math.Abs(curX - nextX) + Math.Abs(curY - nextY)) + SWERVE_COST * (directionCost + tempTraConges) + tempPassDifficulty;
-                        SearchUtil.AsatrPush(open, close, nextX, nextY, surG);
+                        SearchUtil.DijkstraPush(open, close, nextX, nextY, surG);
                     }
                 }
                 if (curPoint.H == 0)
                 {
-            System.Console.WriteLine("Dijsktra times:"+times);
+                    System.Console.WriteLine("astar times:" + times);
                     return SearchUtil.Sequential;
                 }
             }
