@@ -8,14 +8,10 @@ using System.Threading.Tasks;
 
 namespace AGV_V1._0.Algorithm
 {
-    /// <summary>
-    /// f=g+h  预计花费=起点到当前点+当前点到终点的预计
-    /// </summary>
-    class Astar
+    class Dijkstra
     {
-       
         public const int SWERVE_COST = 3;
-        public static int Search(Close [,]close,Node[,] graph,int beginX,int beginY,Direction beginDir)
+        public static int Search(Close[,] close, Node[,] graph, int beginX, int beginY, Direction beginDir)
         {    // A*算法遍历
             //int times = 0; 
             int i, curX, curY, nextX, nextY;
@@ -23,11 +19,11 @@ namespace AGV_V1._0.Algorithm
             Close curPoint = new Close();
 
 
-             List<Close> open = new List<Close>();
-             SearchUtil.AsatrPush(open, close, beginX, beginY, 0);
+            List<Close> open = new List<Close>();
+            SearchUtil.DijkstraPush(open, close, beginX, beginY, 0);
             int times = 0;
             while (open.Count > 0)
-            {    
+            {
                 times++;
                 curPoint = SearchUtil.shift(open);
                 curX = curPoint.Node.x;
@@ -37,7 +33,7 @@ namespace AGV_V1._0.Algorithm
                 if (curPoint.From == null)
                 {
                     curPoint.Node.direction = beginDir;
-                    isFirstDirection=true;
+                    isFirstDirection = true;
                 }
                 else
                 {
@@ -81,7 +77,7 @@ namespace AGV_V1._0.Algorithm
                                 tempPassDifficulty = graph[curX, curY].upDifficulty;
                                 break;
                         }
-                        int directionCost = (tempDir == curPoint.Node.direction) ? 0 :2;
+                        int directionCost = (tempDir == curPoint.Node.direction) ? 0 : 2;
                         if (directionCost == 2 && isFirstDirection == true)
                         {
                             directionCost--;
@@ -92,18 +88,17 @@ namespace AGV_V1._0.Algorithm
 
                         //curPoint.searchDir = close[surX, surY].searchDir;
                         surG = curPoint.G + (float)(Math.Abs(curX - nextX) + Math.Abs(curY - nextY)) + SWERVE_COST * (directionCost + tempTraConges) + tempPassDifficulty;
-                        SearchUtil.AsatrPush(open, close, nextX, nextY, surG);
+                        SearchUtil.DijkstraPush(open, close, nextX, nextY, surG);
                     }
                 }
                 if (curPoint.H == 0)
                 {
-            System.Console.WriteLine("astar times:"+times);
+                    System.Console.WriteLine("astar times:" + times);
                     return SearchUtil.Sequential;
                 }
             }
             return SearchUtil.NoSolution; //无结果
         }
-
 
     }
 }

@@ -510,7 +510,7 @@
     <AGV Num="1" BeginX="2" BeginY="4" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="2" BeginX="4" BeginY="10" StartLoc="WaitArea" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="3" BeginX="9" BeginY="5" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
-    <AGV Num="4" BeginX="7" BeginY="6" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
+    <AGV Num="4" BeginX="2" BeginY="3" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="5" BeginX="60" BeginY="67" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="6" BeginX="37" BeginY="51" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="7" BeginX="59" BeginY="75" StartLoc="扫描仪" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />

@@ -61,22 +61,15 @@ namespace Agv.PathPlanning
                 for (j = 0; j < Width; j++)
                 {
                     graph[i, j] = new Node { };
-                    int value = 1;
-                    if (elc.mapnode[i, j].IsAbleCross == true)
-                    {//&&elc.mapnode[i, j].LockNode != v_num){
-                        value = 0;
-                    }
-                    graph[i, j].value = value;//&&elc.mapnode[i,j].NodeCanUsed==-1
                     graph[i, j].x = i; //地图坐标X
                     graph[i, j].y = j; //地图坐标Y
-
-                    graph[i, j].node_Type = (graph[i, j].value == Reachable);    // 节点可到达性
+                    graph[i, j].node_Type =  elc.mapnode[i, j].IsAbleCross;    // 节点可到达性
                     graph[i, j].adjoinNodeCount = 0; //邻接节点个数
 
-                    graph[i, j].traCongesIntensity = elc.mapnode[i, j].TraCongesIntensity;
-                    graph[i, j].leftDifficulty = elc.mapnode[i, j].LeftDifficulty;
-                    graph[i, j].rightDifficulty = elc.mapnode[i, j].RightDifficulty;
-                    graph[i, j].upDifficulty = elc.mapnode[i, j].UpDifficulty;
+                    graph[i, j].traCongesIntensity =  elc.mapnode[i, j].TraCongesIntensity;
+                    graph[i, j].leftDifficulty =  elc.mapnode[i, j].LeftDifficulty;
+                    graph[i, j].rightDifficulty =  elc.mapnode[i, j].RightDifficulty;
+                    graph[i, j].upDifficulty =  elc.mapnode[i, j].UpDifficulty;
                     graph[i, j].downDifficulty = elc.mapnode[i, j].DownDifficulty;
 
                 }
@@ -142,12 +135,6 @@ namespace Agv.PathPlanning
                 }
             }
         }
-        // 优先队列基本操作
-        void initOpen(Open q)    //优先队列初始化
-        {
-            q.length = 0;        // 队内元素数初始为0
-        }
-
        
         int NodeDirCount(int x, int y)
         {
@@ -177,38 +164,37 @@ namespace Agv.PathPlanning
         /// </summary>
         /// <returns></returns>
          Close PathPlanning()
-        {    
-            Open open = new Open();            
+        {            
             close = new Close[Height, Width];
-            initOpen(open);
             initClose(close, beginX, beginY, endX, endY);
-            close[beginX, beginY].vis = true;
+            close[beginX, beginY].Node.isSearched = true;
 
-              int result = Astar.Search(close, open, graph, beginX, beginY, beginDir);
-             // int result = Bfs.Search(close, graph, beginX, beginY,Height,Width);
+           //int result = Astar.Search(close, graph, beginX, beginY, beginDir);
+           //  int result = Dijkstra.Search(close, graph, beginX, beginY, beginDir);
+           int result = Bfs.Search(close, graph, beginX, beginY,Height,Width);
 
             Close p, t, q = null;
             switch (result)
             {
-                case AstarUtil.Sequential:  //顺序最近
+                case SearchUtil.Sequential:  //顺序最近
                     p = (close[endX, endY]);
                     while (p != null)    //转置路径
                     {
-                        t = p.from;
-                        p.from = q;
+                        t = p.From;
+                        p.From = q;
                         q = p;
                         p = t;
                     }
-                    close[beginX, beginY].from = q.from;
+                    close[beginX, beginY].From = q.From;
                     return (close[beginX, beginY]);
-                case AstarUtil.NoSolution:
+                case SearchUtil.NoSolution:
                     return null;
             }
             return null;
         }
 
          // 地图Close表初始化配置
-         void initClose(Close[,] cls, int sx, int sy, int dx, int dy)
+         void initClose(Close[,] cls, int beginX, int beginY, int endX, int endY)
          {
              int i, j;
              for (i = 0; i < Height; i++)
@@ -216,15 +202,16 @@ namespace Agv.PathPlanning
                  for (j = 0; j < Width; j++)
                  {
                      cls[i, j] = new Close { };
-                     cls[i, j].node = graph[i, j];               // Close表所指节点
-                     cls[i, j].vis = !(graph[i, j].node_Type);  // 是否被访问
-                     cls[i, j].from = null;                    // 所来节点
-                     cls[i, j].G = cls[i, j].F = 0;
-                     cls[i, j].H = Math.Abs(dx - i) + Math.Abs(dy - j);    // 评价函数值
+                     cls[i, j].Node = graph[i, j];               // Close表所指节点
+                     cls[i, j].Node.isSearched = !(graph[i, j].node_Type);  // 是否被访问
+                     cls[i, j].From = null;                    // 所来节点
+                     cls[i, j].G =  0;  //需要根据前面的点计算
+                     cls[i, j].H = Math.Abs(endX - i) + Math.Abs(endY - j);    // 评价函数值
+                     cls[i, j].F = 0;   // cls[i, j].G + cls[i, j].H;
                  }
              }
-             cls[sx, sy].F = cls[sx, sy].H;            //起始点评价初始值
-             cls[dx, dy].G = AstarUtil.Infinity;     //移步花费代价值
+             //cls[endX, endY].G = AstarUtil.Infinity;     //移步花费代价值
+             //cls[beginX, beginY].F = cls[beginX, beginY].H;            //起始点评价初始值
          }
         /// <summary>
         /// // 获取最短路径
@@ -244,18 +231,18 @@ namespace Agv.PathPlanning
             }
             else
             {
-                while (p.from != null)
+                while (p.From != null)
                 {
-                    graph[p.node.x, p.node.y].value = Pass;
-                    route.Add(new MyPoint(p.node.x, p.node.y));
+                   // graph[p.node.x, p.node.y].value = Pass;
+                    route.Add(new MyPoint(p.Node.x, p.Node.y));
                     m++;
-                    p = p.from;
+                    p = p.From;
                     step++;
                 }
-                route.Add(new MyPoint(p.node.x, p.node.y));
+                route.Add(new MyPoint(p.Node.x, p.Node.y));
                 m++;
-                graph[beginX, beginY].value = Source;
-                graph[endX, endY].value = Destination;
+                //graph[beginX, beginY].value = Source;
+               // graph[endX, endY].value = Destination;
                 return step;
             }
         }
