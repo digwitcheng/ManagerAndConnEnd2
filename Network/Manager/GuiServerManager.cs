@@ -32,7 +32,22 @@ namespace CowboyTest.Server.APM
         {
 
         }
-       public override void server_ClientConnected(object sender, TcpClientConnectedEventArgs e)
+        /// <summary>
+        /// 监听本地ip
+        /// </summary>
+        /// <param name="port">监听的端口号</param>
+        public void StartServer(int port)
+        {
+            var config = new TcpSocketServerConfiguration();
+            config.FrameBuilder = new LengthPrefixedFrameBuilder();
+            _server = new TcpSocketServer(port, config);
+            _server.ClientConnected += server_ClientConnected;
+            _server.ClientDisconnected += server_ClientDisconnected;
+            _server.ClientDataReceived += server_ClientDataReceived;
+            _server.Listen();
+
+        }
+        public override void server_ClientConnected(object sender, TcpClientConnectedEventArgs e)
         {
             string str = string.Format("TCP client {0} has connected.", e.Session.RemoteEndPoint);
             Console.WriteLine(str);

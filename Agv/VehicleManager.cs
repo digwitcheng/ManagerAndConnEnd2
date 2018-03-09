@@ -96,18 +96,6 @@ namespace AGV_V1._0
                             Console.WriteLine("send TrayMotion:"+(serinum-1));
                         }
                     }
-                    //else
-                    //{
-                    //    uint x = Convert.ToUInt32(vehicles[vnum].BeginX);
-                    //    uint y = Convert.ToUInt32(vehicles[vnum].BeginY);
-                    //    uint endX = Convert.ToUInt32(vehicles[vnum].EndX);
-                    //    uint endY = Convert.ToUInt32(vehicles[vnum].EndY);
-                    //    RunPacket rp = new RunPacket(serinum, 4, MoveDirection.Forward, 1500, new Destination(new CellPoint(x * ConstDefine.CELL_UNIT, y * ConstDefine.CELL_UNIT), new CellPoint(endX * ConstDefine.CELL_UNIT, endY * ConstDefine.CELL_UNIT), new AgvDriftAngle(0), TrayMotion.None));
-                    //    //asm.Send(rp);
-                    //    SendPacketQueue.Instance.Enqueue(rp);
-
-                    //    Console.WriteLine("unloaing resend");
-                    //}
                     continue;
                 }                
                 if (vehicles[vnum].Arrive == true && vehicles[vnum].CurState == State.unloading)
@@ -154,8 +142,7 @@ namespace AGV_V1._0
                 }
                 else
                 {
-                    vehicles[vnum].Move(ElecMap.Instance);
-                    bool isMove = false;// vehicles[vnum].Move(ElecMap.Instance);
+                    bool isMove = vehicles[vnum].Move(ElecMap.Instance);
                         if (isMove)
                         {
                             uint x = Convert.ToUInt32(vehicles[vnum].BeginX);

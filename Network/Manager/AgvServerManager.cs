@@ -12,6 +12,7 @@ using System.Collections.Concurrent;
 using AGV_V1._0.Server.APM;
 using AGV_V1._0.Event;
 using AGV_V1._0.NLog;
+using Cowboy.Sockets;
 
 namespace AGVSocket.Network
 {
@@ -40,6 +41,22 @@ namespace AGVSocket.Network
             }
         }
         private AgvServerManager() { }
+        /// <summary>
+        /// 监听本地ip
+        /// </summary>
+        /// <param name="port">监听的端口号</param>
+        public void StartServer(int port)
+        {
+            var config = new TcpSocketServerConfiguration();
+            config.FrameBuilder = new LengthPrefixedOneByteFrameBuilder();
+            _server = new TcpSocketServer(port, config);
+            _server.ClientConnected += server_ClientConnected;
+            _server.ClientDisconnected += server_ClientDisconnected;
+            _server.ClientDataReceived += server_ClientDataReceived;
+            _server.Listen();
+
+        }
+
         public override void server_ClientConnected(object sender, Cowboy.Sockets.TcpClientConnectedEventArgs e)
         {
             string str = string.Format("小车连接成功，", e.Session.RemoteEndPoint);

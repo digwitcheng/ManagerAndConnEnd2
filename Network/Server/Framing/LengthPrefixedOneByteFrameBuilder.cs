@@ -21,25 +21,25 @@ namespace Cowboy.Sockets
     // + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
     // |                     Payload Data continued ...                |
     // +---------------------------------------------------------------+
-    public sealed class LengthPrefixedFrameBuilder : FrameBuilder
+    public sealed class LengthPrefixedOneByteFrameBuilder : FrameBuilder
     {
-        public LengthPrefixedFrameBuilder(bool isMasked = false)
-            : this(new LengthPrefixedFrameEncoder(isMasked), new LengthPrefixedFrameDecoder(isMasked))
+        public LengthPrefixedOneByteFrameBuilder(bool isMasked = false)
+            : this(new LengthPrefixedOneByteFrameEncoder(isMasked), new LengthPrefixedOneByteFrameDecoder(isMasked))
         {
         }
 
-        public LengthPrefixedFrameBuilder(LengthPrefixedFrameEncoder encoder, LengthPrefixedFrameDecoder decoder)
+        public LengthPrefixedOneByteFrameBuilder(LengthPrefixedOneByteFrameEncoder encoder, LengthPrefixedOneByteFrameDecoder decoder)
             : base(encoder, decoder)
         {
         }
     }
 
-    public sealed class LengthPrefixedFrameEncoder : IFrameEncoder
+    public sealed class LengthPrefixedOneByteFrameEncoder : IFrameEncoder
     {
         private static readonly Random _rng = new Random(DateTime.UtcNow.Millisecond);
         private static readonly int MaskingKeyLength = 4;
 
-        public LengthPrefixedFrameEncoder(bool isMasked = false)
+        public LengthPrefixedOneByteFrameEncoder(bool isMasked = false)
         {
             IsMasked = isMasked;
         }
@@ -48,11 +48,14 @@ namespace Cowboy.Sockets
 
         public void EncodeFrame(byte[] payload, int offset, int count, out byte[] frameBuffer, out int frameBufferOffset, out int frameBufferLength)
         {
-            var buffer = Encode(payload, offset, count, IsMasked);
+            // var buffer = Encode(payload, offset, count, IsMasked);
+            //frameBuffer = buffer;
+            //frameBufferOffset = 0;
+            //frameBufferLength = buffer.Length;
 
-            frameBuffer = buffer;
+            frameBuffer = payload;
             frameBufferOffset = 0;
-            frameBufferLength = buffer.Length;
+            frameBufferLength = payload.Length;
         }
 
         private static byte[] Encode(byte[] payload, int offset, int count, bool isMasked = false)
@@ -128,11 +131,11 @@ namespace Cowboy.Sockets
         }
     }
 
-    public sealed class LengthPrefixedFrameDecoder : IFrameDecoder
+    public sealed class LengthPrefixedOneByteFrameDecoder : IFrameDecoder
     {
         private static readonly int MaskingKeyLength = 4;
 
-        public LengthPrefixedFrameDecoder(bool isMasked = false)
+        public LengthPrefixedOneByteFrameDecoder(bool isMasked = false)
         {
             IsMasked = isMasked;
         }
@@ -186,48 +189,48 @@ namespace Cowboy.Sockets
 
         private static Header DecodeHeader(byte[] buffer, int offset, int count)
         {
-            if (count < 1)
+            if (count < 3)
                 return null;
 
             // parse fixed header
             var header = new Header()
             {
-                IsMasked = ((buffer[offset + 0] & 0x80) == 0x80),
-                PayloadLength = (buffer[offset + 0] & 0x7f),
-                Length = 1,
+                IsMasked = false,// ((buffer[offset + 0] & 0x80) == 0x80),
+                PayloadLength = (buffer[offset + 2]),
+                Length = 0,
             };
 
-            // parse extended payload length
-            if (header.PayloadLength >= 126)
-            {
-                if (header.PayloadLength == 126)
-                    header.Length += 2;
-                else
-                    header.Length += 8;
+            //// parse extended payload length
+            //if (header.PayloadLength >= 126)
+            //{
+            //    if (header.PayloadLength == 126)
+            //        header.Length += 2;
+            //    else
+            //        header.Length += 8;
 
-                if (count < header.Length)
-                    return null;
+            //    if (count < header.Length)
+            //        return null;
 
-                if (header.PayloadLength == 126)
-                {
-                    header.PayloadLength = buffer[offset + 1] * 256 + buffer[offset + 2];
-                }
-                else
-                {
-                    int totalLength = 0;
-                    int level = 1;
+            //    if (header.PayloadLength == 126)
+            //    {
+            //        header.PayloadLength = buffer[offset + 1] * 256 + buffer[offset + 2];
+            //    }
+            //    else
+            //    {
+            //        int totalLength = 0;
+            //        int level = 1;
 
-                    for (int i = 7; i >= 0; i--)
-                    {
-                        totalLength += buffer[offset + i + 1] * level;
-                        level *= 256;
-                    }
+            //        for (int i = 7; i >= 0; i--)
+            //        {
+            //            totalLength += buffer[offset + i + 1] * level;
+            //            level *= 256;
+            //        }
 
-                    header.PayloadLength = totalLength;
-                }
-            }
+            //        header.PayloadLength = totalLength;
+            //    }
+            //}
 
-            // parse masking key
+            //// parse masking key
             if (header.IsMasked)
             {
                 if (count < header.Length + MaskingKeyLength)

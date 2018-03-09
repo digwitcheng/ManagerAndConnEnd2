@@ -98,7 +98,7 @@ namespace AGV_V1._0
             StartThread();//启动发送，接收，搜索等线程
             InitialSystem();
 
-           // ReInitWithiRealAgv();
+            ReInitWithiRealAgv();
         }
 
         private void ReInitWithiRealAgv()
@@ -147,10 +147,8 @@ namespace AGV_V1._0
         {
             //TaskSendThread.Instance.Start();
             //TaskSendThread.Instance.ShowMessage += OnShowMessageFinishCount;
-
             //TaskReceiveThread.Instance.Start();
             //TaskReceiveThread.Instance.ShowMessage += OnShowMessageWithPicBox;
-
             GuiSendThread.Instance.Start();
             GuiSendThread.Instance.ShowMessage += OnShowMessageWithPicBox;
 
@@ -479,46 +477,40 @@ namespace AGV_V1._0
 
         void drawArrow(int y, int x)
         {
-            int dir = 0;
-            if (Elc.mapnode[y, x].RightDifficulty < MapNode.MAX_ABLE_PASS)
-            {
-                dir |= Right;
-            }
-            if (Elc.mapnode[y, x].LeftDifficulty < MapNode.MAX_ABLE_PASS)
-            {
-                dir |= Left;
-            }
-            if (Elc.mapnode[y, x].DownDifficulty < MapNode.MAX_ABLE_PASS)
-            {
-                dir |= Down;
-            }
-            if (Elc.mapnode[y, x].UpDifficulty < MapNode.MAX_ABLE_PASS)
-            {
-                dir |= Up;
-            }
+            ////模拟地图
+            //int dir = 0;
+            //if (Elc.mapnode[y, x].RightDifficulty < MapNode.MAX_ABLE_PASS)
+            //{
+            //    dir |= Right;
+            //}
+            //if (Elc.mapnode[y, x].LeftDifficulty < MapNode.MAX_ABLE_PASS)
+            //{
+            //    dir |= Left;
+            //}
+            //if (Elc.mapnode[y, x].DownDifficulty < MapNode.MAX_ABLE_PASS)
+            //{
+            //    dir |= Down;
+            //}
+            //if (Elc.mapnode[y, x].UpDifficulty < MapNode.MAX_ABLE_PASS)
+            //{
+            //    dir |= Up;
+            //}
+            //Image img = IMAGE_DICT[dir];
+            //if (img != null)
+            //{
+            //    g.DrawImage(img, new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
 
-            //if (dir == 0)
-            //{
-            //    dir = -1;
             //}
-            //else
-            //{
-            //    dir = 0;
-            //}
-            Image img = IMAGE_DICT[dir];
-            if (img != null)
-            {
-                g.DrawImage(img, new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
 
+            //实体地图
+            if (Elc.mapnode[y, x].IsAbleCross)
+            {
+                g.DrawImage(IMAGE_DICT[15], new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
             }
-            //if (Elc.mapnode[y, x].IsAbleCross)
-            //{
-            //    g.DrawImage(IMAGE_DICT[15], new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
-            //}
-            //else
-            //{
-            //    g.DrawImage(IMAGE_DICT[0], new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
-            //}
+            else
+            {
+                g.DrawImage(IMAGE_DICT[0], new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
+            }
         }
 
         bool first = true;
@@ -769,12 +761,10 @@ namespace AGV_V1._0
         {
             //TaskSendThread.Instance.ShowMessage -= OnShowMessageFinishCount;
             //TaskSendThread.Instance.End();
-
             //TaskReceiveThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
             //TaskReceiveThread.Instance.End();
-
-            //GuiSendThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            //GuiSendThread.Instance.End();
+            GuiSendThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            GuiSendThread.Instance.End();
 
             SearchRouteThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
             SearchRouteThread.Instance.End();

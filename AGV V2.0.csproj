@@ -147,6 +147,7 @@
     <Compile Include="Network\Server\Framing\Base\IFrameEncoder.cs" />
     <Compile Include="Network\Server\Framing\FixedLengthFrameBuilder.cs" />
     <Compile Include="Network\Server\Framing\LengthFieldBasedFrameBuilder.cs" />
+    <Compile Include="Network\Server\Framing\LengthPrefixedOneByteFrameBuilder.cs" />
     <Compile Include="Network\Server\Framing\LengthPrefixedFrameBuilder.cs" />
     <Compile Include="Network\Server\Framing\LineBasedFrameBuilder.cs" />
     <Compile Include="Network\Server\Framing\RawBufferFrameBuilder.cs" />
