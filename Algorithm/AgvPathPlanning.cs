@@ -169,9 +169,9 @@ namespace Agv.PathPlanning
             initClose(close, beginX, beginY, endX, endY);
             close[beginX, beginY].Node.isSearched = true;
 
-           //int result = Astar.Search(close, graph, beginX, beginY, beginDir);
+           int result = Astar.Search(close, graph, beginX, beginY, beginDir);
            //  int result = Dijkstra.Search(close, graph, beginX, beginY, beginDir);
-           int result = Bfs.Search(close, graph, beginX, beginY,Height,Width);
+          // int result = Bfs.Search(close, graph, beginX, beginY,Height,Width);
 
             Close p, t, q = null;
             switch (result)
