@@ -1,12 +1,7 @@
 ﻿using AGV_V1._0.Network.ThreadCode;
-using AGV_V1._0.Network;
 using AGV_V1._0.NLog;
 using AGV_V1._0.Queue;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AGVSocket.Network.Packet;
 using AGVSocket.Network;
 

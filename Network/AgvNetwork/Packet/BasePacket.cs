@@ -1,12 +1,4 @@
-﻿using AGV;
-using Cowboy.Sockets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AGVSocket.Network.Packet
+﻿namespace AGVSocket.Network.Packet
 {
     abstract class BasePacket
     {

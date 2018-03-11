@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AGVSocket.Network.EnumType
+﻿namespace AGVSocket.Network.EnumType
 {
     /// <summary>
     /// 小车运动状态

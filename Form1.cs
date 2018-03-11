@@ -1,45 +1,36 @@
-﻿using System;
+﻿#define moni
+
+
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Collections;
-using System.Linq;
 using System.Text;
-using System.Windows;
 using System.Windows.Forms;
-using System.Xml;
 using Agv.PathPlanning;
 using AGV_V1._0.Properties;
-using System.Drawing.Imaging;
-using System.Drawing.Drawing2D;
-using System.Xml.Linq;
 using System.IO;
 using System.Threading;
 using AGV_V1._0.Algorithm;
-using Newtonsoft.Json;
 using AGV_V1._0.Queue;
 using AGV_V1._0.ThreadCode;
 using AGV_V1._0.Event;
-using System.Threading.Tasks;
-using System.Net.WebSockets;
 using System.Net.Sockets;
 using System.Net;
 using CowboyTest.Server.APM;
 using AGV_V1._0.Server.APM;
-using System.Diagnostics;
 using AGV_V1._0.NLog;
 using AGV_V1._0.Util;
-using AGV_V1._0.Network.Messages;
 using AGV_V1._0.Network.ThreadCode;
 using AGV_V1._0.DataBase;
 using System.Collections.Concurrent;
-using AGV_V1._0.Agv;
 using AGV_V1._0.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Tcp;
 using AGVSocket.Network;
+
+
+
 
 namespace AGV_V1._0
 {
@@ -272,22 +263,6 @@ namespace AGV_V1._0
             }
 
         }
-        //private void ReInitialAgv()
-        //{
-        //    if (tableLayoutPanel1.InvokeRequired)
-        //    {
-        //        // 当一个控件的InvokeRequired属性值为真时，说明有一个创建它以外的线程想访问它
-        //        Action actionDelegate = () => { InitialAgv(); };
-        //        // 或者
-        //        // Action<string> actionDelegate = delegate(string txt) { this.label2.Text = txt; };
-        //        this.tableLayoutPanel1.Invoke(actionDelegate, null);
-        //    }
-        //    else
-        //    {
-        //        InitialAgv();
-        //    }
-
-        //}
         private void ReInitialSystem()
         {
             if (tableLayoutPanel1.InvokeRequired)
@@ -520,31 +495,32 @@ namespace AGV_V1._0
 
         void drawArrow(int y, int x)
         {
-            ////模拟地图
-            //int dir = 0;
-            //if (Elc.mapnode[y, x].RightDifficulty < MapNode.MAX_ABLE_PASS)
-            //{
-            //    dir |= Right;
-            //}
-            //if (Elc.mapnode[y, x].LeftDifficulty < MapNode.MAX_ABLE_PASS)
-            //{
-            //    dir |= Left;
-            //}
-            //if (Elc.mapnode[y, x].DownDifficulty < MapNode.MAX_ABLE_PASS)
-            //{
-            //    dir |= Down;
-            //}
-            //if (Elc.mapnode[y, x].UpDifficulty < MapNode.MAX_ABLE_PASS)
-            //{
-            //    dir |= Up;
-            //}
-            //Image img = IMAGE_DICT[dir];
-            //if (img != null)
-            //{
-            //    g.DrawImage(img, new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
+#if moni
+            //模拟地图
+            int dir = 0;
+            if (Elc.mapnode[y, x].RightDifficulty < MapNode.MAX_ABLE_PASS)
+            {
+                dir |= Right;
+            }
+            if (Elc.mapnode[y, x].LeftDifficulty < MapNode.MAX_ABLE_PASS)
+            {
+                dir |= Left;
+            }
+            if (Elc.mapnode[y, x].DownDifficulty < MapNode.MAX_ABLE_PASS)
+            {
+                dir |= Down;
+            }
+            if (Elc.mapnode[y, x].UpDifficulty < MapNode.MAX_ABLE_PASS)
+            {
+                dir |= Up;
+            }
+            Image img = IMAGE_DICT[dir];
+            if (img != null)
+            {
+                g.DrawImage(img, new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
 
-            //}
-
+            }
+#else
             //实体地图
             if (Elc.mapnode[y, x].IsAbleCross)
             {
@@ -554,6 +530,7 @@ namespace AGV_V1._0
             {
                 g.DrawImage(IMAGE_DICT[0], new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
             }
+#endif
         }
 
         bool first = true;

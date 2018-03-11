@@ -1,14 +1,5 @@
-﻿using AGV_V1._0.Queue;
-using AGV_V1._0.ThreadCode;
-using AGVSocket.Network.EnumType;
-using AGVSocket.Network.MyException;
-using System;
-using System.Collections.Generic;
+﻿using AGVSocket.Network.EnumType;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AGVSocket.Network.Packet
 {

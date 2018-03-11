@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AGV_V1._0.Properties;
-using System.Drawing;
-
-namespace AGV_V1._0
+﻿namespace AGV_V1._0
 {
-        enum MapNodeType
+    enum MapNodeType
         {
             None,                  //0无
             Road,                  //1道路

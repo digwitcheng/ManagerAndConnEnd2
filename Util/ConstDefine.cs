@@ -1,14 +1,4 @@
-﻿using AGV_V1._0;
-using AGV_V1._0.Properties;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Xml;
-
-
-namespace AGV_V1._0.Util
+﻿namespace AGV_V1._0.Util
 {
     class ConstDefine
     {
