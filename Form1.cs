@@ -98,7 +98,7 @@ namespace AGV_V1._0
             StartThread();//启动发送，接收，搜索等线程
             InitialSystem();
 
-            ReInitWithiRealAgv();
+          //  ReInitWithiRealAgv();
         }
 
         private void ReInitWithiRealAgv()
@@ -142,13 +142,31 @@ namespace AGV_V1._0
            //am.DataMessage +=OnAgvDone ;
             am.StartServer(54321);
         }
-       
+        void DisposeServer()
+        {
+            gm.ShowMessage -= OnShowMessageWithPicBox;
+            gm.ReLoad -= ReInitialSystem;
+            gm.DataMessage -= OnTransmitToTask;
+            gm.Close();
+
+
+            am.ShowMessage -= OnShowMessageWithPicBox;
+            // am.ReLoad -= ReInitialSystem;
+            // am.DataMessage -= OnAgvDone;
+            am.Close();
+
+
+            tm.ShowMessage -= OnShowMessageWithPicBox;
+            tm.DataMessage -= ReceveTask;
+            tm.Close();
+        }
+
         void StartThread()
         {
-            //TaskSendThread.Instance.Start();
-            //TaskSendThread.Instance.ShowMessage += OnShowMessageFinishCount;
-            //TaskReceiveThread.Instance.Start();
-            //TaskReceiveThread.Instance.ShowMessage += OnShowMessageWithPicBox;
+            TaskSendThread.Instance.Start();
+            TaskSendThread.Instance.ShowMessage += OnShowMessageFinishCount;
+            TaskReceiveThread.Instance.Start();
+            TaskReceiveThread.Instance.ShowMessage += OnShowMessageWithPicBox;
             GuiSendThread.Instance.Start();
             GuiSendThread.Instance.ShowMessage += OnShowMessageWithPicBox;
 
@@ -166,8 +184,33 @@ namespace AGV_V1._0
             SendPacketThread.Instance.ShowMessage += OnShowMessageWithPicBox;
 
         }
-      
-       
+
+        void EndThread()
+        {
+            TaskSendThread.Instance.ShowMessage -= OnShowMessageFinishCount;
+            TaskSendThread.Instance.End();
+            TaskReceiveThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            TaskReceiveThread.Instance.End();
+            GuiSendThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            GuiSendThread.Instance.End();
+
+            SearchRouteThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            SearchRouteThread.Instance.End();
+
+
+            VehicleManager.Instance.ShowMessage -= OnShowMessageDistanceCount;
+            VehicleManager.Instance.End();
+
+            //SqlManager.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            //SqlManager.Instance.End();
+
+            //CheckCongestionThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            //CheckCongestionThread.Instance.End();
+
+            SendPacketThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            SendPacketThread.Instance.End();
+        }
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -738,49 +781,6 @@ namespace AGV_V1._0
         {
             RemotingServices.Disconnect(remotableObject);
         }
-        void DisposeServer()
-        {
-            gm.ShowMessage -= OnShowMessageWithPicBox;
-            gm.ReLoad -= ReInitialSystem;
-            gm.DataMessage -= OnTransmitToTask;
-            gm.Close();
-
-
-            am.ShowMessage -= OnShowMessageWithPicBox;
-           // am.ReLoad -= ReInitialSystem;
-           // am.DataMessage -= OnAgvDone;
-            am.Close();
-
-
-            tm.ShowMessage -= OnShowMessageWithPicBox;
-            tm.DataMessage -= ReceveTask;
-            tm.Close();
-        }
-
-        void EndThread()
-        {
-            //TaskSendThread.Instance.ShowMessage -= OnShowMessageFinishCount;
-            //TaskSendThread.Instance.End();
-            //TaskReceiveThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            //TaskReceiveThread.Instance.End();
-            GuiSendThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            GuiSendThread.Instance.End();
-
-            SearchRouteThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            SearchRouteThread.Instance.End();
-
-
-            VehicleManager.Instance.ShowMessage -= OnShowMessageDistanceCount;
-            VehicleManager.Instance.End();
-
-            //SqlManager.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            //SqlManager.Instance.End();
-
-            //CheckCongestionThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            //CheckCongestionThread.Instance.End();
-
-            SendPacketThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            SendPacketThread.Instance.End();
-        }
+      
     }
 }

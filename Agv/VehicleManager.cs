@@ -142,7 +142,8 @@ namespace AGV_V1._0
                 }
                 else
                 {
-                    bool isMove = vehicles[vnum].Move(ElecMap.Instance);
+                    vehicles[vnum].Move(ElecMap.Instance);
+                    bool isMove = false;// vehicles[vnum].Move(ElecMap.Instance);
                         if (isMove)
                         {
                             uint x = Convert.ToUInt32(vehicles[vnum].BeginX);

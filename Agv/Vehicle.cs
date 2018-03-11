@@ -335,15 +335,15 @@ namespace AGV_V1._0
                     Arrive = true;
                     return false;
                 }
-                if (ShouldMove(tPtr + 1) == false)
-                {
-                    if (this.WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下当前位置
-                    {
-                        Console.WriteLine("Resend Current location");
-                        return true;
-                    }
-                    return false;
-                }
+                //if (ShouldMove(tPtr + 1) == false)
+                //{
+                //    if (this.WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下当前位置
+                //    {
+                //        Console.WriteLine("Resend Current location");
+                //        return true;
+                //    }
+                //    return false;
+                //}
                 bool virtulChange = false;
 
 
