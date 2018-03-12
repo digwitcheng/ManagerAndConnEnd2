@@ -12,8 +12,8 @@ namespace Agv.PathPlanning
 
         internal Node Node
         {
-            get { return node; }
-            set { node = value; }
+            get { return node; } 
+            set { node = value; } 
         }
       
        private   Close from;

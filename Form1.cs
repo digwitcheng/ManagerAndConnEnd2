@@ -98,7 +98,7 @@ namespace AGV_V1._0
             StartThread();//启动发送，接收，搜索等线程
             InitialSystem();
 
-            ReInitWithiRealAgv();
+           // ReInitWithiRealAgv();
         }
 
         private void ReInitWithiRealAgv()
@@ -145,10 +145,10 @@ namespace AGV_V1._0
        
         void StartThread()
         {
-            //TaskSendThread.Instance.Start();
-            //TaskSendThread.Instance.ShowMessage += OnShowMessageFinishCount;
-            //TaskReceiveThread.Instance.Start();
-            //TaskReceiveThread.Instance.ShowMessage += OnShowMessageWithPicBox;
+            TaskSendThread.Instance.Start();
+            TaskSendThread.Instance.ShowMessage += OnShowMessageFinishCount;
+            TaskReceiveThread.Instance.Start();
+            TaskReceiveThread.Instance.ShowMessage += OnShowMessageWithPicBox;
             GuiSendThread.Instance.Start();
             GuiSendThread.Instance.ShowMessage += OnShowMessageWithPicBox;
 

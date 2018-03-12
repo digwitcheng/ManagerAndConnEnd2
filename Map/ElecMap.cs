@@ -205,7 +205,7 @@ namespace AGV_V1._0
                 string strType = gridnode[p].InnerText.ToString().Trim();
                 XmlAttribute xa = gridnode[p].Attributes["direction"];
 
-                if (tdx >= ConstDefine.minX && tdx <= ConstDefine.maxX && tdy >= ConstDefine.minY && tdy <= ConstDefine.maxY)
+                /*if (tdx >= ConstDefine.minX && tdx <= ConstDefine.maxX && tdy >= ConstDefine.minY && tdy <= ConstDefine.maxY)
                 {
                     mapnode[tdx, tdy].IsAbleCross = true;
                     mapnode[tdx, tdy].Type = MapNodeType.Road;
@@ -214,8 +214,8 @@ namespace AGV_V1._0
                 {
                     mapnode[tdx, tdy].IsAbleCross = false;
                     mapnode[tdx, tdy].Type = MapNodeType.obstacle;
-                }
-                if (false)
+                }*/
+                if (true)
                 {
                     string dir = xa.InnerText.ToString().Trim();                   
 
