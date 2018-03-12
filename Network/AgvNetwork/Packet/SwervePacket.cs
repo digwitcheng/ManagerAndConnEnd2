@@ -1,9 +1,4 @@
-﻿using AGVSocket.Network.EnumType;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace AGVSocket.Network.Packet
 {

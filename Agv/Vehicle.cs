@@ -1,25 +1,13 @@
-﻿using System;
+﻿#define moni
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using System.ComponentModel;
-using System.Data;
-using AGV_V1._0.Properties;
 using Agv.PathPlanning;
-using System.Threading;
-using System.Collections.Concurrent;
-using AGV_V1._0.Algorithm;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using AGV_V1._0.Agv;
 using AGV_V1._0.Util;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using AGV_V1._0.DataBase;
 using AGVSocket.Network;
 using AGVSocket.Network.EnumType;
-using AGV_V1._0.NLog;
 
 namespace AGV_V1._0
 {
@@ -335,6 +323,9 @@ namespace AGV_V1._0
                     Arrive = true;
                     return false;
                 }
+#if moni
+
+#else
                 if (ShouldMove(tPtr + 1) == false)
                 {
                     if (this.WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下当前位置
@@ -344,6 +335,7 @@ namespace AGV_V1._0
                     }
                     return false;
                 }
+#endif
                 bool virtulChange = false;
 
 

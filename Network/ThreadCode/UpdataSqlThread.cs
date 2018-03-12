@@ -1,18 +1,12 @@
 ﻿using AGV_V1._0.Network.ThreadCode;
-using AGV_V1._0.Queue;
-using AGV_V1._0.Network;
 using AGV_V1._0.NLog;
 using AGV_V1._0.Util;
 using DataBase;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using AGVSocket.Network;
 
 namespace AGV_V1._0.DataBase

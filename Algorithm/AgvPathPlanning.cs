@@ -2,11 +2,7 @@
 using AGV_V1._0.Agv;
 using AGV_V1._0.Algorithm;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 
@@ -205,9 +201,9 @@ namespace Agv.PathPlanning
                      cls[i, j].Node = graph[i, j];               // Close表所指节点
                      cls[i, j].Node.isSearched = !(graph[i, j].node_Type);  // 是否被访问
                      cls[i, j].From = null;                    // 所来节点
-                     cls[i, j].G =  0;  //需要根据前面的点计算
+                     cls[i, j].G =float.MaxValue;  //需要根据前面的点计算
                      cls[i, j].H = Math.Abs(endX - i) + Math.Abs(endY - j);    // 评价函数值
-                     cls[i, j].F = 0;   // cls[i, j].G + cls[i, j].H;
+                     cls[i, j].F = float.MaxValue;   // cls[i, j].G + cls[i, j].H;
                  }
              }
              //cls[endX, endY].G = AstarUtil.Infinity;     //移步花费代价值

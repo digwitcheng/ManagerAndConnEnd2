@@ -1,11 +1,8 @@
-﻿using System;
+﻿#define moni
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.Data;
 using System.Windows.Forms;
-using AGV_V1._0.Properties;
 using Agv.PathPlanning;
 using System.Xml;
 using AGV_V1._0.Algorithm;
@@ -205,17 +202,8 @@ namespace AGV_V1._0
                 string strType = gridnode[p].InnerText.ToString().Trim();
                 XmlAttribute xa = gridnode[p].Attributes["direction"];
 
-                /*if (tdx >= ConstDefine.minX && tdx <= ConstDefine.maxX && tdy >= ConstDefine.minY && tdy <= ConstDefine.maxY)
-                {
-                    mapnode[tdx, tdy].IsAbleCross = true;
-                    mapnode[tdx, tdy].Type = MapNodeType.Road;
-                }
-                else
-                {
-                    mapnode[tdx, tdy].IsAbleCross = false;
-                    mapnode[tdx, tdy].Type = MapNodeType.obstacle;
-                }*/
-                if (true)
+#if moni
+                if (xa!=null)
                 {
                     string dir = xa.InnerText.ToString().Trim();                   
 
@@ -227,17 +215,6 @@ namespace AGV_V1._0
                     mapnode[tdx, tdy].DownDifficulty  = (dir[1] == '1' ? MapNode.DEFAULT_DIFFICULTY : MapNode.UNABLE_PASS);
                     mapnode[tdx, tdy].LeftDifficulty  = (dir[2] == '1' ? MapNode.DEFAULT_DIFFICULTY : MapNode.UNABLE_PASS);
                     mapnode[tdx, tdy].RightDifficulty = (dir[3] == '1' ? MapNode.DEFAULT_DIFFICULTY : MapNode.UNABLE_PASS);
-
-                    //if ((tdy > 25 && tdy < 29) || (tdy > 44 && tdy < 49) || (tdy > 63 && tdy < 68))
-                    //{
-                    //    mapnode[tdx, tdy].UpDifficulty -= 1;
-                    //    mapnode[tdx, tdy].DownDifficulty -= 1;
-                    //}
-                    //if (tdx > 31 && tdx < 35)
-                    //{
-                    //    mapnode[tdx, tdy].LeftDifficulty -= 2;
-                    //    mapnode[tdx, tdy].RightDifficulty -= 2;
-                    //}
 
                     if (tdy == 19 || tdy == 20 || tdy == 22 || tdy == 23 || tdy == 25)
                     {
@@ -258,6 +235,19 @@ namespace AGV_V1._0
                     }
 
                 }
+#else
+                if (tdx >= ConstDefine.minX && tdx <= ConstDefine.maxX && tdy >= ConstDefine.minY && tdy <= ConstDefine.maxY)
+                {
+                    mapnode[tdx, tdy].IsAbleCross = true;
+                    mapnode[tdx, tdy].Type = MapNodeType.Road;
+                }
+                else
+                {
+                    mapnode[tdx, tdy].IsAbleCross = false;
+                    mapnode[tdx, tdy].Type = MapNodeType.obstacle;
+                }
+                
+#endif
                 switch (strType)
                 {
 

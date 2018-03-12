@@ -5,9 +5,6 @@ using Cowboy.Sockets;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AGV_V1._0.Network.Messages
 {

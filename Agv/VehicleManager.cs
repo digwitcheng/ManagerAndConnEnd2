@@ -1,11 +1,11 @@
-﻿using AGV_V1._0.Agv;
+﻿#define moni
+
+using AGV_V1._0.Agv;
 using AGV_V1._0.Algorithm;
-using AGV_V1._0.DataBase;
 using AGV_V1._0.Event;
 using AGV_V1._0.Network.ThreadCode;
 using AGV_V1._0.NLog;
 using AGV_V1._0.Queue;
-using AGV_V1._0.Server.APM;
 using AGV_V1._0.Util;
 using AGVSocket.Network;
 using AGVSocket.Network.EnumType;
@@ -13,13 +13,8 @@ using AGVSocket.Network.Packet;
 using Agv.PathPlanning;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AGV_V1._0
@@ -142,8 +137,13 @@ namespace AGV_V1._0
                 }
                 else
                 {
-                    bool isMove = vehicles[vnum].Move(ElecMap.Instance);
-                        if (isMove)
+                    bool isMove = false;// vehicles[vnum].Move(ElecMap.Instance);
+#if moni
+                    vehicles[vnum].Move(ElecMap.Instance);                    
+#else
+                    isMove = vehicles[vnum].Move(ElecMap.Instance);
+#endif
+                    if (isMove)
                         {
                             uint x = Convert.ToUInt32(vehicles[vnum].BeginX);
                             uint y = Convert.ToUInt32(vehicles[vnum].BeginY);
