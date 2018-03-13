@@ -38,14 +38,14 @@ namespace Agv.PathPlanning
         Close[,] close = null;
         Direction beginDir; //当前搜索方向
 
-        IAlgorithm pathPlanning;
+        IAlgorithm algorithm;
         public AgvPathPlanning()
         {
-            pathPlanning =new Astar();
+            algorithm =new Astar();
         }
-        public AgvPathPlanning(IAlgorithm pathPlanning)
+        public AgvPathPlanning(IAlgorithm algorithm)
         {
-            this.pathPlanning = pathPlanning;
+            this.algorithm = algorithm;
         }
 
         void initGraph(ElecMap elc, List<MyPoint> scanner, List<MyPoint> lockNode, int v_num, int beginX, int beginY, int endX, int endY, Direction direction)
@@ -179,7 +179,7 @@ namespace Agv.PathPlanning
             initClose(close, beginX, beginY, endX, endY);
             close[beginX, beginY].Node.isSearched = true;
 
-            int result = pathPlanning.Search(close, graph, beginX, beginY, beginDir);
+            int result = algorithm.Search(close, graph, beginX, beginY, beginDir);
 
             Close p, t, q = null;
             switch (result)
