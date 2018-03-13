@@ -39,21 +39,12 @@ namespace AGV_V1._0
         }
         public void ReSearchRoute(Vehicle v)
         {
-            //lock (searchLock)
-            //{
             ResearchCount++;
             if (v.Route == null || v.Route.Count <= v.VirtualTPtr)
             {
                 return;
             }
-            //if (ResearchCount > ConstDefine.RESEARCH_COUNT && v.BeginX == route[0].X && v.BeginY == route[0].Y)
-            //{
-            //    this.vehical_state = State.cannotToDestination;
-            //    route = null;
-            //    return;
-            //}
             v.LockNode.Add(v.Route[v.VirtualTPtr]);
-            //Elc.mapnode[route[Virtual_tPtr].X, route[Virtual_tPtr].Y].LockNode = v_num;
             for (int i = 1; i < ConstDefine.FORWORD_STEP - 1; i++)
             {
                 if (v.TPtr + i < v.Route.Count - 1)
@@ -88,10 +79,9 @@ namespace AGV_V1._0
                 scannerNode = Elc.GetScanner();
             }
             List<MyPoint> routeList = astarSearch.Search(Elc,scannerNode, v.LockNode, v.Id, Elc.WidthNum, Elc.HeightNum, v.BeginX, v.BeginY, v.EndX, v.EndY, v.Dir);
-            //this.Speed = 0;
             Elc.mapnode[v.BeginX, v.BeginY].NodeCanUsed = v.Id;
             // Elc.mapnode[startX, startY].NodeCanUsed = false;//搜索完,小车自己所在的地方被小车占用           
-            if (routeList.Count<1)
+             if (routeList.Count<1)
             {
                 // MessageBox.Show("没有搜索到路线:"+v_num);
                 v.CurState = State.cannotToDestination;
