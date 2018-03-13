@@ -2,7 +2,11 @@
 using AGV_V1._0.Agv;
 using AGV_V1._0.Algorithm;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 
 
@@ -33,6 +37,16 @@ namespace Agv.PathPlanning
         int beginX, beginY, endX, endY; //起始点、终点
         Close[,] close = null;
         Direction beginDir; //当前搜索方向
+
+        IAlgorithm algorithm;
+        public AgvPathPlanning()
+        {
+            algorithm =new Astar();
+        }
+        public AgvPathPlanning(IAlgorithm algorithm)
+        {
+            this.algorithm = algorithm;
+        }
 
         void initGraph(ElecMap elc, List<MyPoint> scanner, List<MyPoint> lockNode, int v_num, int beginX, int beginY, int endX, int endY, Direction direction)
         //  public void initGraph(ElecMap elc, List<MyPoint> scanner,ConcurrentQueue<MyPoint> lockNode, int v_num, int sx, int sy, int dx, int dy, Direction direction)
@@ -165,9 +179,7 @@ namespace Agv.PathPlanning
             initClose(close, beginX, beginY, endX, endY);
             close[beginX, beginY].Node.isSearched = true;
 
-           int result = Astar.Search(close, graph, beginX, beginY, beginDir);
-           //  int result = Dijkstra.Search(close, graph, beginX, beginY, beginDir);
-          // int result = Bfs.Search(close, graph, beginX, beginY,Height,Width);
+            int result = algorithm.Search(close, graph, beginX, beginY, beginDir);
 
             Close p, t, q = null;
             switch (result)
@@ -201,9 +213,9 @@ namespace Agv.PathPlanning
                      cls[i, j].Node = graph[i, j];               // Close表所指节点
                      cls[i, j].Node.isSearched = !(graph[i, j].node_Type);  // 是否被访问
                      cls[i, j].From = null;                    // 所来节点
-                     cls[i, j].G =float.MaxValue;  //需要根据前面的点计算
+                     cls[i, j].G =  0;  //需要根据前面的点计算
                      cls[i, j].H = Math.Abs(endX - i) + Math.Abs(endY - j);    // 评价函数值
-                     cls[i, j].F = float.MaxValue;   // cls[i, j].G + cls[i, j].H;
+                     cls[i, j].F = 0;   // cls[i, j].G + cls[i, j].H;
                  }
              }
              //cls[endX, endY].G = AstarUtil.Infinity;     //移步花费代价值

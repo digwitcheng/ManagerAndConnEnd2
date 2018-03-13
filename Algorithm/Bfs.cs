@@ -3,19 +3,21 @@ using System;
 
 namespace AGV_V1._0.Algorithm
 {
-    class Bfs
-    {         
-        public static int Search(Close[,] close,  Node[,] graph, int beginX, int beginY,int Height,int Width)
+    class Bfs:IAlgorithm
+    {
+        public int Search(Close[,] close, Node[,] graph, int beginX, int beginY, Agv.Direction beginDir)
         {
             int times = 0;
             int i, curX, curY, surX, surY;
+            int height = close.GetLength(0);
+            int width = close.GetLength(1);
             int f = 0, r = 1;
             Close p = new Close();
-            Close[] q = new Close[Height * Width];
+            Close[] q = new Close[height * width];
             int w = 0;
-            for (int m = 0; m < Height; m++)
+            for (int m = 0; m < height; m++)
             {
-                for (int n = 0; n < Width; n++)
+                for (int n = 0; n < width; n++)
                 {
                     q[w] = new Close ();
                     w++;
@@ -55,5 +57,6 @@ namespace AGV_V1._0.Algorithm
             }
             return times;
         }
+
     }
 }
