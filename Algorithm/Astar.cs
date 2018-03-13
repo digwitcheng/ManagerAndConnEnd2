@@ -11,11 +11,11 @@ namespace AGV_V1._0.Algorithm
     /// <summary>
     /// f=g+h  预计花费=起点到当前点+当前点到终点的预计
     /// </summary>
-    class Astar
+    class Astar:IAlgorithm
     {
        
-        public const int SWERVE_COST = 3;
-        public static int Search(Close [,]close,Node[,] graph,int beginX,int beginY,Direction beginDir)
+         const int SWERVE_COST = 3;
+        public int  Search(Close [,]close,Node[,] graph,int beginX,int beginY,Direction beginDir)
         {    // A*算法遍历
             //int times = 0; 
             int i, curX, curY, nextX, nextY;

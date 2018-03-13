@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace AGV_V1._0.Algorithm
 {
-    class Dijkstra2
+    interface IAlgorithm
     {
-        public static void Search(Node[,] graph, int beginX, int beginY, Direction beginDir)
-        {
-
-        }
+        int Search(Close[,] close, Node[,] graph, int beginX, int beginY, Direction beginDir);
     }
 }

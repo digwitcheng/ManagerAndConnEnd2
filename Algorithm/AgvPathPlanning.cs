@@ -38,6 +38,16 @@ namespace Agv.PathPlanning
         Close[,] close = null;
         Direction beginDir; //当前搜索方向
 
+        IAlgorithm pathPlanning;
+        public AgvPathPlanning()
+        {
+            pathPlanning =new Astar();
+        }
+        public AgvPathPlanning(IAlgorithm pathPlanning)
+        {
+            this.pathPlanning = pathPlanning;
+        }
+
         void initGraph(ElecMap elc, List<MyPoint> scanner, List<MyPoint> lockNode, int v_num, int beginX, int beginY, int endX, int endY, Direction direction)
         //  public void initGraph(ElecMap elc, List<MyPoint> scanner,ConcurrentQueue<MyPoint> lockNode, int v_num, int sx, int sy, int dx, int dy, Direction direction)
         {
@@ -169,9 +179,7 @@ namespace Agv.PathPlanning
             initClose(close, beginX, beginY, endX, endY);
             close[beginX, beginY].Node.isSearched = true;
 
-           //int result = Astar.Search(close, graph, beginX, beginY, beginDir);
-           //  int result = Dijkstra.Search(close, graph, beginX, beginY, beginDir);
-           int result = Bfs.Search(close, graph, beginX, beginY,Height,Width);
+            int result = pathPlanning.Search(close, graph, beginX, beginY, beginDir);
 
             Close p, t, q = null;
             switch (result)

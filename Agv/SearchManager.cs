@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AGV_V1._0.Algorithm;
 
 namespace AGV_V1._0
 {
@@ -31,7 +32,7 @@ namespace AGV_V1._0
         public SearchManager()
         {
             Elc = ElecMap.Instance;
-            astarSearch = new AgvPathPlanning();
+            astarSearch = new AgvPathPlanning(new Dijkstra());
 
         }
         private int ResearchCount
