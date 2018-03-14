@@ -71,7 +71,9 @@ namespace AGV_V1._0.ThreadCode
             vehicle[num].BeginX = searchData.Data.BeginX;
             vehicle[num].BeginY = searchData.Data.BeginY;
             vehicle[num].EndX = searchData.Data.EndX;
-            vehicle[num].EndY = searchData.Data.EndY; 
+            vehicle[num].EndY = searchData.Data.EndY;
+            vehicle[num].DestX = searchData.Data.DestX;
+            vehicle[num].DestY= searchData.Data.DestY;
             vehicle[num].Arrive = searchData.Data.Arrive;
             vehicle[num].EndLoc = searchData.Data.EndLoc;
             vehicle[num].StartLoc = searchData.Data.StartLoc;

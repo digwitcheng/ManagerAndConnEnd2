@@ -81,24 +81,8 @@ namespace AGV_V1._0
                 //int tPtr = v.TPtr;
                 obj.BeginX = v.BeginX;
                 obj.BeginY = v.BeginY;
-                //List<MyLocation> route = v.GetRoute();
-                //if (route != null)
-                //{
-                //    if (route.Count > 0)
-                //    {
-                //        if (tPtr < route.Count)
-                //        {
-                //            obj.BeginX = route[tPtr].Point.X;
-                //            obj.BeginY = route[tPtr].Point.Y;
-                //        }
-                //        else
-                //        {
-                //            obj.BeginX = route[route.Count - 1].Point.X;
-                //            obj.BeginY = route[route.Count - 1].Point.Y;
-                //        }
-                //    }
-                //}
-            
+                obj.DestX = v.DestX;
+                obj.DestY = v.DestY;
             obj.State = v.CurState;
             obj.Arrive = v.Arrive;
             obj.Direction = v.Dir;
