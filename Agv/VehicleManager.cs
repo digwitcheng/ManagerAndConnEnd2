@@ -77,6 +77,29 @@ namespace AGV_V1._0
                 {
                     continue;
                 }
+#if moni
+                if (vehicles[vnum].Arrive == true && vehicles[vnum].CurState == State.carried)
+                {
+                    //vehicle[vnum].BeginX = vehicle[vnum].EndX;
+                    //vehicle[vnum].BeginY = vehicle[vnum].EndY;
+                    vehicles[vnum].CurState = State.unloading;
+                    vFinished.Add(vehicles[vnum]);
+                    vehicles[vnum].Route.Clear();
+                    vehicles[vnum].LockNode.Clear();
+                    continue;
+                }
+                if (vehicles[vnum].Arrive == true)
+                {
+                    //vehicle[vnum].BeginX = vehicle[vnum].EndX;
+                    //vehicle[vnum].BeginY = vehicle[vnum].EndY;
+                    //vehicle[vnum].vehical_state = State.unloading;
+                    vFinished.Add(vehicles[vnum]);
+                    vehicles[vnum].Route.Clear();
+                    vehicles[vnum].LockNode.Clear();
+
+                    continue;
+                }
+#else
                 if (vehicles[vnum].Arrive == true && vehicles[vnum].CurState == State.carried)
                 {
                     if (vehicles[vnum].EqualWithRealLocation(vehicles[vnum].BeginX, vehicles[vnum].BeginY))
@@ -121,7 +144,8 @@ namespace AGV_V1._0
                     Console.WriteLine("下一个目标：");
                     RandomMove(4);
                     continue;
-                }               
+                }        
+#endif
                 if (vehicles[vnum].StopTime < 0)
                 {
                     if (vehicles[vnum].CurNodeTypy() != MapNodeType.queuingArea && GetDirCount(vehicles[vnum].BeginX, vehicles[vnum].BeginY) > 1)
@@ -137,12 +161,11 @@ namespace AGV_V1._0
                 }
                 else
                 {
-                    bool isMove = false;// vehicles[vnum].Move(ElecMap.Instance);
+
 #if moni
-                    vehicles[vnum].Move(ElecMap.Instance);                    
+                    vehicles[vnum].Move(ElecMap.Instance);
 #else
                     isMove = vehicles[vnum].Move(ElecMap.Instance);
-#endif
                     if (isMove)
                         {
                             uint x = Convert.ToUInt32(vehicles[vnum].BeginX);
@@ -157,14 +180,13 @@ namespace AGV_V1._0
 
                             CheckAlarmState(vnum);
                             vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
-
-                            moveCount++;
-                            OnShowMessage(string.Format("{0:N} 公里", (moveCount * 1.5) / 1000.0));
                         }
-
+#endif
+                    moveCount++;
+                    OnShowMessage(string.Format("{0:N} 公里", (moveCount * 1.5) / 1000.0));
                 }
 
-                
+
 
 
             }

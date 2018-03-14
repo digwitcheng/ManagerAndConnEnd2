@@ -21,7 +21,6 @@ using AGV_V1._0.Server.APM;
 using AGV_V1._0.NLog;
 using AGV_V1._0.Util;
 using AGV_V1._0.Network.ThreadCode;
-using AGV_V1._0.DataBase;
 using System.Collections.Concurrent;
 using AGV_V1._0.Remoting;
 using System.Runtime.Remoting.Channels;
@@ -89,7 +88,10 @@ namespace AGV_V1._0
             StartThread();//启动发送，接收，搜索等线程
             InitialSystem();
 
-          //  ReInitWithiRealAgv();
+#if moni
+#else
+            ReInitWithiRealAgv();
+#endif
         }
 
         private void ReInitWithiRealAgv()
@@ -110,7 +112,7 @@ namespace AGV_V1._0
        
         private void ConnectDataBase()
         {
-           SqlManager.Instance.Connect2DataBase();
+           //SqlManager.Instance.Connect2DataBase();
         }
       
         void InitServer()
@@ -751,7 +753,7 @@ namespace AGV_V1._0
 
         private void button6_Click(object sender, EventArgs e)
         {
-            SqlManager.Instance.GetElecMapInfo();
+            //SqlManager.Instance.GetElecMapInfo();
         }
 
         private void EndRemoteServer()

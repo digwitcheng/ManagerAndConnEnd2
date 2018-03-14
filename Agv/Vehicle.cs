@@ -348,8 +348,11 @@ namespace AGV_V1._0
                         {
                             int tx = (int)route[VirtualTPtr].X;
                             int ty = (int)route[VirtualTPtr].Y;
-                            // Boolean temp = Elc.canMoveToNode(this, tx, ty);
+#if moni
+                            int temp =Elc.mapnode[tx, ty].NodeCanUsed;
+#else
                             int temp = -1;// Elc.mapnode[tx, ty].NodeCanUsed;
+#endif
                             if (temp > -1)
                             {
                                 Stoped = temp;
@@ -374,8 +377,11 @@ namespace AGV_V1._0
                     {
                         int tx = (int)route[VirtualTPtr].X;
                         int ty = (int)route[VirtualTPtr].Y;
-                        // Boolean temp = Elc.canMoveToNode(this, tx, ty);
-                        int temp = -1;// Elc.mapnode[tx, ty].NodeCanUsed;
+#if moni
+                        int temp = Elc.mapnode[tx, ty].NodeCanUsed;
+#else
+                            int temp = -1;// Elc.mapnode[tx, ty].NodeCanUsed;
+#endif
                         if (temp > -1)
                         {
                             Stoped = temp;
@@ -403,31 +409,6 @@ namespace AGV_V1._0
                 BeginX = route[tPtr].X;
                 BeginY = route[tPtr].Y;
                 return true;
-
-                //if (ShouldMove(route[tPtr].X, route[tPtr].Y))
-                //{
-                //    BeginX = route[tPtr].X;
-                //    BeginY = route[tPtr].Y;
-                //    return true;
-                //}
-                //else
-                //{
-                //    //int tx = (int)route[VirtualTPtr].X;
-                //    //int ty = (int)route[VirtualTPtr].Y;
-                //    //Elc.mapnode[tx, ty].NodeCanUsed = -1;
-                //    //Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = -1;
-                //    //tx = (int)route[VirtualTPtr].X;
-                //    //ty = (int)route[VirtualTPtr].Y;
-                //    //Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
-                //    //Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = this.Id;
-
-                //    tPtr--;
-                //    if (virtulChange)
-                //    {
-                //        VirtualTPtr--;
-                //    }
-                //    return false;
-                //}
 
             }
         }

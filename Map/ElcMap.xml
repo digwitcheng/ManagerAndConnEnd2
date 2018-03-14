@@ -1,17 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="test.xsl"?>
 <config>
-  <NO>90</NO>
+  <NO>140</NO>
   <Map>
-    <!--地图格子宽度-->
-    <PixOfMap>40</PixOfMap>
+    <!--左右工件台个数，每个排队区的入口个数，网页上格子的像素大小-->
+    <leftWorkstationNum>2</leftWorkstationNum>
+    <rightWorkstationNum>0</rightWorkstationNum>
+    <entranceNum>4</entranceNum>
+    <PixOfMap>50</PixOfMap>
     <!-- 地图格子个数 -->
-    <Heightnum>14</Heightnum>
-    <Widthnum>18</Widthnum>
-    <Restnum>0</Restnum>
-    <LWaitnum>0</LWaitnum>
-    <RWaitnum>0</RWaitnum>
+    <!--heigthnum是指一列有几个格子，即有多少行-->
+    <!--左右排队区个数，投放口，左右扫描仪，充电区个数，休息区-->
+    <heightNum>14</heightNum>
+    <widthNum>18</widthNum>
+    <leftWaitNum>4</leftWaitNum>
+    <rightWaitNum>0</rightWaitNum>
     <Destnum>12</Destnum>
+    <leftScannerNum>4</leftScannerNum>
+    <rightScannerNum>0</rightScannerNum>
+    <Chargenum>2</Chargenum>
+    <Restnum>0</Restnum>
   </Map>
   <!--上下左右-->
   <Direct>
@@ -177,9 +185,9 @@
     <td3-0 direction="0000" tip="0不能走">障碍区</td3-0>
     <td3-1 direction="0000" tip="0不能走">充电区</td3-1>
     <td3-2 direction="0101" tip="5下右">道路</td3-2>
-    <td3-3 direction="1001" tip="9上右">道路</td3-3>
-    <td3-4 direction="0001" tip="1右">道路</td3-4>
-    <td3-5 direction="0001" tip="1右">道路</td3-5>
+    <td3-3 direction="1001" tip="9上右">排队区入口</td3-3>
+    <td3-4 direction="0001" tip="1右">排队区入口</td3-4>
+    <td3-5 direction="0001" tip="1右">排队区</td3-5>
     <td3-6 direction="0001" tip="1右">扫描仪</td3-6>
     <td3-7 direction="1001" tip="9上右">道路</td3-7>
     <td3-8 direction="0101" tip="5下右">道路</td3-8>
@@ -195,9 +203,9 @@
     <td4-0 direction="0000" tip="0不能走">障碍区</td4-0>
     <td4-1 direction="0000" tip="0不能走">障碍区</td4-1>
     <td4-2 direction="0101" tip="5下右">道路</td4-2>
-    <td4-3 direction="1001" tip="9上右">道路</td4-3>
-    <td4-4 direction="0001" tip="1右">道路</td4-4>
-    <td4-5 direction="0001" tip="1右">道路</td4-5>
+    <td4-3 direction="1001" tip="9上右">排队区入口</td4-3>
+    <td4-4 direction="0001" tip="1右">排队区入口</td4-4>
+    <td4-5 direction="0001" tip="1右">排队区</td4-5>
     <td4-6 direction="0001" tip="1右">扫描仪</td4-6>
     <td4-7 direction="1001" tip="9上右">道路</td4-7>
     <td4-8 direction="0101" tip="5下右">道路</td4-8>
@@ -285,9 +293,9 @@
     <td9-0 direction="0000" tip="0不能走">障碍区</td9-0>
     <td9-1 direction="0000" tip="0不能走">充电区</td9-1>
     <td9-2 direction="0101" tip="5下右">道路</td9-2>
-    <td9-3 direction="1001" tip="9上右">道路</td9-3>
-    <td9-4 direction="0001" tip="1右">道路</td9-4>
-    <td9-5 direction="0001" tip="1右">道路</td9-5>
+    <td9-3 direction="1001" tip="9上右">排队区入口</td9-3>
+    <td9-4 direction="0001" tip="1右">排队区入口</td9-4>
+    <td9-5 direction="0001" tip="1右">排队区</td9-5>
     <td9-6 direction="0001" tip="1右">扫描仪</td9-6>
     <td9-7 direction="1001" tip="9上右">道路</td9-7>
     <td9-8 direction="0101" tip="5下右">道路</td9-8>
@@ -303,9 +311,9 @@
     <td10-0 direction="0000" tip="0不能走">障碍区</td10-0>
     <td10-1 direction="0000" tip="0不能走">障碍区</td10-1>
     <td10-2 direction="0101" tip="5下右">道路</td10-2>
-    <td10-3 direction="1001" tip="9上右">道路</td10-3>
-    <td10-4 direction="0001" tip="1右">道路</td10-4>
-    <td10-5 direction="0001" tip="1右">道路</td10-5>
+    <td10-3 direction="1001" tip="9上右">排队区入口</td10-3>
+    <td10-4 direction="0001" tip="1右">排队区入口</td10-4>
+    <td10-5 direction="0001" tip="1右">排队区</td10-5>
     <td10-6 direction="0001" tip="1右">扫描仪</td10-6>
     <td10-7 direction="1001" tip="9上右">道路</td10-7>
     <td10-8 direction="0101" tip="5下右">道路</td10-8>
