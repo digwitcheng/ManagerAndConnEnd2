@@ -88,9 +88,9 @@
     <Compile Include="Agv\State.cs" />
     <Compile Include="Algorithm\AgvPathPlanning.cs" />
     <Compile Include="Algorithm\Astar.cs" />
+    <Compile Include="Algorithm\Dstar.cs" />
     <Compile Include="Algorithm\IAlgorithm.cs" />
     <Compile Include="Algorithm\SearchUtil.cs" />
-    <Compile Include="Algorithm\Bfs.cs" />
     <Compile Include="Algorithm\Close.cs" />
     <Compile Include="Algorithm\Dijkstra.cs" />
     <Compile Include="DataBase\DataBseUtil.cs" />
