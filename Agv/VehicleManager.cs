@@ -1,4 +1,4 @@
-﻿#define moni
+﻿//#define moni
 
 using AGV_V1._0.Agv;
 using AGV_V1._0.Algorithm;
@@ -61,7 +61,7 @@ namespace AGV_V1._0
             {
                 return;
             }
-            for (int vnum = 0; vnum < vehicles.Length; vnum++)
+            for (int vnum =4; vnum < vehicles.Length; vnum++)
             {
                 serinum = (byte)(serinum % 255);
                 if (vehicles[vnum].CurState == State.cannotToDestination && vehicles[vnum].Arrive == false)
@@ -106,7 +106,7 @@ namespace AGV_V1._0
                     {
                         if (vehicles[vnum].agvInfo.AgvMotion == AgvMotionState.StopedNode)
                         {
-                            TrayPacket tp = new TrayPacket(serinum++, 4, TrayMotion.TopLeft);
+                            TrayPacket tp = new TrayPacket(serinum++, (ushort)vnum, TrayMotion.TopLeft);
                            // SendPacketQueue.Instance.Enqueue(tp);
                             AgvServerManager.Instance.Send(tp);
                             vehicles[vnum].CurState = State.unloading;
@@ -118,31 +118,28 @@ namespace AGV_V1._0
                 }                
                 if (vehicles[vnum].Arrive == true && vehicles[vnum].CurState == State.unloading)
                 {
-                    if (DateTime.Now > vehicles[vnum].WaitEndTime)
-                    {
-                        if (vehicles[vnum].EqualWithRealLocation(vehicles[vnum].BeginX, vehicles[vnum].BeginY))
-                        {
-                            if (vehicles[vnum].agvInfo.AgvMotion == AgvMotionState.StopedNode)
-                            {
-                                TrayPacket tp = new TrayPacket(serinum++, 4, TrayMotion.TopLeft);
-                                // SendPacketQueue.Instance.Enqueue(tp);
-                                AgvServerManager.Instance.Send(tp);
-                                vehicles[vnum].CurState = State.unloading;
-                                vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
-                                Console.WriteLine("resend TrayMotion**********:" + (serinum - 1));
-                            }
-                        }
-                    }
-                    continue;
+                    //if (DateTime.Now > vehicles[vnum].WaitEndTime)//超过设置的等待时间则重新发送
+                    //{
+                    //    if (vehicles[vnum].EqualWithRealLocation(vehicles[vnum].BeginX, vehicles[vnum].BeginY))
+                    //    {
+                    //        if (vehicles[vnum].agvInfo.AgvMotion == AgvMotionState.StopedNode)
+                    //        {
+                    //            TrayPacket tp = new TrayPacket(serinum++, (ushort)vnum, TrayMotion.TopLeft);
+                    //            // SendPacketQueue.Instance.Enqueue(tp);
+                    //            AgvServerManager.Instance.Send(tp);
+                    //            vehicles[vnum].CurState = State.unloading;
+                    //            vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
+                    //            Console.WriteLine("resend TrayMotion**********:" + (serinum - 1));
+                    //        }
+                    //    }
+                    //}
+                    //continue;
                 }
                 if (vehicles[vnum].Arrive == true && vehicles[vnum].CurState == State.Free)
-                {                    
+                {    
                     vFinished.Add(vehicles[vnum]);
                     vehicles[vnum].Route.Clear();
                     vehicles[vnum].LockNode.Clear();
-
-                    Console.WriteLine("下一个目标：");
-                    RandomMove(4);
                     continue;
                 }        
 #endif
@@ -165,14 +162,18 @@ namespace AGV_V1._0
 #if moni
                     vehicles[vnum].Move(ElecMap.Instance);
 #else
-                    isMove = vehicles[vnum].Move(ElecMap.Instance);
+                   bool isMove = vehicles[vnum].Move(ElecMap.Instance);
                     if (isMove)
                         {
+                        int tPtr = vehicles[vnum].TPtr-1;
+                        if (tPtr >= 0) {
+                            ElecMap.Instance.mapnode[vehicles[vnum].Route[tPtr].X, vehicles[vnum].Route[tPtr].Y].NodeCanUsed = -1;
+                        }
                             uint x = Convert.ToUInt32(vehicles[vnum].BeginX);
                             uint y = Convert.ToUInt32(vehicles[vnum].BeginY);
                             uint endX = Convert.ToUInt32(vehicles[vnum].EndX);
                             uint endY = Convert.ToUInt32(vehicles[vnum].EndY);                            
-                            RunPacket rp = new RunPacket(serinum++, 4, MoveDirection.Forward, 1500, new Destination(new CellPoint(x * ConstDefine.CELL_UNIT, y * ConstDefine.CELL_UNIT), new CellPoint(endX * ConstDefine.CELL_UNIT, endY * ConstDefine.CELL_UNIT), new AgvDriftAngle(0), TrayMotion.None));
+                            RunPacket rp = new RunPacket(serinum++, (ushort)vnum, MoveDirection.Forward, 1500, new Destination(new CellPoint(x * ConstDefine.CELL_UNIT, y * ConstDefine.CELL_UNIT), new CellPoint(endX * ConstDefine.CELL_UNIT, endY * ConstDefine.CELL_UNIT), new AgvDriftAngle(0), TrayMotion.None));
                             AgvServerManager.Instance.Send(rp);
 
                             Console.WriteLine("*--------------------------------------------------------------------------*");
@@ -286,6 +287,8 @@ namespace AGV_V1._0
                 }
                 count++;
             }
+            ////把小车所在的节点设为占用状态
+            RouteUtil.VehicleOcuppyNode(ElecMap.Instance, vehicles);
             if (count >= REINIT_COUNT)
             {
                 MessageBox.Show("没有小车连接，请检查ip设置是否有问题");
