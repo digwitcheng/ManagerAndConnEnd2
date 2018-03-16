@@ -18,8 +18,7 @@
         public const string REMOTE_NAME = "RouteSearch";//远程过程调用名称
         public const int VEHICLE_SUM = 10;
         public const float DEVIATION = 0.1f;//坐标相差在DEVIATION以内就看作在一个点
-
-
+        
 
         
         public static int g_WidthNum = 100;        //地图格子的个数，默认150*150
