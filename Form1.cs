@@ -1,4 +1,4 @@
-﻿#define moni
+﻿//#define moni
 
 
 using System;
@@ -410,23 +410,23 @@ namespace AGV_V1._0
         {
             newSurface = new Bitmap(surface);
             Graphics gg = Graphics.FromImage(newSurface);
-            ////绘制探测节点
-            //for (int i = 0; i < Elc.HeightNum; i++)
-            //{
-            //    for (int j = 0; j < Elc.WidthNum; j++)
-            //    {
-            //        if (Elc.mapnode[i, j].NodeCanUsed > -1)
-            //        {
-            //            gg.FillRectangle(new SolidBrush(Color.DarkOliveGreen), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.nodeLength, ConstDefine.nodeLength));
-            //            Font font = new Font(new System.Drawing.FontFamily("宋体"), ConstDefine.nodeLength / 2);
-            //            Brush brush = Brushes.Black;
-            //            PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
-            //            gg.DrawString(Elc.mapnode[i, j].NodeCanUsed + "", font, brush, pf);
-            //        }
-            //    }
-            //}
+            //绘制探测节点
+            for (int i = 0; i < Elc.HeightNum; i++)
+            {
+                for (int j = 0; j < Elc.WidthNum; j++)
+                {
+                    if (Elc.mapnode[i, j].NodeCanUsed > -1)
+                    {
+                        gg.FillRectangle(new SolidBrush(Color.DarkOliveGreen), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength));
+                        Font font = new Font(new System.Drawing.FontFamily("宋体"), ConstDefine.g_NodeLength / 2);
+                        Brush brush = Brushes.Black;
+                        PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
+                        gg.DrawString(Elc.mapnode[i, j].NodeCanUsed + "", font, brush, pf);
+                    }
+                }
+            }
 
-           // 绘制锁住的节点            
+            // 绘制锁住的节点            
             for (int num = 0; num < VehicleManager.Instance.GetVehicles().Length; num++)
             {
                 List<MyPoint> listNode = new List<MyPoint>(VehicleManager.Instance.GetVehicles()[num].LockNode);

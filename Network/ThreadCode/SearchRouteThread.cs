@@ -68,8 +68,8 @@ namespace AGV_V1._0.ThreadCode
                 OnShowMessage(this, new MessageEventArgs("任务中小车编号超出小车实际数量"));
                 return;
             }
-            vehicle[num].BeginX = searchData.Data.BeginX;
-            vehicle[num].BeginY = searchData.Data.BeginY;
+            //vehicle[num].BeginX = searchData.Data.BeginX;
+            //vehicle[num].BeginY = searchData.Data.BeginY;
             vehicle[num].EndX = searchData.Data.EndX;
             vehicle[num].EndY = searchData.Data.EndY;
             vehicle[num].DestX = searchData.Data.DestX;

@@ -1,4 +1,4 @@
-﻿#define moni
+﻿//#define moni
 
 using System;
 using System.Collections.Generic;
@@ -277,8 +277,8 @@ namespace AGV_V1._0
         }
         //public int TPtr
         //{
-        //    get { return tPtr; }
-        //    set { tPtr = value; }
+        //    get { return TPtr; }
+        //    set { TPtr = value; }
         //}
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace AGV_V1._0
                 {
                     return false;
                 }
-                if (tPtr >= route.Count - 1)
+                if (TPtr >= route.Count - 1)
                 {
                     Elc.mapnode[route[route.Count - 1].X, route[route.Count - 1].Y].NodeCanUsed = this.Id;
                     Arrive = true;
@@ -326,7 +326,7 @@ namespace AGV_V1._0
 #if moni
 
 #else
-                if (ShouldMove(tPtr + 1) == false)
+                if (ShouldMove(TPtr + 1) == false)
                 {
                     if (this.WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下当前位置
                     {
@@ -339,19 +339,19 @@ namespace AGV_V1._0
                 bool virtulChange = false;
 
 
-                if (tPtr == 0)// ConstDefine.FORWORD_STEP)
+                if (TPtr == 0)// ConstDefine.FORWORD_STEP)
                 {
 
                     for (VirtualTPtr = 1; VirtualTPtr < ConstDefine.FORWORD_STEP; VirtualTPtr++)
                     {
-                        if (tPtr + VirtualTPtr <= route.Count - 1)
+                        if (TPtr + VirtualTPtr <= route.Count - 1)
                         {
                             int tx = (int)route[VirtualTPtr].X;
                             int ty = (int)route[VirtualTPtr].Y;
 #if moni
                             int temp =Elc.mapnode[tx, ty].NodeCanUsed;
 #else
-                            int temp = -1;// Elc.mapnode[tx, ty].NodeCanUsed;
+                            int temp = Elc.mapnode[tx, ty].NodeCanUsed;
 #endif
                             if (temp > -1)
                             {
@@ -365,12 +365,11 @@ namespace AGV_V1._0
                             }
                         }
                     }
-                    Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = -1;
                     StopTime = ConstDefine.STOP_TIME;
-                    tPtr++;
+                    TPtr++;
 
                 }
-                else if (tPtr > 0)
+                else if (TPtr > 0)
                 {                   
 
                     if (VirtualTPtr <= route.Count - 1)
@@ -380,7 +379,7 @@ namespace AGV_V1._0
 #if moni
                         int temp = Elc.mapnode[tx, ty].NodeCanUsed;
 #else
-                            int temp = -1;// Elc.mapnode[tx, ty].NodeCanUsed;
+                            int temp =  Elc.mapnode[tx, ty].NodeCanUsed;
 #endif
                         if (temp > -1)
                         {
@@ -391,9 +390,8 @@ namespace AGV_V1._0
                         else
                         {
                             Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
-                            StopTime = ConstDefine.STOP_TIME;
-                            Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = -1;
-                            tPtr++;
+                            StopTime = ConstDefine.STOP_TIME;                            
+                            TPtr++;
                             VirtualTPtr++;
                             virtulChange = true;
                         }
@@ -401,13 +399,12 @@ namespace AGV_V1._0
                     }
                     else
                     {
-                        Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = -1;
                         StopTime = ConstDefine.STOP_TIME;
-                        tPtr++;
+                        TPtr++;
                     }
                 }
-                BeginX = route[tPtr].X;
-                BeginY = route[tPtr].Y;
+                BeginX = route[TPtr].X;
+                BeginY = route[TPtr].Y;
                 return true;
 
             }
