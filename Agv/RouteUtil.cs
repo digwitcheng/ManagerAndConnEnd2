@@ -11,7 +11,7 @@ namespace AGV_V1._0.Algorithm
     class RouteUtil
     {
 
-        public static Random rand = new Random(3);//5,/4/4 //((int)DateTime.Now.Ticks);//随机数，随机产生坐标
+        public static Random rand = new Random(12);//5,/4/4 //((int)DateTime.Now.Ticks);//随机数，随机产生坐标
 
         public static MyPoint RandPoint(ElecMap Elc)
         {
@@ -27,16 +27,12 @@ namespace AGV_V1._0.Algorithm
         }
         public static MyPoint RandRealPoint(ElecMap Elc)
         {
-            int minX=ConstDefine.minX;
-            int maxX=ConstDefine.maxX;
-            int minY = ConstDefine.minY;
-            int maxY = ConstDefine.maxY;
-            int x = rand.Next(minX, maxX+1);
-            int y = rand.Next(minY,maxY+1);
+            int x = rand.Next(0, Elc.HeightNum-1);
+            int y = rand.Next(0,Elc.WidthNum-1);
             while (!Elc.IsNodeAvailable(x, y))
             {
-                x = rand.Next(minX, maxX);
-                y = rand.Next(minY, maxY);
+                 x = rand.Next(0, Elc.HeightNum - 1);
+                 y = rand.Next(0, Elc.WidthNum - 1);
             }
             return new MyPoint(x, y);
         }

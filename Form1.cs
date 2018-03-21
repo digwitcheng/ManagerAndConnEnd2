@@ -98,7 +98,10 @@ namespace AGV_V1._0
             StartThread();//启动发送，接收，搜索等线程
             InitialSystem();
 
-           // ReInitWithiRealAgv();
+            // ReInitWithiRealAgv();
+
+            SearchProcess sp = new SearchProcess();
+            sp.Show();
         }
 
         private void ReInitWithiRealAgv()
@@ -743,7 +746,7 @@ namespace AGV_V1._0
         {
             //InitialAgv();
 
-            VehicleManager.Instance.RandomMove(4);
+            VehicleManager.Instance.RandomMove(2);
         }
 
         private void button6_Click(object sender, EventArgs e)

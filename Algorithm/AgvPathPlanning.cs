@@ -92,18 +92,10 @@ namespace Agv.PathPlanning
             {
                 graph[lockNode[index].X, lockNode[index].Y].node_Type = false;
             }
-            //Parallel.For(0, lockNode.Count, (int ii) =>
+            //for (int index = 0; index < scanner.Count; index++)
             //{
-            //    MyPoint point = null;
-            //    if(lockNode.TryPeek(out point)){
-            //        graph[point.X, point.Y].node_Type = false;
-            //    }
-            //});
-
-            for (int index = 0; index < scanner.Count; index++)
-            {
-                graph[scanner[index].X, scanner[index].Y].node_Type = false;
-            }
+            //    graph[scanner[index].X, scanner[index].Y].node_Type = false;
+            //}
 
             for (i = 0; i < Height; i++)
             {
@@ -180,6 +172,8 @@ namespace Agv.PathPlanning
             close[beginX, beginY].Node.isSearched = true;
 
             int result = algorithm.Search(close, graph, beginX, beginY, beginDir);
+
+
 
             Close p, t, q = null;
             switch (result)
@@ -268,6 +262,9 @@ namespace Agv.PathPlanning
                 route = new List<MyPoint>();
                 GetShortestPath(route);
             }
+
+            SearchProcess.SetGraph(graph,route,firstY,firstX,endY,endX);
+            
             return route;
         }
     }
