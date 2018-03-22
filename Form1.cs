@@ -93,12 +93,15 @@ namespace AGV_V1._0
         {
 
             InitializeComponent();
-            InitServer();//初始化服务器
+           // InitServer();//初始化服务器
             InitUiView();//绘制界面
             StartThread();//启动发送，接收，搜索等线程
             InitialSystem();
 
-           // ReInitWithiRealAgv();
+            // ReInitWithiRealAgv();
+
+            SearchProcess sp = new SearchProcess();
+            sp.Show();
         }
 
         private void ReInitWithiRealAgv()
@@ -151,8 +154,8 @@ namespace AGV_V1._0
             //TaskReceiveThread.Instance.Start();
             //TaskReceiveThread.Instance.ShowMessage += OnShowMessageWithPicBox;
 
-            GuiSendThread.Instance.Start();
-            GuiSendThread.Instance.ShowMessage += OnShowMessageWithPicBox;
+            //GuiSendThread.Instance.Start();
+            //GuiSendThread.Instance.ShowMessage += OnShowMessageWithPicBox;
 
             SearchRouteThread.Instance.Start();
             SearchRouteThread.Instance.ShowMessage += OnShowMessageWithPicBox;
@@ -164,8 +167,8 @@ namespace AGV_V1._0
             //SqlManager.Instance.Start();
             //SqlManager.Instance.ShowMessage += OnShowMessageWithPicBox;
 
-            SendPacketThread.Instance.Start();
-            SendPacketThread.Instance.ShowMessage += OnShowMessageWithPicBox;
+            //SendPacketThread.Instance.Start();
+            //SendPacketThread.Instance.ShowMessage += OnShowMessageWithPicBox;
 
         }
       
@@ -270,7 +273,7 @@ namespace AGV_V1._0
             Elc.InitialElc();
 
            // this.WindowState = FormWindowState.Maximized;
-            ConstDefine.g_NodeLength = (int)(FORM_WIDTH * PANEL_RADIO) / (ConstDefine.g_WidthNum+1);
+            ConstDefine.g_NodeLength = (int)(FORM_WIDTH * PANEL_RADIO) / (ConstDefine.g_WidthNum+1)/2;
             MAX_NODE_LENGTH = ConstDefine.g_NodeLength * 2;
             MIN_NODE_LENGTH = ConstDefine.g_NodeLength / 2;
 
@@ -324,7 +327,7 @@ namespace AGV_V1._0
             // splitContainer1.Panel1.ClientSize = new System.Drawing.Size(ConstDefine.WIDTH, ConstDefine.HEIGHT);
 
             //将pictureBox加入到panel上
-            pic.Image = newSurface;
+            pic.Image = surface;
             pic.BackColor = Color.FromArgb(100, 0, 0, 0);
 
             //设置滚动条滚动的区域
@@ -363,7 +366,16 @@ namespace AGV_V1._0
             {
                 for (int j = 0; j < Elc.WidthNum; j++)
                 {
-                    drawArrow(i, j);
+                    //drawArrow(i, j);
+                    //绘制表格
+                    if (Elc.mapnode[i, j].IsAbleCross)
+                    {
+                        DrawUtil.FillRectangle(g, Color.LightGray, Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
+                    }
+                    else
+                    {
+                        DrawUtil.FillRectangle(g, Color.Black, Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
+                    }
 
                     //绘制标尺
                     if (i == 0 || i == Elc.HeightNum - 1)
@@ -376,6 +388,7 @@ namespace AGV_V1._0
                         DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
                         DrawUtil.DrawString(g, i, ConstDefine.g_NodeLength / 2, Color.Yellow, Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1);
                     }
+                    
                 }
             }
 
@@ -383,15 +396,15 @@ namespace AGV_V1._0
 
 
 
-        Bitmap newSurface;
+       // Bitmap newSurface;
         /// <summary>
         /// 绘制电子地图
         /// </summary>
         /// <param name="e"></param>
         public void Draw(Graphics g)
         {
-            newSurface = new Bitmap(surface);
-            Graphics gg = Graphics.FromImage(newSurface);
+            //newSurface = new Bitmap(surface);
+            //Graphics gg = Graphics.FromImage(newSurface);
             ////绘制探测节点
             //for (int i = 0; i < Elc.HeightNum; i++)
             //{
@@ -417,11 +430,11 @@ namespace AGV_V1._0
 
                     int i = listNode[q].X;
                     int j = listNode[q].Y;
-                    gg.FillRectangle(new SolidBrush(Color.Red), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength));
+                    g.FillRectangle(new SolidBrush(Color.Red), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength));
                     Font font = new Font(new System.Drawing.FontFamily("宋体"), ConstDefine.g_NodeLength / 2);
                     Brush brush = Brushes.DarkMagenta;
                     PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
-                    gg.DrawString(VehicleManager.Instance.GetVehicles()[num].Id + "", font, brush, pf);
+                    g.DrawString(VehicleManager.Instance.GetVehicles()[num].Id + "", font, brush, pf);
 
                 }
             }
@@ -448,7 +461,7 @@ namespace AGV_V1._0
             {
                 for (int i = 0; i < v.Length; i++)
                 {
-                    v[i].Draw(gg);
+                    v[i].Draw(g);
                     v[0].X = 1111;
                 }
             }
@@ -471,10 +484,9 @@ namespace AGV_V1._0
             //vehicle[0].Draw(e.Graphics);
             //vehicle[1].Draw(e.Graphics);
 
-
+            pic.Image = surface;
 
             DrawMsgOnPic();
-            pic.Image = newSurface;
         }
 
         void drawArrow(int y, int x)
@@ -734,7 +746,7 @@ namespace AGV_V1._0
         {
             //InitialAgv();
 
-            VehicleManager.Instance.RandomMove(4);
+            VehicleManager.Instance.RandomMove(2);
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -748,49 +760,49 @@ namespace AGV_V1._0
         }
         void DisposeServer()
         {
-            gm.ShowMessage -= OnShowMessageWithPicBox;
-            gm.ReLoad -= ReInitialSystem;
-            gm.DataMessage -= OnTransmitToTask;
-            gm.Close();
+           // gm.ShowMessage -= OnShowMessageWithPicBox;
+           // gm.ReLoad -= ReInitialSystem;
+           // gm.DataMessage -= OnTransmitToTask;
+           // gm.Close();
 
 
-            am.ShowMessage -= OnShowMessageWithPicBox;
-           // am.ReLoad -= ReInitialSystem;
-           // am.DataMessage -= OnAgvDone;
-            am.Close();
+           // am.ShowMessage -= OnShowMessageWithPicBox;
+           //// am.ReLoad -= ReInitialSystem;
+           //// am.DataMessage -= OnAgvDone;
+           // am.Close();
 
 
-            tm.ShowMessage -= OnShowMessageWithPicBox;
-            tm.DataMessage -= ReceveTask;
-            tm.Close();
+           // tm.ShowMessage -= OnShowMessageWithPicBox;
+           // tm.DataMessage -= ReceveTask;
+           // tm.Close();
         }
 
         void EndThread()
         {
-            //TaskSendThread.Instance.ShowMessage -= OnShowMessageFinishCount;
-            //TaskSendThread.Instance.End();
+            ////TaskSendThread.Instance.ShowMessage -= OnShowMessageFinishCount;
+            ////TaskSendThread.Instance.End();
 
-            //TaskReceiveThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            //TaskReceiveThread.Instance.End();
+            ////TaskReceiveThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            ////TaskReceiveThread.Instance.End();
 
-            //GuiSendThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            //GuiSendThread.Instance.End();
+            ////GuiSendThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            ////GuiSendThread.Instance.End();
 
-            SearchRouteThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            SearchRouteThread.Instance.End();
+            //SearchRouteThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            //SearchRouteThread.Instance.End();
 
 
-            VehicleManager.Instance.ShowMessage -= OnShowMessageDistanceCount;
-            VehicleManager.Instance.End();
+            //VehicleManager.Instance.ShowMessage -= OnShowMessageDistanceCount;
+            //VehicleManager.Instance.End();
 
-            //SqlManager.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            //SqlManager.Instance.End();
+            ////SqlManager.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            ////SqlManager.Instance.End();
 
-            //CheckCongestionThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            //CheckCongestionThread.Instance.End();
+            ////CheckCongestionThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            ////CheckCongestionThread.Instance.End();
 
-            SendPacketThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
-            SendPacketThread.Instance.End();
+            //SendPacketThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
+            //SendPacketThread.Instance.End();
         }
     }
 }

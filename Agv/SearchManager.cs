@@ -32,7 +32,7 @@ namespace AGV_V1._0
         public SearchManager()
         {
             Elc = ElecMap.Instance;
-            astarSearch = new AgvPathPlanning(new Dijkstra());
+            astarSearch = new AgvPathPlanning(new Astar());
 
         }
         private int ResearchCount

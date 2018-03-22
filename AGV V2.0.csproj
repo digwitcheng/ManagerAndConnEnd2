@@ -174,6 +174,12 @@
     <Compile Include="Network\ThreadCode\TaskSendThread.cs" />
     <Compile Include="Network\ThreadCode\UpdataSqlThread.cs" />
     <Compile Include="Remoting\RouteRemoteObject.cs" />
+    <Compile Include="SearchProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchProcess.Designer.cs">
+      <DependentUpon>SearchProcess.cs</DependentUpon>
+    </Compile>
     <Compile Include="Util\DrawUtil.cs" />
     <Compile Include="Util\FileUtil.cs" />
     <Compile Include="Util\ConstDefine.cs" />
@@ -219,6 +225,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SearchProcess.resx">
+      <DependentUpon>SearchProcess.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
