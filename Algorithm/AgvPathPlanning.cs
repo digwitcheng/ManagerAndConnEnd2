@@ -108,28 +108,28 @@ namespace Agv.PathPlanning
                     }
                     if (j > 0)
                     {
-                        if (graph[i, j - 1].node_Type && graph[i, j].leftDifficulty < Node.MAX_ABLE_PASS)    // left节点可以到达
+                        if (graph[i, j - 1].node_Type && graph[i, j].leftDifficulty < Node.UNABLE_PASS)    // left节点可以到达
                         {
                             graph[i, j].adjoinNodeCount |= Left;
                         }
                     }
                     if (j < Width - 1)
                     {
-                        if (graph[i, j + 1].node_Type && graph[i, j].rightDifficulty < Node.MAX_ABLE_PASS)    // right节点可以到达
+                        if (graph[i, j + 1].node_Type && graph[i, j].rightDifficulty < Node.UNABLE_PASS)    // right节点可以到达
                         {
                             graph[i, j].adjoinNodeCount |= Right;
                         }
                     }
                     if (i > 0)
                     {
-                        if (graph[i - 1, j].node_Type && graph[i, j].upDifficulty<Node.MAX_ABLE_PASS)    // up节点可以到达
+                        if (graph[i - 1, j].node_Type && graph[i, j].upDifficulty<Node.UNABLE_PASS)    // up节点可以到达
                         {
                             graph[i, j].adjoinNodeCount |= Up;
                         }
                     }
                     if (i < Height - 1)
                     {
-                        if (graph[i + 1, j].node_Type && graph[i, j].downDifficulty < Node.MAX_ABLE_PASS)    // down节点可以到达
+                        if (graph[i + 1, j].node_Type && graph[i, j].downDifficulty < Node.UNABLE_PASS)    // down节点可以到达
                         {
                             graph[i, j].adjoinNodeCount |= Down;
                         }
@@ -171,28 +171,28 @@ namespace Agv.PathPlanning
             initClose(close, beginX, beginY, endX, endY);
             close[beginX, beginY].Node.isSearched = true;
 
-            int result = algorithm.Search(close, graph, beginX, beginY, beginDir);
+            Close result = algorithm.Search(close, graph, beginX, beginY, beginDir);
 
-
-
+            result = close[endX, endY];
             Close p, t, q = null;
-            switch (result)
+            if (result != null)
             {
-                case SearchUtil.Sequential:  //顺序最近
-                    p = (close[endX, endY]);
-                    while (p != null)    //转置路径
-                    {
-                        t = p.From;
-                        p.From = q;
-                        q = p;
-                        p = t;
-                    }
-                    close[beginX, beginY].From = q.From;
-                    return (close[beginX, beginY]);
-                case SearchUtil.NoSolution:
-                    return null;
+                p = result;
+                while (p != null)    //转置路径
+                {
+                    t = p.From;
+                    p.From = q;
+                    q = p;
+                    p = t;
+                }
+                close[beginX, beginY].From = q.From;
+                return (close[beginX, beginY]);
             }
-            return null;
+            else
+            {
+                return null;
+            }
+            
         }
 
          // 地图Close表初始化配置
@@ -205,7 +205,7 @@ namespace Agv.PathPlanning
                  {
                      cls[i, j] = new Close { };
                      cls[i, j].Node = graph[i, j];               // Close表所指节点
-                     cls[i, j].Node.isSearched = !(graph[i, j].node_Type);  // 是否被访问
+                     cls[i, j].Node.isSearched = false;  // 是否被访问
                      cls[i, j].From = null;                    // 所来节点
                      cls[i, j].G =  0;  //需要根据前面的点计算
                      cls[i, j].H = Math.Abs(endX - i) + Math.Abs(endY - j);    // 评价函数值

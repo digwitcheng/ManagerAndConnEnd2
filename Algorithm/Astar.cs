@@ -19,25 +19,24 @@ namespace AGV_V1._0.Algorithm
         {    // A*算法遍历
             //int times = 0; 
             int i, curX, curY, nextX, nextY;
-            float surG;
+            float surG=float.MaxValue;
             Close curPoint = new Close();
 
 
              List<Close> open = new List<Close>();
              SearchUtil.AsatrPush(open, close, beginX, beginY, 0);
             int times = 0;
+            bool isFirstDirection = true;
             while (open.Count > 0)
             {    
                 times++;
                 curPoint = SearchUtil.shift(open);
                 curX = curPoint.Node.x;
-                curY = curPoint.Node.y;
-                bool isFirstDirection = false;
+                curY = curPoint.Node.y;                
 
                 if (curPoint.From == null)
                 {
                     curPoint.Node.direction = beginDir;
-                    isFirstDirection=true;
                 }
                 else
                 {
@@ -85,23 +84,27 @@ namespace AGV_V1._0.Algorithm
                         if (directionCost == 2 && isFirstDirection == true)
                         {
                             directionCost--;
+                            isFirstDirection =false;
                         }
                         //  curPoint.node.stopTime = 1+directionCost * 2; 
-                        int tempTraConges = graph[curX, curY].traCongesIntensity;
+                        // int tempTraConges = graph[curX, curY].traCongesIntensity;
 
 
                         //curPoint.searchDir = close[surX, surY].searchDir;
-                        surG = curPoint.G + (float)(Math.Abs(curX - nextX) + Math.Abs(curY - nextY)) + SWERVE_COST * (directionCost + tempTraConges) + tempPassDifficulty;
+                        surG = curPoint.G + (float)(Math.Abs(curX - nextX) + Math.Abs(curY - nextY)) + SWERVE_COST * directionCost;
                         SearchUtil.AsatrPush(open, close, nextX, nextY, surG);
                     }
                 }
-                if (curPoint.H == 0)
-                {
-            System.Console.WriteLine("astar times:"+times);
-                    return SearchUtil.Sequential;
-                }
             }
-            return SearchUtil.NoSolution; //无结果
+            if (curPoint.H==0)
+            {
+                System.Console.WriteLine("astar times:" + times);
+                return SearchUtil.Sequential;
+            }
+            else
+            {
+                return SearchUtil.NoSolution; //无结果
+            }
         }
 
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AGV_V1._0.Algorithm
 {
-    class Dijkstra:IAlgorithm
+    class Dijkstra
     {
          const int SWERVE_COST = 3;
         public  int Search(Close[,] close, Node[,] graph, int beginX, int beginY, Direction beginDir)
