@@ -14,9 +14,7 @@ namespace AGV_V1._0
 {
     partial class SearchProcess : Form
     {
-
-        private int MAX_NODE_LENGTH;
-        private int MIN_NODE_LENGTH;
+        
         //public static readonly int FORM_WIDTH = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;   //框体的宽度
         //public static readonly int FORM_HEIGHT = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;    //框体的长度  
 
@@ -144,8 +142,8 @@ namespace AGV_V1._0
                 }
             }
 
-            DrawUtil.FillRectangle(g, Color.Yellow, startX*nodeLength, startY*nodeLength, nodeLength - 2, nodeLength - 2);
-            DrawUtil.FillEllipse(g, Color.Red, endX*nodeLength, endY*nodeLength, nodeLength - 2, nodeLength - 2);
+            DrawUtil.FillEllipse(g, Color.Yellow, startX*nodeLength, startY*nodeLength, nodeLength - 2, nodeLength - 2);
+            DrawUtil.FillRectangle(g, Color.Red, endX*nodeLength, endY*nodeLength, nodeLength - 2, nodeLength - 2);
 
             pic.Image = surface;
 

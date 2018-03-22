@@ -170,6 +170,7 @@ namespace Agv.PathPlanning
             close[beginX, beginY].Node.isSearched = true;
 
             int result = algorithm.Search(close, graph, beginX, beginY, beginDir);
+           
 
             //
 
@@ -206,7 +207,7 @@ namespace Agv.PathPlanning
                      cls[i, j].Node.isSearched = !(graph[i, j].node_Type);  // 是否被访问
                      cls[i, j].From = null;                    // 所来节点
                      cls[i, j].G =  0;  //需要根据前面的点计算
-                     cls[i, j].H = Math.Abs(endX - i) + Math.Abs(endY - j);    // 评价函数值
+                    cls[i, j].H = 0;// Math.Abs(endX - i) + Math.Abs(endY - j);    // 评价函数值
                      cls[i, j].F = 0;   // cls[i, j].G + cls[i, j].H;
                  }
              }
@@ -252,13 +253,23 @@ namespace Agv.PathPlanning
             // ChangeMap(elc, width, height);  // 转换寻找路径的可达还是不可达
             initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
             List<MyPoint> route = new List<MyPoint>();
-            GetShortestPath(route);
-            if (route.Count < 1)
+            //GetShortestPath(route);
+            //if (route.Count < 1)
+            //{
+            //    lockNode.Clear();
+            //    initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
+            //    route = new List<MyPoint>();
+            //    GetShortestPath(route);
+            //}
+
+            close = new Close[Height, Width];
+            initClose(close, beginX, beginY, endX, endY);
+            close[beginX, beginY].Node.isSearched = true;
+            Dstar dstar = new Dstar();
+            route = dstar.SearchDstar(close, beginX, beginY, endX, endY, beginDir);
+            if (route != null && route.Count > 0)
             {
-                lockNode.Clear();
-                initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
-                route = new List<MyPoint>();
-                GetShortestPath(route);
+                route.Insert(0,new MyPoint(beginX, beginY));
             }
 
             SearchProcess.SetGraph(graph,route,firstY,firstX,endY,endX);

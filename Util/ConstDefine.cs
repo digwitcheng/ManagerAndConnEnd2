@@ -40,7 +40,7 @@ namespace AGV_V1._0.Util
         
 
         public const int STOP_TIME = 6; //设置等待时间片段
-        public const int STEP_TIME = 500;//小车每走一格的间隔
+        public const int STEP_TIME = 100;//小车每走一格的间隔
         public const int GUI_TIME = 100;//发送给界面的间隔
         public const int CHECK_CONGESTION = 3000;//检测拥堵情况
         public const int SEARCH_TIME = 3;//搜索路径的间隔

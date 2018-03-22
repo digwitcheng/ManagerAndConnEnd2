@@ -15,7 +15,7 @@ namespace AGV_V1._0.Algorithm
         {    // A*算法遍历
             //int times = 0; 
             int i, curX, curY, nextX, nextY;
-            float surG;
+            double surG;
             Close curPoint = new Close();
 
 
@@ -87,7 +87,7 @@ namespace AGV_V1._0.Algorithm
 
 
                         //curPoint.searchDir = close[surX, surY].searchDir;
-                        surG = curPoint.G + (float)(Math.Abs(curX - nextX) + Math.Abs(curY - nextY)) + SWERVE_COST * (directionCost + tempTraConges) + tempPassDifficulty;
+                        surG = curPoint.G + (Math.Abs(curX - nextX) + Math.Abs(curY - nextY)) + SWERVE_COST * (directionCost + tempTraConges) + tempPassDifficulty;
                         SearchUtil.DijkstraPush(open, close, nextX, nextY, surG);
                     }
                 }

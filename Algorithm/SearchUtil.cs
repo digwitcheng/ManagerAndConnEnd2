@@ -26,7 +26,7 @@ namespace AGV_V1._0.Algorithm
         new MyPoint( -1, 0), //,Direction.UpDifficulty  // North 6
 	 //   new myPoint( -1, 1)   // North_East 7
         };
-        public static void AsatrPush(List<Close> q, Close[,] cls, int x, int y, float g)
+        public static void AsatrPush(List<Close> q, Close[,] cls, int x, int y, double g)
         {    //向优先队列（Open表）中添加元素
             Close t;
             int i, mintag;
@@ -47,7 +47,7 @@ namespace AGV_V1._0.Algorithm
             q[mintag] = t;    //将评价函数值最小节点置于列表最前面
         }
 
-        public static void DijkstraPush(List<Close> q, Close[,] cls, int x, int y, float g)
+        public static void DijkstraPush(List<Close> q, Close[,] cls, int x, int y, double g)
         {    //向优先队列（Open表）中添加元素
             Close t;
             int i, mintag;

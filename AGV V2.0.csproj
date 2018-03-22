@@ -129,8 +129,8 @@
     <Compile Include="Network\AgvNetwork\Packet\SwervePacket.cs" />
     <Compile Include="Network\AgvNetwork\Packet\SysResponsePacket.cs" />
     <Compile Include="Network\AgvNetwork\Packet\TrayPacket.cs" />
-    <Compile Include="Network\Queue\ReSendPacketQueue.cs" />
-    <Compile Include="Network\Queue\SendPacketQueue.cs" />
+    <Compile Include="Network\MyQueue\ReSendPacketQueue.cs" />
+    <Compile Include="Network\MyQueue\SendPacketQueue.cs" />
     <Compile Include="Network\Server\APM\TcpSocketServer.cs" />
     <Compile Include="Network\Server\APM\TcpSocketServerConfiguration.cs" />
     <Compile Include="Network\Server\APM\TcpSocketSession.cs" />
@@ -244,10 +244,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Network\Messages\MyMessage.cs" />
-    <Compile Include="Network\Queue\BaseQueue.cs" />
-    <Compile Include="Network\Queue\TaskRecvQueue.cs" />
-    <Compile Include="Network\Queue\SearchRouteQueue.cs" />
-    <Compile Include="Network\Queue\FinishedQueue.cs" />
+    <Compile Include="Network\MyQueue\BaseQueue.cs" />
+    <Compile Include="Network\MyQueue\TaskRecvQueue.cs" />
+    <Compile Include="Network\MyQueue\SearchRouteQueue.cs" />
+    <Compile Include="Network\MyQueue\FinishedQueue.cs" />
     <Compile Include="Network\DataProtocol\SearchData.cs" />
     <Compile Include="Network\DataProtocol\SendData.cs" />
     <Compile Include="Network\Manager\GuiServerManager.cs" />

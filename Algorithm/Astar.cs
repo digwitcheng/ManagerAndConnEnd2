@@ -19,7 +19,7 @@ namespace AGV_V1._0.Algorithm
         {    // A*算法遍历
             //int times = 0; 
             int i, curX, curY, nextX, nextY;
-            float surG;
+            double surG;
             Close curPoint = new Close();
 
              List<Close> open = new List<Close>();
