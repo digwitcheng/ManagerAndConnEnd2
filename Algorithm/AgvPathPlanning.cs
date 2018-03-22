@@ -171,7 +171,7 @@ namespace Agv.PathPlanning
 
             int result = algorithm.Search(close, graph, beginX, beginY, beginDir);
 
-
+            //
 
             Close p, t, q = null;
             switch (result)

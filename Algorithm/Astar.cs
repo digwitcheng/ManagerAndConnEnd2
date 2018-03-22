@@ -50,11 +50,6 @@ namespace AGV_V1._0.Algorithm
                     }
                     nextX = curX + (int)SearchUtil.dir[i].X;
                     nextY = curY + (int)SearchUtil.dir[i].Y;
-                    //if (surX < 0 || surY < 0)
-                    //{
-                    //    Console.WriteLine("走出场地外");
-                    //    continue;
-                    //} 
                     if (!close[nextX, nextY].Node.isSearched)
                     {
                         close[nextX, nextY].Node.isSearched = true;
@@ -85,11 +80,8 @@ namespace AGV_V1._0.Algorithm
                         {
                             directionCost--;
                         }
-                        //  curPoint.node.stopTime = 1+directionCost * 2; 
                         int tempTraConges = graph[curX, curY].traCongesIntensity;
-
-
-                        //curPoint.searchDir = close[surX, surY].searchDir;
+                        
                         surG = curPoint.G + (float)(Math.Abs(curX - nextX) + Math.Abs(curY - nextY)) + SWERVE_COST * (directionCost + tempTraConges) + tempPassDifficulty;
                         SearchUtil.AsatrPush(open, close, nextX, nextY, surG);
                     }
