@@ -31,8 +31,6 @@ namespace Agv.PathPlanning
         private const int Left = (1 << 2);
         private const int Up = (1 << 3);
 
-        
-
         Node[,] graph = null;
         int beginX, beginY, endX, endY; //起始点、终点
         Close[,] close = null;

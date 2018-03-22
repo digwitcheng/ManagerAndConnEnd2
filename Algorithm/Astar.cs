@@ -22,7 +22,6 @@ namespace AGV_V1._0.Algorithm
             float surG;
             Close curPoint = new Close();
 
-
              List<Close> open = new List<Close>();
              SearchUtil.AsatrPush(open, close, beginX, beginY, 0);
             int times = 0;
