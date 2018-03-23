@@ -1,4 +1,7 @@
-﻿using AGV_V1._0.Agv;
+﻿//#define moni
+
+
+using AGV_V1._0.Agv;
 using AGV_V1._0.Event;
 using AGV_V1._0.NLog;
 using AGV_V1._0.Queue;
@@ -44,20 +47,22 @@ namespace AGV_V1._0.Network.ThreadCode
                 if (FinishedQueue.Instance.IsHasData())
                 {
                     Vehicle v = FinishedQueue.Instance.Dequeue();
+                    DateTime nowTime = DateTime.Now;
+                    if (nowTime > startTime)
+                    {
+                        per++;
+                        Logs.Info(nowTime.ToString() + " " + per + ":" + perCount);
+                        startTime = DateTime.Now.AddMinutes(10);
+                        perCount = 0;
+
+                    }
+                    perCount++;
+                    finishCount++;
+                    OnShowMessage(finishCount + "");
+#if moni
                     if (v.CurState == State.unloading)
                     {
-                        DateTime nowTime = DateTime.Now;
-                        if (nowTime > startTime)
-                        {
-                            per++;
-                            Logs.Info(nowTime.ToString()+" "+per + ":" + perCount);
-                            startTime = DateTime.Now.AddMinutes(10);
-                            perCount = 0;
-                            
-                        }
-                        perCount++;
-                        finishCount++;
-                        OnShowMessage(finishCount + "");
+                        
                         Unloading(v);
 
                     }
@@ -67,6 +72,10 @@ namespace AGV_V1._0.Network.ThreadCode
                         // TaskLisenter.Instance.SendVehicleData(json);                    
                         TaskServerManager.Instance.Send(MessageType.Arrived, json);
                     }
+#else
+                      string json = JsonHelper.VehicleToJson(v);                   
+                      TaskServerManager.Instance.Send(MessageType.Arrived, json);
+#endif
                 }
                 Thread.Sleep(ConstDefine.TASK_TIME);
             }

@@ -167,6 +167,8 @@ namespace AGV_V1._0
         public int BeginY { get; set; }
         public int DestX { get; set; }
         public int DestY { get; set; }
+        public int RealX { get; set; }
+        public int RealY { get; set; }
 
         //  public float Distance;//上一个节拍所走的距离；
         // public int stopTime;//停留时钟数
@@ -290,13 +292,20 @@ namespace AGV_V1._0
 
             lock (RouteLock)
             {
-
+#if moni
                 Rectangle rect = new Rectangle(BeginY * ConstDefine.g_NodeLength, (int)BeginX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
                 DrawUtil.FillRectangle(g, showColor, rect);
 
                 PointF p = new PointF((int)((BeginY) * ConstDefine.g_NodeLength), (int)((BeginX) * ConstDefine.g_NodeLength));
                 DrawUtil.DrawString(g, this.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
+#else
+                UpdateRealLocation();
+                Rectangle rect = new Rectangle(RealY * ConstDefine.g_NodeLength, (int)RealX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
+                DrawUtil.FillRectangle(g, showColor, rect);
 
+                PointF p = new PointF((int)((RealY) * ConstDefine.g_NodeLength), (int)((RealX) * ConstDefine.g_NodeLength));
+                DrawUtil.DrawString(g, this.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
+#endif
 
             }
         }
@@ -416,14 +425,7 @@ namespace AGV_V1._0
 
         bool ShouldMove(int nextTPtr)
         {
-            if (agvInfo == null)
-            {
-                return false;
-            }
-            if (agvInfo.Alarm != AlarmState.Normal)
-            {
-                return false;
-            }
+            if (!CheckAgvCorrect()) { return false; }
             if (nextTPtr >= route.Count)
             {
                 return false;
@@ -454,8 +456,9 @@ namespace AGV_V1._0
             
             int nextX = route[nextTPtr].X;
             int nextY=route[nextTPtr].Y;
-            double RealX = agvInfo.CurLocation.CurNode.X / 1000.0;
-            double RealY = agvInfo.CurLocation.CurNode.Y / 1000.0;
+            UpdateRealLocation();
+            //int RealX = (int)Math.Round(agvInfo.CurLocation.CurNode.X / 1000.0);
+            //int RealY = (int)Math.Round(agvInfo.CurLocation.CurNode.Y / 1000.0);
             if (Math.Abs(nextX - RealX) < ConstDefine.DEVIATION + ConstDefine.FORWORD_STEP - 1 && Math.Abs(nextY - RealY) < ConstDefine.DEVIATION)//X轴移动
             {
                 return true;
@@ -490,7 +493,13 @@ namespace AGV_V1._0
                 nextMoveDirection = MoveDirecion.XDirection;
             }
         }
-        public bool EqualWithRealLocation(int srcX, int srcY)
+        void UpdateRealLocation()
+        {
+            if (!CheckAgvCorrect()) { return; }
+            RealX =(int)Math.Round(agvInfo.CurLocation.CurNode.X / 1000.0);
+            RealY =(int)Math.Round( agvInfo.CurLocation.CurNode.Y / 1000.0);
+        }
+        bool CheckAgvCorrect()
         {
             if (agvInfo == null)
             {
@@ -504,6 +513,11 @@ namespace AGV_V1._0
             //{
             //    return false;
             //}
+            return true;
+        }
+        public bool EqualWithRealLocation(int srcX, int srcY)
+        {
+            if (!CheckAgvCorrect()) { return false; }
             double tempX = agvInfo.CurLocation.CurNode.X / 1000.0;
             double tempY = agvInfo.CurLocation.CurNode.Y / 1000.0;
             if (Math.Abs(srcX - tempX) < ConstDefine.DEVIATION && Math.Abs(srcY - tempY) < ConstDefine.DEVIATION)
