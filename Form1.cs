@@ -88,6 +88,8 @@ namespace AGV_V1._0
             StartThread();//启动发送，接收，搜索等线程
             InitialSystem();
 
+
+
 #if moni
 #else
             ReInitWithiRealAgv();
