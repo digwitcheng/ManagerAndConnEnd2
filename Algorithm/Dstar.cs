@@ -14,9 +14,12 @@ namespace AGV_V1._0.Algorithm
     {
         Queue<Close> OpenList = new Queue<Close>();
         int correnti, correntj;
-        int wp;
-        int hp;
-
+        private int hp = 10;
+        private int wp = 10;
+        private int beginX;
+        private int beginY;
+        private int endX;
+        private int endY;
 
         //INSERT THE ELEMENT S INTO OPENLIST
         static void insert(Queue<Close> OpenList, Close s)
@@ -152,10 +155,41 @@ namespace AGV_V1._0.Algorithm
                 }
         }//end of setdimval
 
-        public  List<MyPoint> SearchDstar(Close[,] close, int beginX, int beginY,int endX,int endY, Direction beginDir)
+        void initClose(Close[,] cls, Node[,] graph)
         {
-             wp = close.GetLength(0);
-             hp = close.GetLength(1);
+            int i, j;
+            for (i = 0; i < wp; i++)
+            {
+                for (j = 0; j < hp; j++)
+                {
+                    cls[i, j] = new Close { };
+                    cls[i, j].Node = graph[j, i];               // Close表所指节点
+                    cls[i, j].Node.isSearched = -1;// !(graph[i, j].node_Type);  // 是否被访问
+                    cls[i, j].From = null;                    // 所来节点
+                    cls[i, j].G = 0;  //需要根据前面的点计算
+                    cls[i, j].H = 0;// Math.Abs(endX - i) + Math.Abs(endY - j);    // 评价函数值
+                    cls[i, j].F = 0;  //cls[i, j].G + cls[i, j].H;
+                }
+            }
+            //cls[endX, endY].G = AstarUtil.Infinity;     //移步花费代价值
+            //cls[beginX, beginY].F = cls[beginX, beginY].H;            //起始点评价初始值
+        }
+
+        public List<MyPoint> Search(Node[,] graph, int beginX, int beginY, int endX, int endY, Direction beginDir)
+        {
+            List<MyPoint> route = new List<MyPoint>();
+            wp = graph.GetLength(1);
+            hp = graph.GetLength(0);
+            this.beginX = beginX;
+            this.beginY = beginY;
+            this.endX = endX;
+            this.endY = endY;
+            Close[,] close = new Close[wp, hp];
+            initClose(close, graph);
+            close[beginX, beginY].Node.isSearched = 0;
+
+            //wp = close.GetLength(0);
+            // hp = close.GetLength(1);
 
             setdimval(close, hp, wp);
             settag(close, hp, wp);
@@ -206,7 +240,7 @@ namespace AGV_V1._0.Algorithm
             correnti = iold;
             correntj = jold;
 
-            List<MyPoint>route= findpath(close, endX, endY);
+            route= findpath(close, endX, endY);
 
             return route;
         }
@@ -600,5 +634,6 @@ namespace AGV_V1._0.Algorithm
         {
             throw new NotImplementedException();
         }
+               
     }
 }

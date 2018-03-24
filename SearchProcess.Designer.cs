@@ -86,6 +86,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(664, 452);
             this.Controls.Add(this.splitContainer1);
+            this.Location = new System.Drawing.Point(900, 60);
             this.Name = "SearchProcess";
             this.Text = "SearchProcess";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.SearchProcess_Paint);

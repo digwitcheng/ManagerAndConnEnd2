@@ -10,6 +10,6 @@ namespace AGV_V1._0.Algorithm
 {
     interface IAlgorithm
     {
-        int Search(Close[,] close, Node[,] graph, int beginX, int beginY, Direction beginDir);
+        List<MyPoint> Search(Node[,] graph, int beginX, int beginY,int endX,int endY, Direction beginDir);
     }
 }

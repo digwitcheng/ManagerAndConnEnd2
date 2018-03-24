@@ -102,6 +102,7 @@ namespace AGV_V1._0
 
             SearchProcess sp = new SearchProcess();
             sp.Show();
+            sp.SetDesktopLocation(1200, 190);
         }
 
         private void ReInitWithiRealAgv()
@@ -396,15 +397,15 @@ namespace AGV_V1._0
 
 
 
-       // Bitmap newSurface;
+        Bitmap newSurface;
         /// <summary>
         /// 绘制电子地图
         /// </summary>
         /// <param name="e"></param>
         public void Draw(Graphics g)
         {
-            //newSurface = new Bitmap(surface);
-            //Graphics gg = Graphics.FromImage(newSurface);
+            newSurface = new Bitmap(surface);
+            Graphics gg = Graphics.FromImage(newSurface);
             ////绘制探测节点
             //for (int i = 0; i < Elc.HeightNum; i++)
             //{
@@ -421,7 +422,7 @@ namespace AGV_V1._0
             //    }
             //}
 
-           // 绘制锁住的节点            
+            // 绘制锁住的节点            
             for (int num = 0; num < VehicleManager.Instance.GetVehicles().Length; num++)
             {
                 List<MyPoint> listNode = new List<MyPoint>(VehicleManager.Instance.GetVehicles()[num].LockNode);
@@ -430,11 +431,11 @@ namespace AGV_V1._0
 
                     int i = listNode[q].X;
                     int j = listNode[q].Y;
-                    g.FillRectangle(new SolidBrush(Color.Red), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength));
+                    gg.FillRectangle(new SolidBrush(Color.Red), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength));
                     Font font = new Font(new System.Drawing.FontFamily("宋体"), ConstDefine.g_NodeLength / 2);
                     Brush brush = Brushes.DarkMagenta;
                     PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
-                    g.DrawString(VehicleManager.Instance.GetVehicles()[num].Id + "", font, brush, pf);
+                    gg.DrawString(VehicleManager.Instance.GetVehicles()[num].Id + "", font, brush, pf);
 
                 }
             }
@@ -461,7 +462,7 @@ namespace AGV_V1._0
             {
                 for (int i = 0; i < v.Length; i++)
                 {
-                    v[i].Draw(g);
+                    v[i].Draw(gg);
                     v[0].X = 1111;
                 }
             }
@@ -484,7 +485,7 @@ namespace AGV_V1._0
             //vehicle[0].Draw(e.Graphics);
             //vehicle[1].Draw(e.Graphics);
 
-            pic.Image = surface;
+            pic.Image = newSurface;
 
             DrawMsgOnPic();
         }

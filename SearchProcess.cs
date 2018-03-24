@@ -77,73 +77,65 @@ namespace AGV_V1._0
             {
                 return;
             }
-            //横纵坐标的控制变量
-            int point_x, point_y;
 
             //节点类型
-
-            point_x = 0;
-            point_y = 0;
-
-            for (int i = 0; i < graph.GetLength(0); i++)
-            {
-                point_x = 0;
-                for (int j = 0; j < graph.GetLength(1); j++)
-                {
-                    //graph[i, j] = new MapNode(point_x, point_y, Node_number, point_type);
-                    graph[i, j].x = point_x;
-                    graph[i, j].y = point_y;
-                    point_x += nodeLength;
-
-                }
-                point_y += nodeLength;
-            }
-
             for (int i = 0; i < graph.GetLength(0); i++)
             {
                 for (int j = 0; j < graph.GetLength(1); j++)
                 {
                     //drawArrow(i, j);
                     //绘制表格
+                    int point_x = graph[i, j].x*nodeLength-1;
+                    int point_y = graph[i, j].y*nodeLength-1;
+
                     if (graph[i, j].node_Type)
                     {
-                        DrawUtil.FillRectangle(g, Color.LightGray, graph[i, j].x - 1, graph[i, j].y - 1, nodeLength - 2, nodeLength - 2);
+                        DrawUtil.FillRectangle(g, Color.LightGray, point_x,point_y, nodeLength - 2, nodeLength - 2);
                     }
                     else
                     {
-                        DrawUtil.FillRectangle(g, Color.Black, graph[i, j].x - 1, graph[i, j].y - 1, nodeLength - 2, nodeLength - 2);
+                        DrawUtil.FillRectangle(g, Color.Black, point_x, point_y, nodeLength - 2, nodeLength - 2);
                     }
 
                     //绘制标尺
                     if (i == 0 || i == graph.GetLength(0) - 1)
                     {
-                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), graph[i, j].x - 1, graph[i, j].y - 1, nodeLength - 2, nodeLength - 2);
-                        DrawUtil.DrawString(g, j, nodeLength / 2, Color.Yellow, graph[i, j].x - 1, graph[i, j].y - 1);
+                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
+                        DrawUtil.DrawString(g, j, nodeLength / 2, Color.Yellow, point_x, point_y);
                     }
                     if (j == 0 || j == graph.GetLength(1) - 1)
                     {
-                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), graph[i, j].x - 1, graph[i, j].y - 1, nodeLength - 2, nodeLength - 2);
-                        DrawUtil.DrawString(g, i, nodeLength / 2, Color.Yellow, graph[i, j].x - 1, graph[i, j].y - 1);
+                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
+                        DrawUtil.DrawString(g, i, nodeLength / 2, Color.Yellow, point_x, point_y);
                     }
 
-                    if (graph[i, j].isSearched)
+                    if (graph[i, j].isSearched>=0)
                     {
-                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 46, 0), graph[i, j].x - 1, graph[i, j].y - 1, nodeLength - 2, nodeLength - 2);
+                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, graph[i,j].isSearched, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
+                        DrawUtil.DrawString(g, graph[i,j].isSearched, 9,Color.White, point_x, point_y);
+
                     }
                     
 
                 }
             }
+            int colorR = 250;
             if (route != null)
             {
                 for (int i = 0; i < route.Count; i++)
                 {
-                    DrawUtil.FillRectangle(g, Color.LightYellow, route[i].Y * nodeLength, route[i].X * nodeLength, nodeLength - 2, nodeLength - 2);
+                    colorR -= 10;
+                    if (colorR < 25)
+                    {
+                        colorR = 25;
+                    }
+                    DrawUtil.FillRectangle(g, Color.FromArgb(180, colorR, 0, 0), route[i].Y * nodeLength, route[i].X * nodeLength, nodeLength - 2, nodeLength - 2);
+                    
                 }
             }
 
-            DrawUtil.FillEllipse(g, Color.Yellow, startX*nodeLength, startY*nodeLength, nodeLength - 2, nodeLength - 2);
-            DrawUtil.FillRectangle(g, Color.Red, endX*nodeLength, endY*nodeLength, nodeLength - 2, nodeLength - 2);
+            DrawUtil.FillEllipse(g, Color.Blue, startX*nodeLength, startY*nodeLength, nodeLength - 2, nodeLength - 2);
+            DrawUtil.FillEllipse(g, Color.FromArgb(180, 255, 0, 0), endX*nodeLength, endY*nodeLength, nodeLength - 2, nodeLength - 2);
 
             pic.Image = surface;
 

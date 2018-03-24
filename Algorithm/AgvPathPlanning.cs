@@ -33,7 +33,6 @@ namespace Agv.PathPlanning
 
         Node[,] graph = null;
         int beginX, beginY, endX, endY; //起始点、终点
-        Close[,] close = null;
         Direction beginDir; //当前搜索方向
 
         IAlgorithm algorithm;
@@ -158,119 +157,30 @@ namespace Agv.PathPlanning
 
             return count;
         }
-        
-        /// <summary>
-        /// //使用某种算法进行路径规划
-        /// </summary>
-        /// <returns></returns>
-         Close PathPlanning()
-        {            
-            close = new Close[Height, Width];
-            initClose(close, beginX, beginY, endX, endY);
-            close[beginX, beginY].Node.isSearched = true;
-
-            int result = algorithm.Search(close, graph, beginX, beginY, beginDir);
-           
-
-            //
-
-            Close p, t, q = null;
-            switch (result)
-            {
-                case SearchUtil.Sequential:  //顺序最近
-                    p = (close[endX, endY]);
-                    while (p != null)    //转置路径
-                    {
-                        t = p.From;
-                        p.From = q;
-                        q = p;
-                        p = t;
-                    }
-                    close[beginX, beginY].From = q.From;
-                    return (close[beginX, beginY]);
-                case SearchUtil.NoSolution:
-                    return null;
-            }
-            return null;
-        }
-
-         // 地图Close表初始化配置
-         void initClose(Close[,] cls, int beginX, int beginY, int endX, int endY)
-         {
-             int i, j;
-             for (i = 0; i < Height; i++)
-             {
-                 for (j = 0; j < Width; j++)
-                 {
-                     cls[i, j] = new Close { };
-                     cls[i, j].Node = graph[i, j];               // Close表所指节点
-                     cls[i, j].Node.isSearched = !(graph[i, j].node_Type);  // 是否被访问
-                     cls[i, j].From = null;                    // 所来节点
-                     cls[i, j].G =  0;  //需要根据前面的点计算
-                    cls[i, j].H = 0;// Math.Abs(endX - i) + Math.Abs(endY - j);    // 评价函数值
-                     cls[i, j].F = 0;   // cls[i, j].G + cls[i, j].H;
-                 }
-             }
-             //cls[endX, endY].G = AstarUtil.Infinity;     //移步花费代价值
-             //cls[beginX, beginY].F = cls[beginX, beginY].H;            //起始点评价初始值
-         }
-        /// <summary>
-        /// // 获取最短路径
-        /// </summary>
-        /// <returns></returns>
-         int GetShortestPath(List<MyPoint> route)
-        {
-            Close start;
-            int m = 0;
-            Close p;
-            int step = 0;
-            p = PathPlanning();
-            start = p;
-            if (p == null)
-            {
-                return 0;
-            }
-            else
-            {
-                while (p.From != null)
-                {
-                   // graph[p.node.x, p.node.y].value = Pass;
-                    route.Add(new MyPoint(p.Node.x, p.Node.y));
-                    m++;
-                    p = p.From;
-                    step++;
-                }
-                route.Add(new MyPoint(p.Node.x, p.Node.y));
-                m++;
-                //graph[beginX, beginY].value = Source;
-               // graph[endX, endY].value = Destination;
-                return step;
-            }
-        }
+         
+       
         public List<MyPoint> Search(ElecMap elc, List<MyPoint> scannerNode, List<MyPoint> lockNode, int v_num, int width, int height, int firstX, int firstY, int endX, int endY, Direction direction)
         {
 
             // ChangeMap(elc, width, height);  // 转换寻找路径的可达还是不可达
             initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
-            List<MyPoint> route = new List<MyPoint>();
-            //GetShortestPath(route);
-            //if (route.Count < 1)
-            //{
-            //    lockNode.Clear();
-            //    initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
-            //    route = new List<MyPoint>();
-            //    GetShortestPath(route);
-            //}
-
-            close = new Close[Height, Width];
-            initClose(close, beginX, beginY, endX, endY);
-            close[beginX, beginY].Node.isSearched = true;
-            Dstar dstar = new Dstar();
-            route = dstar.SearchDstar(close, beginX, beginY, endX, endY, beginDir);
-            if (route != null && route.Count > 0)
+            List<MyPoint> route = algorithm.Search(graph,beginX,beginY,endX,endY,direction);
+            if (route.Count < 1)
             {
-                route.Insert(0,new MyPoint(beginX, beginY));
+                lockNode.Clear();
+                initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
+                route = algorithm.Search(graph, beginX, beginY, endX, endY, direction);
             }
+
+            //close = new Close[Height, Width];
+            //initClose(close, beginX, beginY, endX, endY);
+            //close[beginX, beginY].Node.isSearched = true;
+            //Dstar dstar = new Dstar();
+            //route = dstar.SearchDstar(close, beginX, beginY, endX, endY, beginDir);
+            //if (route != null && route.Count > 0)
+            //{
+            //    route.Insert(0,new MyPoint(beginX, beginY));
+            //}
 
             SearchProcess.SetGraph(graph,route,firstY,firstX,endY,endX);
             
