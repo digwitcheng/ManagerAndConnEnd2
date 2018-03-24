@@ -21,7 +21,7 @@ namespace AGVSocket.Network.Packet
 
         public override void Receive()
         {
-            Debug.WriteLine("完成标识:{0},消息是否正确：{1},序列号:{2}",doneStyle, this.IsCheckSumCorrect,this.SerialNum);
+            Debug.WriteLine(this.AgvId+"完成标识:{0},消息是否正确：{1},序列号:{2}",doneStyle, this.IsCheckSumCorrect,this.SerialNum);
            this.ReceiveResponse();
              int id = Convert.ToInt32(this.AgvId);
            if (doneStyle == OprationState.Loaded)

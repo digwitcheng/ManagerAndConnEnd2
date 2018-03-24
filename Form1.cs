@@ -468,7 +468,7 @@ namespace AGV_V1._0
             {
                 for (int i = 0; i < v.Length; i++)
                 {
-                    v[i].Draw(gg);
+                    DrawVehicle(gg,v[i]);
                     v[0].X = 1111;
                 }
             }
@@ -495,6 +495,30 @@ namespace AGV_V1._0
 
             DrawMsgOnPic();
             pic.Image = newSurface;
+        }
+        /// <summary>
+        /// 重绘函数
+        /// </summary>
+        /// <param name="g"></param>
+         void DrawVehicle(Graphics g,Vehicle v)
+        {
+         
+#if moni
+                Rectangle rect = new Rectangle(BeginY * ConstDefine.g_NodeLength, (int)BeginX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
+                DrawUtil.FillRectangle(g, showColor, rect);
+
+                PointF p = new PointF((int)((BeginY) * ConstDefine.g_NodeLength), (int)((BeginX) * ConstDefine.g_NodeLength));
+                DrawUtil.DrawString(g, this.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
+#else
+
+                Rectangle rect = new Rectangle(v.RealY * ConstDefine.g_NodeLength, (int)v.RealX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
+                DrawUtil.FillRectangle(g, v.showColor, rect);
+
+                PointF p = new PointF((int)((v.RealY) * ConstDefine.g_NodeLength), (int)((v.RealX) * ConstDefine.g_NodeLength));
+                DrawUtil.DrawString(g, v.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
+#endif
+
+            
         }
 
         void drawArrow(int y, int x)

@@ -71,10 +71,6 @@ namespace AGV_V1._0
                     vehicles[vnum].Route.Clear();
                     string str = string.Format("小车" + vnum + ":{0},{1}->{2},{3}没有搜索到路径，", vehicles[vnum].BeginX, vehicles[vnum].BeginY, vehicles[vnum].EndX, vehicles[vnum].EndY);
                     OnShowMessage(this, new MessageEventArgs(str));
-                    if (vnum == 4)
-                    {
-                        int a = 0;
-                    }
                     continue;
                 }
                 if (vehicles[vnum].Route == null || vehicles[vnum].Route.Count <1)
@@ -111,7 +107,6 @@ namespace AGV_V1._0
                         if (vehicles[vnum].agvInfo.AgvMotion == AgvMotionState.StopedNode)
                         {
                             TrayPacket tp = new TrayPacket(serinum++, (ushort)vnum, TrayMotion.TopLeft);
-                           // SendPacketQueue.Instance.Enqueue(tp);
                             AgvServerManager.Instance.Send(tp);
                             vehicles[vnum].CurState = State.unloading;
                             vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
@@ -150,12 +145,12 @@ namespace AGV_V1._0
                    bool isMove = vehicles[vnum].Move(ElecMap.Instance);
                     if (isMove)
                         {
-                        int tPtr = vehicles[vnum].TPtr - 1;
-                        if (tPtr >= 0)
-                        {
-                            ElecMap.Instance.mapnode[vehicles[vnum].Route[tPtr].X, vehicles[vnum].Route[tPtr].Y].NodeCanUsed = -1;
-                        }
-                        uint x = Convert.ToUInt32(vehicles[vnum].BeginX);
+                        //int tPtr = vehicles[vnum].TPtr - 1;
+                        //if (tPtr >= 0)
+                        //{
+                        //    ElecMap.Instance.mapnode[vehicles[vnum].Route[tPtr].X, vehicles[vnum].Route[tPtr].Y].NodeCanUsed = -1;
+                        //}
+                           uint x = Convert.ToUInt32(vehicles[vnum].BeginX);
                             uint y = Convert.ToUInt32(vehicles[vnum].BeginY);
                             uint endX = Convert.ToUInt32(vehicles[vnum].EndX);
                             uint endY = Convert.ToUInt32(vehicles[vnum].EndY);                            

@@ -32,7 +32,15 @@ namespace Agv.PathPlanning
             this.x = x;
             this.y = y;
         }
-       
+        public override bool Equals(object obj)
+        {
+            MyPoint point = (MyPoint)obj;
+            if (this.x == point.x && this.y == point.y)
+                return true;
+            else
+                return false;
+        }
+
         //public MyPoint(MyPoint point,int addSpeed)
         //{
         //    this.col = point.col;
@@ -53,6 +61,6 @@ namespace Agv.PathPlanning
         //    this.row = row;
         //}
 
-         
+
     }
 }
