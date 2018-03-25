@@ -1,4 +1,4 @@
-﻿//#define moni
+﻿#define moni
 
 using AGV_V1._0.Agv;
 using AGV_V1._0.Algorithm;

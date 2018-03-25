@@ -1,4 +1,4 @@
-﻿//#define moni
+﻿#define moni
 
 
 using System;
@@ -504,11 +504,11 @@ namespace AGV_V1._0
         {
          
 #if moni
-                Rectangle rect = new Rectangle(BeginY * ConstDefine.g_NodeLength, (int)BeginX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
-                DrawUtil.FillRectangle(g, showColor, rect);
+                Rectangle rect = new Rectangle(v.BeginY * ConstDefine.g_NodeLength, (int)v.BeginX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
+                DrawUtil.FillRectangle(g, v.showColor, rect);
 
-                PointF p = new PointF((int)((BeginY) * ConstDefine.g_NodeLength), (int)((BeginX) * ConstDefine.g_NodeLength));
-                DrawUtil.DrawString(g, this.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
+                PointF p = new PointF((int)((v.BeginY) * ConstDefine.g_NodeLength), (int)((v.BeginX) * ConstDefine.g_NodeLength));
+                DrawUtil.DrawString(g, v.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
 #else
 
                 Rectangle rect = new Rectangle(v.RealY * ConstDefine.g_NodeLength, (int)v.RealX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
