@@ -108,12 +108,12 @@ namespace AGV_V1._0
                     if (i == 0 || i == height - 1)
                     {
                         DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
-                        DrawUtil.DrawString(g, i, nodeLength / 2, Color.Yellow, point_x, point_y);
+                        DrawUtil.DrawString(g, j, nodeLength / 2, Color.Yellow, point_x, point_y);
                     }
                     if (j == 0 || j == width- 1)
                     {
                         DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
-                        DrawUtil.DrawString(g, j, nodeLength / 2, Color.Yellow, point_x, point_y);
+                        DrawUtil.DrawString(g, i, nodeLength / 2, Color.Yellow, point_x, point_y);
                     }
 
                     if (graph[i, j].isSearched>=0)

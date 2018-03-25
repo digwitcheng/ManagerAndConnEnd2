@@ -81,7 +81,7 @@ namespace Agv.PathPlanning
 
                 }
             }
-            if (NodeDirCount(beginX, beginY) <= lockNode.Count)
+            if (NodeDirCount(beginX, beginY) <= lockNode.Count&&lockNode.Count>0)
             {
                 lockNode.Remove(lockNode[0]);
             }
