@@ -1,6 +1,7 @@
 ﻿//#define moni
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Timers;
@@ -227,7 +228,7 @@ namespace AGV_V1._0
 
 
         
-        private List<MyPoint> crossedPoint = new List<MyPoint>();
+        private ConcurrentQueue<MyPoint> crossedPoint = new ConcurrentQueue<MyPoint>();
         public int VirtualTPtr
         {
             get;
@@ -296,17 +297,51 @@ namespace AGV_V1._0
         void SetCurrentNodeOccpyAndOldNodeFree()
         {
             MyPoint cur = new MyPoint(RealX, RealY);
-            for (int i=0;i<crossedPoint.Count;i++)
+            if (crossedPoint.Count >0)
             {
-                if (cur.Equals(crossedPoint[i]))
+                IEnumerator<MyPoint> it = crossedPoint.GetEnumerator();
+                int index = 0;
+                MyPoint crossed = it.Current;
+                while (!cur.Equals(crossed)&&it.MoveNext())
                 {
-                    for (int j = 0; j < i; j++)
+                    crossed = it.Current;
+                    index++;
+                }
+                if (!cur.Equals(crossed))//遍历结束都没有找到等于当前真实坐标的，说明队列中的点都还没走过
+                {
+                    return;
+                }
+                for (int j = 0; j < index-1; j++)
+                {
+                    MyPoint realCrossedPoint = null;
+                    bool success = crossedPoint.TryDequeue(out realCrossedPoint);
+                    if (success)
                     {
-                        ElecMap.Instance.mapnode[crossedPoint[j].X, crossedPoint[j].Y].NodeCanUsed = -1;
-                        crossedPoint.RemoveAt(j);
+                        ElecMap.Instance.mapnode[realCrossedPoint.X, realCrossedPoint.Y].NodeCanUsed = -1;
                     }
                 }
+
+
+                //MyPoint[] crossedList=crossedPoint.ToArray();
+                //for (int i = 0; i < crossedList.Length; i++)
+                //{
+                //    MyPoint crossed = crossedList[i];
+                //    if (cur.Equals(crossed))
+                //    {
+                //        for (int j = 0; j < i; j++)
+                //        {
+                //            MyPoint realCrossedPoint = null;
+                //            bool success= crossedPoint.TryDequeue(out realCrossedPoint);
+                //            if (success)
+                //            {
+                //                ElecMap.Instance.mapnode[realCrossedPoint.X, realCrossedPoint.Y].NodeCanUsed = -1;
+                //            }
+                //        }
+                //    }
+                //}
             }
+            
+            
            
         }
 
@@ -337,7 +372,7 @@ namespace AGV_V1._0
                 if (TPtr >= route.Count - 1)
                 {
                     Elc.mapnode[route[route.Count - 1].X, route[route.Count - 1].Y].NodeCanUsed = this.Id;
-                    Arrive = true;
+                    Arrive = true;                    
                     return false;
                 }
 #if moni
@@ -377,28 +412,25 @@ namespace AGV_V1._0
                 }
                 if (lockPoint.Count>0)
                 {
-                   // bool success = lockPoint.Remove(new MyPoint(BeginX, BeginY));
-
-
 #if moni
                     //if (TPtr == 0)
                     //{
                     //    ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
                     //}
                     ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
-#else                   
-                    if (success)
-                    {
-                        crossedPoint.Add(new MyPoint(BeginX, BeginY));
-                    }
-
-#endif
-
-
+                     TPtr++;
+                    BeginX = route[TPtr].X;
+                    BeginY = route[TPtr].Y;
+#else               
+                    crossedPoint.Enqueue(new MyPoint(BeginX, BeginY));  
                     TPtr++;
                     BeginX = route[TPtr].X;
                     BeginY = route[TPtr].Y;
-
+                    if (BeginX == EndX && BeginY == EndY)
+                    {
+                        crossedPoint.Enqueue(new MyPoint(BeginX, BeginY));
+                    }
+#endif
                     return true;
                 }
                 else
@@ -551,6 +583,7 @@ namespace AGV_V1._0
             if (!CheckAgvCorrect()) { return; }
             RealX = (int)Math.Round(agvInfo.CurLocation.CurNode.X / 1000.0);
             RealY = (int)Math.Round(agvInfo.CurLocation.CurNode.Y / 1000.0);
+            ElecMap.Instance.mapnode[RealX, RealY].NodeCanUsed =this.Id;
         }
         bool CheckAgvCorrect()
         {
