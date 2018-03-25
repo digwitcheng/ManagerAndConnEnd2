@@ -1,4 +1,4 @@
-﻿#define moni
+﻿//#define moni
 
 using AGV_V1._0.Agv;
 using AGV_V1._0.Algorithm;
@@ -55,7 +55,11 @@ namespace AGV_V1._0
         byte serinum = 1;
         protected override void Run()
         {
+#if moni
+            Thread.Sleep(1000);
+#else
             Thread.Sleep(ConstDefine.STEP_TIME);
+#endif
 
             if (vehicles == null)
             {

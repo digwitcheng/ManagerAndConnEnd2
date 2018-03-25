@@ -1,4 +1,4 @@
-﻿#define moni
+﻿//#define moni
 
 
 using System;
@@ -419,11 +419,11 @@ namespace AGV_V1._0
                 {
                     if (Elc.mapnode[i, j].NodeCanUsed > -1)
                     {
-                        gg.FillRectangle(new SolidBrush(Color.DarkOliveGreen), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength));
-                        Font font = new Font(new System.Drawing.FontFamily("宋体"), ConstDefine.g_NodeLength / 2);
-                        Brush brush = Brushes.Black;
+                        Rectangle rect = new Rectangle(Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1, ConstDefine.g_NodeLength + 2, ConstDefine.g_NodeLength + 2);
+                        DrawUtil.FillRectangle(gg, Color.DarkOliveGreen, rect);
                         PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
-                        gg.DrawString(Elc.mapnode[i, j].NodeCanUsed + "", font, brush, pf);
+                        DrawUtil.DrawString(gg,Elc.mapnode[i, j].NodeCanUsed, ConstDefine.g_NodeLength / 2, Color.Black, pf);
+
                     }
                 }
             }
@@ -437,11 +437,12 @@ namespace AGV_V1._0
 
                     int i = listNode[q].X;
                     int j = listNode[q].Y;
-                    gg.FillRectangle(new SolidBrush(Color.Red), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength));
-                    Font font = new Font(new System.Drawing.FontFamily("宋体"), ConstDefine.g_NodeLength / 2);
-                    Brush brush = Brushes.DarkMagenta;
+
+                    Rectangle rect = new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength);
+                    DrawUtil.FillRectangle(gg, Color.Red, rect);
                     PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
-                    gg.DrawString(VehicleManager.Instance.GetVehicles()[num].Id + "", font, brush, pf);
+                    DrawUtil.DrawString(gg, VehicleManager.Instance.GetVehicles()[num].Id, ConstDefine.g_NodeLength / 2, Color.DarkMagenta, pf);
+
 
                 }
             }

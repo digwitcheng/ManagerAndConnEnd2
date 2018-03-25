@@ -40,6 +40,10 @@ namespace Agv.PathPlanning
             else
                 return false;
         }
+        public override int GetHashCode()
+        {
+            return x+1314*y;
+        }
 
         //public MyPoint(MyPoint point,int addSpeed)
         //{

@@ -1,4 +1,4 @@
-﻿#define moni
+﻿//#define moni
 
 using System;
 using System.Collections.Generic;
@@ -226,7 +226,7 @@ namespace AGV_V1._0
         public Color showColor = Color.Pink;
 
 
-        private BaseQueue<MyPoint> lockPoint = new BaseQueue<MyPoint>();
+        
         private List<MyPoint> crossedPoint = new List<MyPoint>();
         public int VirtualTPtr
         {
@@ -289,7 +289,9 @@ namespace AGV_V1._0
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             UpdateRealLocation();
+
             SetCurrentNodeOccpyAndOldNodeFree();
+
         }
         void SetCurrentNodeOccpyAndOldNodeFree()
         {
@@ -354,17 +356,17 @@ namespace AGV_V1._0
                     return false;
                 }
 #endif
-
-                for (VirtualTPtr = TPtr+1; VirtualTPtr < TPtr + ConstDefine.FORWORD_STEP; VirtualTPtr++)
+                List<MyPoint> lockPoint = new List<MyPoint>();
+                for (VirtualTPtr = TPtr+1; VirtualTPtr <TPtr + ConstDefine.FORWORD_STEP; VirtualTPtr++)
                 {
                     if (VirtualTPtr <= route.Count - 1)
                     {
                         int tx = (int)route[VirtualTPtr].X;
                         int ty = (int)route[VirtualTPtr].Y;
-                        int temp = Elc.mapnode[tx, ty].NodeCanUsed;
-                        if (temp <= -1)
+                        Boolean IsCanMoveTo = Elc.IsVehicleCanMove(this, tx, ty);// Elc.mapnode[tx, ty].NodeCanUsed;
+                        if (IsCanMoveTo)
                         {
-                            lockPoint.Enqueue(new MyPoint(tx, ty));
+                            lockPoint.Add(new MyPoint(tx, ty));
                             Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
                         }
                         else
@@ -373,17 +375,30 @@ namespace AGV_V1._0
                         }
                     }
                 }
-                if (lockPoint.IsHasData())
+                if (lockPoint.Count>0)
                 {
-                    if (TPtr == 0)
+                   // bool success = lockPoint.Remove(new MyPoint(BeginX, BeginY));
+
+
+#if moni
+                    //if (TPtr == 0)
+                    //{
+                    //    ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
+                    //}
+                    ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
+#else                   
+                    if (success)
                     {
                         crossedPoint.Add(new MyPoint(BeginX, BeginY));
                     }
-                    MyPoint cross= lockPoint.Dequeue();
-                    crossedPoint.Add(cross);
+
+#endif
+
+
                     TPtr++;
                     BeginX = route[TPtr].X;
                     BeginY = route[TPtr].Y;
+
                     return true;
                 }
                 else
