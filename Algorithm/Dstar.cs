@@ -22,13 +22,13 @@ namespace AGV_V1._0.Algorithm
         private int endY;
 
         //INSERT THE ELEMENT S INTO OPENLIST
-        static void insert(Queue<Close> OpenList, Close s)
+         void insert(Queue<Close> OpenList, Close s)
         {
             s.Node.tag = "OPEN";
             OpenList.Enqueue(s);
         }//end of insert
         //GIVING VALUES TO SI,SJ (THE PROBEBLY VALUE OF NEIGHBOURS OF STATE IN [IOLD,JOLD] POSITION)
-        static void vs(int[] si, int[] sj, int iold, int jold)
+         void vs(int[] si, int[] sj, int iold, int jold)
         {
             //si[0] = iold - 1; sj[0] = jold + 1;
 
@@ -47,7 +47,7 @@ namespace AGV_V1._0.Algorithm
             //si[7] = iold + 1; sj[7] = jold - 1;
         }//end of vs
          //THE PROCESS STEPS IN "CROSS" MOVING TO NIEGHBOURS
-        static void crossmove(int si, int sj, Close s, Close old, Queue<Close> OpenList)
+         void crossmove(int si, int sj, Close s, Close old, Queue<Close> OpenList)
         {
             if (s.Node.tag == "NEW")
             {
@@ -64,7 +64,7 @@ namespace AGV_V1._0.Algorithm
 
 
         //THE PROCESS STEPS IN "HORIZONTALY" OR "VERTICALLY" MOVING TO NIEGHBOURS
-        static void linemove(int si, int sj, Close s, Close old, Queue<Close> OpenList)
+         void linemove(int si, int sj, Close s, Close old, Queue<Close> OpenList)
         {
 
             if (s.Node.tag == "NEW")
@@ -79,7 +79,7 @@ namespace AGV_V1._0.Algorithm
 
         }//end of linemove
 
-        static void sortqueue(Queue<Close> OpenList, Close[,] state)
+         void sortqueue(Queue<Close> OpenList, Close[,] state)
         {
             int ind = OpenList.Count;
 
@@ -121,7 +121,7 @@ namespace AGV_V1._0.Algorithm
                 OpenList.Enqueue(state[ii[i], jj[i]]);
             }
         }//end of sortqueue
-        static void setstatus(Close[,] a, int hp, int wp, int gx, int gy, int sx, int sy)
+         void setstatus(Close[,] a, int hp, int wp, int gx, int gy, int sx, int sy)
         {
             for (int j = 0; j < hp; j++)
                 for (int i = 0; i < wp; i++)
@@ -136,7 +136,7 @@ namespace AGV_V1._0.Algorithm
                         a[i, j].Node.status = "CLEAR";
                 }
         }//end of set status
-        static void settag(Close[,] a, int hp, int wp)
+         void settag(Close[,] a, int hp, int wp)
         {
             for (int j = 0; j < hp; j++)
                 for (int i = 0; i < wp; i++)
@@ -145,7 +145,7 @@ namespace AGV_V1._0.Algorithm
 
 
         //SET DIMATION VALUE OF MY NODE
-        static void setdimval(Close[,] a, int hp, int wp)
+         void setdimval(Close[,] a, int hp, int wp)
         {
             for (int j = 0; j < hp; j++)
                 for (int i = 0; i < wp; i++)
@@ -244,7 +244,7 @@ namespace AGV_V1._0.Algorithm
 
             return route;
         }
-        static void k_min(int ni,int nj,Close s, double[] mink, int[] mi, int[] mj)
+         void k_min(int ni,int nj,Close s, double[] mink, int[] mi, int[] mj)
         {
            
             if (s.G < mink[0])
@@ -622,7 +622,7 @@ namespace AGV_V1._0.Algorithm
             return route;
 
         }
-        static double cost(int x1, int y1, int x2, int y2)
+         double cost(int x1, int y1, int x2, int y2)
         {
             if ((x2 - x1 == 0) || (y2 - y1 == 0))
             {
@@ -630,10 +630,6 @@ namespace AGV_V1._0.Algorithm
             }
             return (1.4);
         }//end cost
-        public int Search(Close[,] close, Node[,] graph, int beginX, int beginY, Direction beginDir)
-        {
-            throw new NotImplementedException();
-        }
                
     }
 }

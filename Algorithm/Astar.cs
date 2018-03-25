@@ -45,7 +45,7 @@ namespace AGV_V1._0.Algorithm
         {
             List<MyPoint> route = new List<MyPoint>();
             Height = graph.GetLength(0);
-             Width  = graph.GetLength(1);
+            Width  = graph.GetLength(1);
             this.beginX = beginX;
             this.beginY = beginY;
             this.endX = endX;

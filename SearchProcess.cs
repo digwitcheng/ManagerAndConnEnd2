@@ -26,6 +26,8 @@ namespace AGV_V1._0
         private static int startY;
         private static int endX;
         private static int endY;
+        private int width;
+        private int height;
         private static List<MyPoint> route = new List<MyPoint>();
 
         public SearchProcess()
@@ -57,12 +59,16 @@ namespace AGV_V1._0
         }
         void SetMapView()
         {
-            int w = nodeLength * (graph.GetLength(0));
-            int h = nodeLength * (graph.GetLength(1));
+
+
+            height =  (graph.GetLength(0));
+            width = (graph.GetLength(1));
+            int w = width * nodeLength;
+            int h = height * nodeLength;
             //设置pictureBox的尺寸和位置
             pic.Location = Point.Empty;
-            pic.Size = new Size(h, w);
-            surface = new Bitmap(h,w);
+            pic.Size = new Size( w,h);
+            surface = new Bitmap(w,h);
             g = Graphics.FromImage(surface);
             //将pictureBox加入到panel上
             
@@ -79,14 +85,15 @@ namespace AGV_V1._0
             }
 
             //节点类型
-            for (int i = 0; i < graph.GetLength(0); i++)
+            for (int i = 0; i < height; i++)
             {
-                for (int j = 0; j < graph.GetLength(1); j++)
-                {
+                for (int j = 0; j < width; j++)
+                   {
+                
                     //drawArrow(i, j);
                     //绘制表格
-                    int point_x = graph[i, j].x*nodeLength-1;
-                    int point_y = graph[i, j].y*nodeLength-1;
+                    int point_x = j*nodeLength-1;
+                    int point_y = i*nodeLength-1;
 
                     if (graph[i, j].node_Type)
                     {
@@ -98,15 +105,15 @@ namespace AGV_V1._0
                     }
 
                     //绘制标尺
-                    if (i == 0 || i == graph.GetLength(0) - 1)
-                    {
-                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
-                        DrawUtil.DrawString(g, j, nodeLength / 2, Color.Yellow, point_x, point_y);
-                    }
-                    if (j == 0 || j == graph.GetLength(1) - 1)
+                    if (i == 0 || i == height - 1)
                     {
                         DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
                         DrawUtil.DrawString(g, i, nodeLength / 2, Color.Yellow, point_x, point_y);
+                    }
+                    if (j == 0 || j == width- 1)
+                    {
+                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
+                        DrawUtil.DrawString(g, j, nodeLength / 2, Color.Yellow, point_x, point_y);
                     }
 
                     if (graph[i, j].isSearched>=0)
