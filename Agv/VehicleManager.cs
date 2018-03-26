@@ -52,11 +52,11 @@ namespace AGV_V1._0
         {
             return "VehicleManager";
         }
-        byte serinum = 1;
+        byte serinum = 10;
         protected override void Run()
         {
 #if moni
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
 #else
             Thread.Sleep(ConstDefine.STEP_TIME);
 #endif
@@ -110,7 +110,7 @@ namespace AGV_V1._0
                     {
                         if (vehicles[vnum].agvInfo.AgvMotion == AgvMotionState.StopedNode)
                         {
-                            TrayPacket tp = new TrayPacket(serinum++, (ushort)vnum, TrayMotion.TopLeft);
+                            TrayPacket tp = new TrayPacket((byte)(serinum *vnum), (ushort)vnum, TrayMotion.TopLeft);
                             AgvServerManager.Instance.Send(tp);
                             vehicles[vnum].CurState = State.unloading;
                             vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
@@ -158,7 +158,7 @@ namespace AGV_V1._0
                             uint y = Convert.ToUInt32(vehicles[vnum].BeginY);
                             uint endX = Convert.ToUInt32(vehicles[vnum].EndX);
                             uint endY = Convert.ToUInt32(vehicles[vnum].EndY);                            
-                            RunPacket rp = new RunPacket(serinum++, (ushort)vnum, MoveDirection.Forward, 1500, new Destination(new CellPoint(x * ConstDefine.CELL_UNIT, y * ConstDefine.CELL_UNIT), new CellPoint(endX * ConstDefine.CELL_UNIT, endY * ConstDefine.CELL_UNIT), new AgvDriftAngle(0), TrayMotion.None));
+                            RunPacket rp = new RunPacket((byte)(serinum * vnum), (ushort)vnum, MoveDirection.Forward, 1500, new Destination(new CellPoint(x * ConstDefine.CELL_UNIT, y * ConstDefine.CELL_UNIT), new CellPoint(endX * ConstDefine.CELL_UNIT, endY * ConstDefine.CELL_UNIT), new AgvDriftAngle(0), TrayMotion.None));
                             AgvServerManager.Instance.Send(rp);
 
                             Console.WriteLine("*--------------------------------------------------------------------------*");

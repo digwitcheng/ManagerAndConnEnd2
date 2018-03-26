@@ -34,11 +34,14 @@ namespace Agv.PathPlanning
         }
         public override bool Equals(object obj)
         {
-            MyPoint point = (MyPoint)obj;
-            if (this.x == point.x && this.y == point.y)
-                return true;
-            else
-                return false;
+            if (obj == null) return false;
+            if(obj is MyPoint)
+            {
+                MyPoint point = (MyPoint)obj;
+                if (this.x == point.x && this.y == point.y)
+                    return true;
+            }
+            return false;
         }
         public override int GetHashCode()
         {
