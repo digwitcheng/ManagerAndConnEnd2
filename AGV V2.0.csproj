@@ -41,7 +41,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;moni</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="Agv\Direction.cs" />
     <Compile Include="Agv\State.cs" />
+    <Compile Include="Agv\VehicleConfiguration.cs" />
     <Compile Include="Algorithm\AgvPathPlanning.cs" />
     <Compile Include="Algorithm\Astar.cs" />
     <Compile Include="Algorithm\IAlgorithm.cs" />

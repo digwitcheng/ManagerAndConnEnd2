@@ -45,7 +45,7 @@ namespace AGV_V1._0
                 return;
             }
             v.LockNode.Add(v.Route[v.VirtualTPtr]);
-            for (int i = 1; i < ConstDefine.FORWORD_STEP - 1; i++)
+            for (int i = 1; i < v.ForwordStep - 1; i++)
             {
                 if (v.TPtr + i < v.Route.Count - 1)
                 {

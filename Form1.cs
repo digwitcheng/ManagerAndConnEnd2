@@ -135,7 +135,7 @@ namespace AGV_V1._0
             am.ShowMessage += OnShowMessageWithPicBox;
            //am.ReLoad += ReInitialSystem;
            //am.DataMessage +=OnAgvDone ;
-            am.StartServer(54321);
+            am.StartServer(ConstDefine.AGV_PORT_ADRESS);
         }
         void DisposeServer()
         {

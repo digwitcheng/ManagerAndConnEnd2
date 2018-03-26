@@ -17,6 +17,7 @@ namespace AGV_V1._0
     class Vehicle
     {
         public AgvInfo agvInfo { get; set; }
+        private readonly VehicleConfiguration config;
         private Timer timer;
         private int routeIndex = 0;
         public int RouteIndex
@@ -43,8 +44,7 @@ namespace AGV_V1._0
                 routeIndex = value;
             }
         }
-
-        private int stopTime = ConstDefine.STOP_TIME;//0406 等待时长，超过则重新规划路线；
+        private int stopTime;
         public int StopTime
         {
             get { return stopTime; }
@@ -73,6 +73,7 @@ namespace AGV_V1._0
             get;
             set;
         }
+        public int ForwordStep { get; set; }
         public DateTime WaitEndTime;
 
         //public List<myPoint> route;//起点到终点的路线
@@ -268,7 +269,7 @@ namespace AGV_V1._0
         }
 
 
-        public Vehicle(int x, int y, int v_num, bool arrive, Direction direction)
+        public Vehicle(int x, int y, int v_num, bool arrive, Direction direction,VehicleConfiguration vehicleConfig)
         {
             this.BeginX = x;
             this.BeginY = y;
@@ -277,12 +278,19 @@ namespace AGV_V1._0
             this.Id = v_num;
             this.Arrive = arrive;
             this.Dir = direction;
+            this.config = vehicleConfig;
             this.timer = new Timer();
             InitTimer();
+            InitAgv();
+        }
+        void InitAgv()
+        {
+            StopTime = config.StopTime;
+            ForwordStep = config.ForwordStep;
         }
         void InitTimer()
         {
-            this.timer.Interval = 100;
+            this.timer.Interval = config.TimerInterval;
             this.timer.Elapsed += Timer_Elapsed;
             this.timer.Start();
         }
@@ -392,7 +400,7 @@ namespace AGV_V1._0
                 }
 #endif
                 List<MyPoint> lockPoint = new List<MyPoint>();
-                for (VirtualTPtr = TPtr+1; VirtualTPtr <TPtr + ConstDefine.FORWORD_STEP; VirtualTPtr++)
+                for (VirtualTPtr = TPtr+1; VirtualTPtr <TPtr + config.ForwordStep; VirtualTPtr++)
                 {
                     if (VirtualTPtr <= route.Count - 1)
                     {
@@ -440,10 +448,10 @@ namespace AGV_V1._0
                 }
 
 
-                if (TPtr == 0)// ConstDefine.FORWORD_STEP)
+                if (TPtr == 0)// config.ForwordStep)
                 {
 
-                    for (VirtualTPtr = 1; VirtualTPtr < ConstDefine.FORWORD_STEP; VirtualTPtr++)
+                    for (VirtualTPtr = 1; VirtualTPtr < config.ForwordStep; VirtualTPtr++)
                     {
                         if (TPtr + VirtualTPtr <= route.Count - 1)
                         {
@@ -462,7 +470,7 @@ namespace AGV_V1._0
                             }
                         }
                     }
-                    StopTime = ConstDefine.STOP_TIME;
+                    StopTime = StopTime;
                     TPtr++;
 
                 }
@@ -483,7 +491,7 @@ namespace AGV_V1._0
                         else
                         {
                             Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
-                            StopTime = ConstDefine.STOP_TIME;
+                            StopTime = StopTime;
                             TPtr++;
                             VirtualTPtr++;
                         }
@@ -491,7 +499,7 @@ namespace AGV_V1._0
                     }
                     else
                     {
-                        StopTime = ConstDefine.STOP_TIME;
+                        StopTime = StopTime;
                         TPtr++;
                     }
                 }
@@ -544,12 +552,12 @@ namespace AGV_V1._0
             UpdateRealLocation();
             //int RealX = (int)Math.Round(agvInfo.CurLocation.CurNode.X / 1000.0);
             //int RealY = (int)Math.Round(agvInfo.CurLocation.CurNode.Y / 1000.0);
-            if (Math.Abs(nextX - RealX) < ConstDefine.DEVIATION + ConstDefine.FORWORD_STEP - 1 && Math.Abs(nextY - RealY) < ConstDefine.DEVIATION)//X轴移动
+            if (Math.Abs(nextX - RealX) < config.Deviation + config.ForwordStep - 1 && Math.Abs(nextY - RealY) < config.Deviation)//X轴移动
             {
                 return true;
             }
-            if (Math.Abs(nextX - RealX) < ConstDefine.DEVIATION && Math.Abs(nextY - RealY
-                ) < ConstDefine.DEVIATION + ConstDefine.FORWORD_STEP - 1)//Y轴移动
+            if (Math.Abs(nextX - RealX) < config.Deviation && Math.Abs(nextY - RealY
+                ) < config.Deviation + config.ForwordStep - 1)//Y轴移动
             {
                 return true;
             }
@@ -606,12 +614,12 @@ namespace AGV_V1._0
             if (!CheckAgvCorrect()) { return false; }
             double tempX = agvInfo.CurLocation.CurNode.X / 1000.0;
             double tempY = agvInfo.CurLocation.CurNode.Y / 1000.0;
-            if (Math.Abs(srcX - tempX) < ConstDefine.DEVIATION && Math.Abs(srcY - tempY) < ConstDefine.DEVIATION)
+            if (Math.Abs(srcX - tempX) < config.Deviation && Math.Abs(srcY - tempY) < config.Deviation)
             {
                 return true;
             }
-            if (Math.Abs(srcX - tempX) < ConstDefine.DEVIATION && Math.Abs(srcY - tempY
-                ) < ConstDefine.DEVIATION)
+            if (Math.Abs(srcX - tempX) < config.Deviation && Math.Abs(srcY - tempY
+                ) < config.Deviation)
             {
                 return true;
             }
