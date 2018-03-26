@@ -17,20 +17,20 @@
             get { return from; }
             set { from = value; }
         }
-        private  float f,g,h;  
+        private  double f,g,h;  
 
-        public float G
+        public double G
         {
             get { return g; }
             set { g = value; }
         }
 
-        public float F
+        public double F
         {
             get { return f; }
             set { f = value; }
         }
-       public float H
+       public double H
         {
             get { return h; }
             set { h = value; }

@@ -4,6 +4,10 @@ namespace AGV_V1._0.Util
 {
     class DrawUtil
     {
+        public static void FillEllipse(Graphics g, Color color, int x, int y, int width, int height)
+        {
+            g.FillEllipse(new SolidBrush(color), new Rectangle(x, y, width, height));
+        }
         public static void FillRectangle(Graphics g, Color color, int x, int y, int width, int height)
         {
             g.FillRectangle(new SolidBrush(color), new Rectangle(x, y, width,height));            

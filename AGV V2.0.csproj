@@ -89,9 +89,9 @@
     <Compile Include="Agv\VehicleConfiguration.cs" />
     <Compile Include="Algorithm\AgvPathPlanning.cs" />
     <Compile Include="Algorithm\Astar.cs" />
+    <Compile Include="Algorithm\Dstar.cs" />
     <Compile Include="Algorithm\IAlgorithm.cs" />
     <Compile Include="Algorithm\SearchUtil.cs" />
-    <Compile Include="Algorithm\Bfs.cs" />
     <Compile Include="Algorithm\Close.cs" />
     <Compile Include="Algorithm\Dijkstra.cs" />
     <Compile Include="DataBase\DataBseUtil.cs" />
@@ -130,8 +130,8 @@
     <Compile Include="Network\AgvNetwork\Packet\SwervePacket.cs" />
     <Compile Include="Network\AgvNetwork\Packet\SysResponsePacket.cs" />
     <Compile Include="Network\AgvNetwork\Packet\TrayPacket.cs" />
-    <Compile Include="Network\Queue\ReSendPacketQueue.cs" />
-    <Compile Include="Network\Queue\SendPacketQueue.cs" />
+    <Compile Include="Network\MyQueue\ReSendPacketQueue.cs" />
+    <Compile Include="Network\MyQueue\SendPacketQueue.cs" />
     <Compile Include="Network\Server\APM\TcpSocketServer.cs" />
     <Compile Include="Network\Server\APM\TcpSocketServerConfiguration.cs" />
     <Compile Include="Network\Server\APM\TcpSocketSession.cs" />
@@ -176,6 +176,12 @@
     <Compile Include="Network\ThreadCode\TaskSendThread.cs" />
     <Compile Include="Network\ThreadCode\UpdataSqlThread.cs" />
     <Compile Include="Remoting\RouteRemoteObject.cs" />
+    <Compile Include="SearchProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchProcess.Designer.cs">
+      <DependentUpon>SearchProcess.cs</DependentUpon>
+    </Compile>
     <Compile Include="Util\DrawUtil.cs" />
     <Compile Include="Util\FileUtil.cs" />
     <Compile Include="Util\ConstDefine.cs" />
@@ -221,6 +227,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SearchProcess.resx">
+      <DependentUpon>SearchProcess.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -237,10 +246,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Network\Messages\MyMessage.cs" />
-    <Compile Include="Network\Queue\BaseQueue.cs" />
-    <Compile Include="Network\Queue\TaskRecvQueue.cs" />
-    <Compile Include="Network\Queue\SearchRouteQueue.cs" />
-    <Compile Include="Network\Queue\FinishedQueue.cs" />
+    <Compile Include="Network\MyQueue\BaseQueue.cs" />
+    <Compile Include="Network\MyQueue\TaskRecvQueue.cs" />
+    <Compile Include="Network\MyQueue\SearchRouteQueue.cs" />
+    <Compile Include="Network\MyQueue\FinishedQueue.cs" />
     <Compile Include="Network\DataProtocol\SearchData.cs" />
     <Compile Include="Network\DataProtocol\SendData.cs" />
     <Compile Include="Network\Manager\GuiServerManager.cs" />

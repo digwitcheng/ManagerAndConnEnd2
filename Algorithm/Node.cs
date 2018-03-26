@@ -9,7 +9,9 @@ namespace Agv.PathPlanning
         public bool node_Type;      //节点可不可达,true表示可达，false表示不可达  
         public int adjoinNodeCount;  //邻接点的个数
         public Direction direction; //搜索到当前节点时的方向
-        public bool isSearched;     //节点是否被搜索过
+        public int isSearched;     //节点是否被搜索过
+        public string tag;
+        public string status;
 
 
         public int traCongesIntensity;//traffic congestion intensity 节点拥堵程度
