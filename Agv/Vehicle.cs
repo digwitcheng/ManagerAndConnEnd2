@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Timers;
 using Agv.PathPlanning;
 using AGV_V1._0.Agv;
+using AGV_V1._0.Algorithm;
 using AGV_V1._0.Util;
 using AGVSocket.Network;
 using AGVSocket.Network.EnumType;
@@ -73,6 +74,7 @@ namespace AGV_V1._0
             get;
             set;
         }
+        public IAlgorithm algorithm;
         public int ForwordStep { get; set; }
         public DateTime WaitEndTime;
 
@@ -287,6 +289,7 @@ namespace AGV_V1._0
         {
             StopTime = config.StopTime;
             ForwordStep = config.ForwordStep;
+            algorithm = config.PathPlanningAlgorithm;
         }
         void InitTimer()
         {

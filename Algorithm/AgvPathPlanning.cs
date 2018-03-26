@@ -32,32 +32,19 @@ namespace Agv.PathPlanning
         private const int Up = (1 << 3);
 
         Node[,] graph = null;
-        int beginX, beginY, endX, endY; //起始点、终点
-        Direction beginDir; //当前搜索方向
 
         IAlgorithm algorithm;
         public AgvPathPlanning()
         {
-            algorithm =new Astar();
-        }
-        public AgvPathPlanning(IAlgorithm algorithm)
-        {
-            this.algorithm = algorithm;
+           
         }
 
-        void initGraph(ElecMap elc, List<MyPoint> scanner, List<MyPoint> lockNode, int v_num, int beginX, int beginY, int endX, int endY, Direction direction)
+        void initGraph(ElecMap elc, List<MyPoint> scanner, List<MyPoint> lockNode,int beginX, int beginY, int endX, int endY, Direction direction)
         //  public void initGraph(ElecMap elc, List<MyPoint> scanner,ConcurrentQueue<MyPoint> lockNode, int v_num, int sx, int sy, int dx, int dy, Direction direction)
         {
 
             //地图发生变化时重新构造地
-            int i, j;
-            this.beginX = beginX;    //起点X坐标
-            this.beginY = beginY;    //起点Y坐标
-            this.endX = endX;    //终点X坐标
-            this.endY = endY;    //终点Y坐标
-            this.beginDir = direction;
-            Height = elc.HeightNum;
-            Width = elc.WidthNum;
+            int i, j;            
             //Width = width;
             //Height = height;
 
@@ -159,16 +146,18 @@ namespace Agv.PathPlanning
         }
          
        
-        public List<MyPoint> Search(ElecMap elc, List<MyPoint> scannerNode, List<MyPoint> lockNode, int v_num, int width, int height, int firstX, int firstY, int endX, int endY, Direction direction)
+        public List<MyPoint> Search(ElecMap elc, List<MyPoint> scannerNode, List<MyPoint> lockNode, int beginX, int beginY, int endX, int endY, Direction direction,IAlgorithm algorithm)
         {
-
+            this.algorithm = algorithm;
+            Height = elc.HeightNum;
+            Width = elc.WidthNum;
             // ChangeMap(elc, width, height);  // 转换寻找路径的可达还是不可达
-            initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
-            List<MyPoint> route = algorithm.Search(graph,beginX,beginY,endX,endY,direction);
+            initGraph(elc, scannerNode, lockNode, beginX, beginY, endX, endY, direction);
+            List<MyPoint> route = algorithm.Search(graph, beginX, beginY, endX, endY, direction);
             if (route.Count < 1)
             {
                 lockNode.Clear();
-                initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
+                initGraph(elc, scannerNode, lockNode,  beginX, beginY, endX, endY, direction);
                 route = algorithm.Search(graph, beginX, beginY, endX, endY, direction);
             }
 
@@ -182,7 +171,7 @@ namespace Agv.PathPlanning
             //    route.Insert(0,new MyPoint(beginX, beginY));
             //}
 
-            SearchProcess.SetGraph(graph,route,firstY,firstX,endY,endX);
+            SearchProcess.SetGraph(graph,route,beginY,beginX,endY,endX);
             
             return route;
         }
