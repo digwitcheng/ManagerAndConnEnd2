@@ -111,11 +111,19 @@ namespace AGVSocket.Network
         {
             Logs.Error("接收错误 "+ex.Code + "-" + ex.Data);
         }
-        public void Send(SendBasePacket pack)
+        //public void Send(SendBasePacket pack)
+        //{
+        //    try
+        //    {
+        //        pack.Send(_server);
+        //    }
+        //    catch { }
+        //}
+        public void SendTo(SendBasePacket pack,int vnum)
         {
             try
             {
-                pack.Send(_server);
+                pack.SendTo(_server,vnum);
             }
             catch { }
         }

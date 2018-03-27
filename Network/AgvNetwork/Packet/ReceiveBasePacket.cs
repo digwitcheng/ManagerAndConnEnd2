@@ -97,7 +97,7 @@ namespace AGVSocket.Network.Packet
         }
         public void ReceiveResponse()
         {
-            AgvServerManager.Instance.Send(new SysResponsePacket(this.SerialNum, this.AgvId, this.Type, this.IsCheckSumCorrect));
+            AgvServerManager.Instance.SendTo(new SysResponsePacket(this.SerialNum, this.AgvId, this.Type, this.IsCheckSumCorrect),this.AgvId);
         }
     }
 }

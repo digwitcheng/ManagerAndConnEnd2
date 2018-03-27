@@ -311,6 +311,7 @@ namespace AGV_V1._0
             if (crossedPoint.Count >0)
             {
                 IEnumerator<MyPoint> it = crossedPoint.GetEnumerator();
+                
                 int index = 0;
                 MyPoint crossed = it.Current;
                 while (!cur.Equals(crossed)&&it.MoveNext())

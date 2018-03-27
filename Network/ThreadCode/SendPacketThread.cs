@@ -44,7 +44,7 @@ namespace AGV_V1._0.ThreadCode
                     if (SendPacketQueue.Instance.IsHasData())
                     {
                         SendBasePacket sp = SendPacketQueue.Instance.Dequeue();// SendPacketQueue.Instance.Peek();//
-                        AgvServerManager.Instance.Send(sp);
+                        AgvServerManager.Instance.SendTo(sp,sp.AgvId);
                         //isCanSendNext = false;
 
                         //RunPacket sp = (RunPacket)SendPacketQueue.Instance.Dequeue();

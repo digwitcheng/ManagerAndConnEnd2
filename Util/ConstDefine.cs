@@ -12,7 +12,7 @@
         public const int maxX =7;
         public const int minY =6;
         public const int maxY = 10;
-        //public const int CELL_UNIT = 1000;//格和毫格的转换单位
+        public const int CELL_UNIT = 1000;//格和毫格的转换单位
 
         public const int REMOTE_PORT = 8081;//远程过程调用端口
         public const string REMOTE_NAME = "RouteSearch";//远程过程调用名称

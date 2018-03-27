@@ -111,7 +111,7 @@ namespace AGV_V1._0
                         if (vehicles[vnum].agvInfo.AgvMotion == AgvMotionState.StopedNode)
                         {
                             TrayPacket tp = new TrayPacket((byte)(serinum *vnum), (ushort)vnum, TrayMotion.TopLeft);
-                            AgvServerManager.Instance.Send(tp);
+                            AgvServerManager.Instance.SendTo(tp,vnum);
                             vehicles[vnum].CurState = State.unloading;
                             vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
                             Console.WriteLine("send TrayMotion:"+(serinum-1));
@@ -159,7 +159,7 @@ namespace AGV_V1._0
                             uint endX = Convert.ToUInt32(vehicles[vnum].EndX);
                             uint endY = Convert.ToUInt32(vehicles[vnum].EndY);                            
                             RunPacket rp = new RunPacket((byte)(serinum * vnum), (ushort)vnum, MoveDirection.Forward, 1500, new Destination(new CellPoint(x * ConstDefine.CELL_UNIT, y * ConstDefine.CELL_UNIT), new CellPoint(endX * ConstDefine.CELL_UNIT, endY * ConstDefine.CELL_UNIT), new AgvDriftAngle(0), TrayMotion.None));
-                            AgvServerManager.Instance.Send(rp);
+                            AgvServerManager.Instance.SendTo(rp,vnum);
 
                             Console.WriteLine("*--------------------------------------------------------------------------*");
                             Console.WriteLine(vehicles[vnum].TPtr+":"+x + "," + y + "->" + endX + "," + endY + " ,实际位置：" + vehicles[vnum].agvInfo.CurLocation.CurNode.X / 1000.0 + "," + vehicles[vnum].agvInfo.CurLocation.CurNode.Y / 1000.0+"序列号："+(serinum-1));

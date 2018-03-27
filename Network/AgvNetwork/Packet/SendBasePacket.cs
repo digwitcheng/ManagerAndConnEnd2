@@ -36,9 +36,13 @@ namespace AGVSocket.Network.Packet
         }
        protected abstract byte NeedLen();
        public abstract byte[] GetBytes();
-       public void Send(TcpSocketServer server)
-       {
-           server.Broadcast(GetBytes());
-       }
+       //public void Send(TcpSocketServer server)
+       //{
+       //    server.Broadcast(GetBytes());
+       //}
+        public void SendTo(TcpSocketServer server,int vnum)
+        {
+            server.Broadcast(GetBytes());
+        }
     }
 }
