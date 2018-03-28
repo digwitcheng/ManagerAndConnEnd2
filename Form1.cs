@@ -775,7 +775,7 @@ namespace AGV_V1._0
         {
             //InitialAgv();
 
-            VehicleManager.Instance.RandomMove(4);
+            VehicleManager.Instance.RandomMove(5);
         }
 
         private void button6_Click(object sender, EventArgs e)

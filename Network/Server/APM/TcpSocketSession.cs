@@ -66,7 +66,7 @@ namespace Cowboy.Sockets
 
             _remoteEndPoint = this.RemoteEndPoint;
             _localEndPoint = this.LocalEndPoint;
-            _sessionKey = configuration.SessionKeyBuilder.GetSessionKey(this.LocalEndPoint.ToString());
+            _sessionKey = configuration.SessionKeyBuilder.GetSessionKey(this.RemoteEndPoint.ToString());
         }
 
         #endregion

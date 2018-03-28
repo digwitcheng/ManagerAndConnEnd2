@@ -9,7 +9,7 @@
     <AGV Num="2" BeginX="10" BeginY="2" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="3" BeginX="1" BeginY="1" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="4" BeginX="6" BeginY="13" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
-    <AGV Num="5" BeginX="12" BeginY="12" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
+    <AGV Num="5" BeginX="7" BeginY="10" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="6" BeginX="7" BeginY="9" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="7" BeginX="12" BeginY="14" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />
     <AGV Num="8" BeginX="0" BeginY="16" StartLoc="道路" Direction="Up" State="free" Battery="100" EndX="" EndY="" DestX="" DestY="" Use="T" />

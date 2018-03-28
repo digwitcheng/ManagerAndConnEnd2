@@ -116,8 +116,10 @@ namespace AGV_V1._0
                             vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
                             Console.WriteLine("send TrayMotion:"+(serinum-1));
                         }
-                    }
-                    continue;
+                        continue;
+                    }      
+                    
+                   
                 }         
                 if (vehicles[vnum].Arrive == true && vehicles[vnum].CurState == State.Free)
                 {    

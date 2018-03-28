@@ -384,8 +384,15 @@ namespace AGV_V1._0
                 if (TPtr >= route.Count - 1)
                 {
                     Elc.mapnode[route[route.Count - 1].X, route[route.Count - 1].Y].NodeCanUsed = this.Id;
-                    Arrive = true;                    
-                    return false;
+                    if (EqualWithRealLocation(route[route.Count - 1].X, route[route.Count - 1].Y))
+                    {
+                        Arrive = true;
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
 #if moni
 
@@ -393,13 +400,13 @@ namespace AGV_V1._0
 
                 if (ShouldMove(TPtr + 1) == false)
                 {
-                    //BeginX = route[TPtr].X;
-                    //BeginY = route[TPtr].Y;
-                    //if (this.WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下当前位置
-                    //{
-                    //    Console.WriteLine("Resend Current location");
-                    //    return true;
-                    //}
+                    BeginX = route[TPtr].X;
+                    BeginY = route[TPtr].Y;
+                    if (this.WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下当前位置
+                    {
+                        Console.WriteLine("Resend Current location");
+                        return true;
+                    }
                     return false;
                 }
 #endif
