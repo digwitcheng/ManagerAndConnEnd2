@@ -132,6 +132,9 @@
     <Compile Include="Network\AgvNetwork\Packet\TrayPacket.cs" />
     <Compile Include="Network\MyQueue\ReSendPacketQueue.cs" />
     <Compile Include="Network\MyQueue\SendPacketQueue.cs" />
+    <Compile Include="Network\Server\APM\AgvIdSessionKeyBuilder.cs" />
+    <Compile Include="Network\Server\APM\GuidSessionKeyBuilder.cs" />
+    <Compile Include="Network\Server\APM\ISessionKeyBuilder.cs" />
     <Compile Include="Network\Server\APM\TcpSocketServer.cs" />
     <Compile Include="Network\Server\APM\TcpSocketServerConfiguration.cs" />
     <Compile Include="Network\Server\APM\TcpSocketSession.cs" />

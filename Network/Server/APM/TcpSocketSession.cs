@@ -60,7 +60,7 @@ namespace Cowboy.Sockets
             _bufferManager = bufferManager;
             _server = server;
 
-            _sessionKey = Guid.NewGuid().ToString();
+            _sessionKey = configuration.SessionKeyBuilder.GetSessionKey(this.RemoteEndPoint.ToString());
             this.StartTime = DateTime.UtcNow;
 
             SetSocketOptions();

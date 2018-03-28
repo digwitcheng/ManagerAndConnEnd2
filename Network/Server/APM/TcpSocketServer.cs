@@ -162,7 +162,8 @@ namespace Cowboy.Sockets
                 bool isSessionStarted = false;
                 try
                 {
-                    _sessions.AddOrUpdate(session.SessionKey, session, (n, o) => { return o; });
+                    string key = _configuration.SessionKeyBuilder.GetSessionKey(session.RemoteEndPoint.ToString());   
+                    _sessions.AddOrUpdate(key, session, (n, o) => { return o; });
                     session.Start();
                     isSessionStarted = true;
                 }
@@ -296,169 +297,6 @@ namespace Cowboy.Sockets
             }
         }
 
-        public void BeginSendTo(string sessionKey, byte[] data)
-        {
-            GuardRunning();
-
-            if (string.IsNullOrEmpty(sessionKey))
-                throw new ArgumentNullException("sessionKey");
-
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            BeginSendTo(sessionKey, data, 0, data.Length);
-        }
-
-        public void BeginSendTo(string sessionKey, byte[] data, int offset, int count)
-        {
-            GuardRunning();
-
-            if (string.IsNullOrEmpty(sessionKey))
-                throw new ArgumentNullException("sessionKey");
-
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            TcpSocketSession session = null;
-            if (_sessions.TryGetValue(sessionKey, out session))
-            {
-                session.BeginSend(data, offset, count);
-            }
-            else
-            {
-                Logs.Warn(string.Format("Cannot find session [{0}].", sessionKey));
-            }
-        }
-
-        public void BeginSendTo(TcpSocketSession session, byte[] data)
-        {
-            GuardRunning();
-
-            if (session == null)
-                throw new ArgumentNullException("session");
-
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            BeginSendTo(session, data, 0, data.Length);
-        }
-
-        public void BeginSendTo(TcpSocketSession session, byte[] data, int offset, int count)
-        {
-            GuardRunning();
-
-            if (session == null)
-                throw new ArgumentNullException("session");
-
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            TcpSocketSession writeSession = null;
-            if (_sessions.TryGetValue(session.SessionKey, out writeSession))
-            {
-                session.BeginSend(data, offset, count);
-            }
-            else
-            {
-                Logs.Warn(string.Format("Cannot find session [{0}].", session));
-            }
-        }
-
-        public IAsyncResult BeginSendTo(string sessionKey, byte[] data, AsyncCallback callback, object state)
-        {
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            return BeginSendTo(sessionKey, data, 0, data.Length, callback, state);
-        }
-
-        public IAsyncResult BeginSendTo(string sessionKey, byte[] data, int offset, int count, AsyncCallback callback, object state)
-        {
-            GuardRunning();
-
-            if (string.IsNullOrEmpty(sessionKey))
-                throw new ArgumentNullException("sessionKey");
-
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            TcpSocketSession session = null;
-            if (_sessions.TryGetValue(sessionKey, out session))
-            {
-                return session.BeginSend(data, offset, count, callback, state);
-            }
-            else
-            {
-                Logs.Warn(string.Format("Cannot find session [{0}].", sessionKey));
-            }
-
-            return null;
-        }
-
-        public IAsyncResult BeginSendTo(TcpSocketSession session, byte[] data, AsyncCallback callback, object state)
-        {
-            GuardRunning();
-
-            if (session == null)
-                throw new ArgumentNullException("session");
-
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            return BeginSendTo(session, data, 0, data.Length, callback, state);
-        }
-
-        public IAsyncResult BeginSendTo(TcpSocketSession session, byte[] data, int offset, int count, AsyncCallback callback, object state)
-        {
-            GuardRunning();
-
-            if (session == null)
-                throw new ArgumentNullException("session");
-
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            TcpSocketSession writeSession = null;
-            if (_sessions.TryGetValue(session.SessionKey, out writeSession))
-            {
-                return session.BeginSend(data, offset, count, callback, state);
-            }
-            else
-            {
-                Logs.Warn(string.Format("Cannot find session [{0}].", session));
-            }
-
-            return null;
-        }
-
-        public void EndSendTo(string sessionKey, IAsyncResult asyncResult)
-        {
-            GuardRunning();
-
-            if (string.IsNullOrEmpty(sessionKey))
-                throw new ArgumentNullException("sessionKey");
-
-            TcpSocketSession session = null;
-            if (_sessions.TryGetValue(sessionKey, out session))
-            {
-                session.EndSend(asyncResult);
-            }
-        }
-
-        public void EndSendTo(TcpSocketSession session, IAsyncResult asyncResult)
-        {
-            GuardRunning();
-
-            if (session == null)
-                throw new ArgumentNullException("session");
-
-            TcpSocketSession writeSession = null;
-            if (_sessions.TryGetValue(session.SessionKey, out writeSession))
-            {
-                session.EndSend(asyncResult);
-            }
-        }
-
         public void Broadcast(byte[] data)
         {
             GuardRunning();
@@ -493,30 +331,6 @@ namespace Cowboy.Sockets
             }
 
         }
-
-        public void BeginBroadcast(byte[] data)
-        {
-            GuardRunning();
-
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            BeginBroadcast(data, 0, data.Length);
-        }
-
-        public void BeginBroadcast(byte[] data, int offset, int count)
-        {
-            GuardRunning();
-
-            if (data == null)
-                throw new ArgumentNullException("data");
-
-            foreach (var session in _sessions.Values)
-            {
-                session.BeginSend(data, offset, count);
-            }
-        }
-
         #endregion
 
         #region Session

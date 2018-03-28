@@ -7,6 +7,7 @@ using AGV_V1._0.Server.APM;
 using AGV_V1._0.Event;
 using AGV_V1._0.NLog;
 using Cowboy.Sockets;
+using AGV_V1._0.Network.Server.APM;
 
 namespace AGVSocket.Network
 {
@@ -43,6 +44,7 @@ namespace AGVSocket.Network
         {
             var config = new TcpSocketServerConfiguration();
             config.FrameBuilder = new LengthPrefixedOneByteFrameBuilder();
+            config.SessionKeyBuilder = new AgvIdSessionKeyBuilder();
             _server = new TcpSocketServer(port, config);
             _server.ClientConnected += server_ClientConnected;
             _server.ClientDisconnected += server_ClientDisconnected;

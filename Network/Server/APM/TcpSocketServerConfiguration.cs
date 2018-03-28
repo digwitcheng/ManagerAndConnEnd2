@@ -3,6 +3,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using AGV_V1._0.Network.Server.APM;
 using Cowboy.Buffer;
 
 namespace Cowboy.Sockets
@@ -41,6 +42,7 @@ namespace Cowboy.Sockets
 
             ConnectTimeout = TimeSpan.FromSeconds(15);
             FrameBuilder = new LengthPrefixedFrameBuilder();
+            SessionKeyBuilder = new GuidSessionKeyBuilder();
         }
 
         public ISegmentBufferManager BufferManager { get; set; }
@@ -68,5 +70,6 @@ namespace Cowboy.Sockets
 
         public TimeSpan ConnectTimeout { get; set; }
         public IFrameBuilder FrameBuilder { get; set; }
+        public ISessionKeyBuilder SessionKeyBuilder { get; set; }
     }
 }
