@@ -60,13 +60,13 @@ namespace Cowboy.Sockets
             _bufferManager = bufferManager;
             _server = server;
 
-            _sessionKey = configuration.SessionKeyBuilder.GetSessionKey(this.RemoteEndPoint.ToString());
             this.StartTime = DateTime.UtcNow;
 
             SetSocketOptions();
 
             _remoteEndPoint = this.RemoteEndPoint;
             _localEndPoint = this.LocalEndPoint;
+            _sessionKey = configuration.SessionKeyBuilder.GetSessionKey(this.LocalEndPoint.ToString());
         }
 
         #endregion

@@ -161,9 +161,8 @@ namespace Cowboy.Sockets
                 var session = new TcpSocketSession(tcpClient, _configuration, _configuration.BufferManager, this);
                 bool isSessionStarted = false;
                 try
-                {
-                    string key = _configuration.SessionKeyBuilder.GetSessionKey(session.RemoteEndPoint.ToString());   
-                    _sessions.AddOrUpdate(key, session, (n, o) => { return o; });
+                { 
+                    _sessions.AddOrUpdate(session.SessionKey, session, (n, o) => { return o; });
                     session.Start();
                     isSessionStarted = true;
                 }

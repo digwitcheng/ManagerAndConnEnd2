@@ -125,6 +125,10 @@ namespace AGVSocket.Network
         {
             try
             {
+                if (vnum == 5)
+                {
+                    vnum = 25;
+                }
                 pack.SendTo(_server,vnum);
             }
             catch { }
