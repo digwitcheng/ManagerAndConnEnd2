@@ -307,7 +307,11 @@ namespace AGV_V1._0
         }
         void SetCurrentNodeOccpyAndOldNodeFree()
         {
+#if moni 
+            MyPoint cur = new MyPoint(BeginX, BeginY);
+#else
             MyPoint cur = new MyPoint(RealX, RealY);
+#endif
             if (crossedPoint.Count >0)
             {
                 IEnumerator<MyPoint> it = crossedPoint.GetEnumerator();
@@ -323,7 +327,7 @@ namespace AGV_V1._0
                 {
                     return;
                 }
-                for (int j = 0; j < index-1; j++)
+                for (int j = 0; j < index; j++)
                 {
                     MyPoint realCrossedPoint = null;
                     bool success = crossedPoint.TryDequeue(out realCrossedPoint);
@@ -383,6 +387,9 @@ namespace AGV_V1._0
                 }
                 if (TPtr >= route.Count - 1)
                 {
+#if moni
+                    Arrive = true;
+#else
                     Elc.mapnode[route[route.Count - 1].X, route[route.Count - 1].Y].NodeCanUsed = this.Id;
                     if (EqualWithRealLocation(route[route.Count - 1].X, route[route.Count - 1].Y))
                     {
@@ -393,6 +400,7 @@ namespace AGV_V1._0
                     {
                         return true;
                     }
+#endif
                 }
 #if moni
 
@@ -436,11 +444,11 @@ namespace AGV_V1._0
                     //{
                     //    ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
                     //}
-                    ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
-                     TPtr++;
+                   ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
+                    TPtr++;
                     BeginX = route[TPtr].X;
                     BeginY = route[TPtr].Y;
-#else               
+#else
                     crossedPoint.Enqueue(new MyPoint(BeginX, BeginY));  
                     TPtr++;
                     BeginX = route[TPtr].X;
@@ -457,67 +465,6 @@ namespace AGV_V1._0
                     StopTime--;
                     return false;
                 }
-
-
-                if (TPtr == 0)// config.ForwordStep)
-                {
-
-                    for (VirtualTPtr = 1; VirtualTPtr < config.ForwordStep; VirtualTPtr++)
-                    {
-                        if (TPtr + VirtualTPtr <= route.Count - 1)
-                        {
-                            int tx = (int)route[VirtualTPtr].X;
-                            int ty = (int)route[VirtualTPtr].Y;
-                            int temp = Elc.mapnode[tx, ty].NodeCanUsed;
-                            if (temp > -1)
-                            {
-                                Stoped = temp;
-                                StopTime--;
-                                return false;
-                            }
-                            else
-                            {
-                                Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
-                            }
-                        }
-                    }
-                    StopTime = StopTime;
-                    TPtr++;
-
-                }
-                else if (TPtr > 0)
-                {
-
-                    if (VirtualTPtr <= route.Count - 1)
-                    {
-                        int tx = (int)route[VirtualTPtr].X;
-                        int ty = (int)route[VirtualTPtr].Y;
-                        int temp = Elc.mapnode[tx, ty].NodeCanUsed;
-                        if (temp > -1)
-                        {
-                            Stoped = temp;
-                            StopTime--;
-                            return false;
-                        }
-                        else
-                        {
-                            Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
-                            StopTime = StopTime;
-                            TPtr++;
-                            VirtualTPtr++;
-                        }
-
-                    }
-                    else
-                    {
-                        StopTime = StopTime;
-                        TPtr++;
-                    }
-                }
-                BeginX = route[TPtr].X;
-                BeginY = route[TPtr].Y;
-                return true;
-
             }
         }
 

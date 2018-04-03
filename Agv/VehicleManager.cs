@@ -65,7 +65,7 @@ namespace AGV_V1._0
             {
                 return;
             }
-            for (int vnum =4; vnum < vehicles.Length; vnum++)
+            for (int vnum =0; vnum < vehicles.Length; vnum++)
             {
                 serinum = (byte)(serinum % 255);
                 if (vehicles[vnum].CurState == State.cannotToDestination && vehicles[vnum].Arrive == false)
