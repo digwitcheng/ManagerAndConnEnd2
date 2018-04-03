@@ -28,7 +28,7 @@ namespace AGV_V1._0.Server.APM
         {
             try
             {
-                BaseMessage bm = BaseMessage.Factory(type, json);
+                BaseMessage bm = MessageFactory.Create(type, json);
                 bm.Send(sessionKey, _server);
                 return SUCCESS;
             }catch(Exception ex){

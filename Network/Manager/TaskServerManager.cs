@@ -62,7 +62,7 @@ namespace AGV_V1._0.Server.APM
             var text = Encoding.UTF8.GetString(e.Data, e.DataOffset + 1, e.DataLength - 1);
 
 
-            BaseMessage bm = BaseMessage.Factory(type, text);
+            BaseMessage bm = MessageFactory.Create(type, text);
             // bm.ShowMessage += OnMessageEvent; //任务是以消息的形式发送过来的，显示的话会刷屏
             bm.DataMessage += OnDataMessageEvent;
             // bm.ReLoad += ReLoadDel;          

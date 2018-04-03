@@ -71,7 +71,7 @@ namespace CowboyTest.Server.APM
             string str = string.Format("Client : {0}--> ", e.Session.RemoteEndPoint);
             OnMessageEvent(this, new MessageEventArgs(str));
 
-            BaseMessage bm = BaseMessage.Factory(type, text);
+            BaseMessage bm = MessageFactory.Create(type, text);
             bm.ShowMessage += OnMessageEvent;
             bm.DataMessage += OnDataMessageEvent;
             bm.ReLoad += ReLoadDel;

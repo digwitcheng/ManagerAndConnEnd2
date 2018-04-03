@@ -43,48 +43,7 @@ namespace AGVSocket.Network.Packet
         public abstract void Receive();
         public abstract byte NeedLen();
 
-        public static ReceiveBasePacket Factory(PacketType type, byte[] data)
-        {
-            try
-            {
-                switch (type)
-                {
-                    case PacketType.DoneReply:
-                        return new DoneReplyPacket(data);
-                    case PacketType.AgvInfo:
-                        return new AgvInfoPacket(data);
-                    case PacketType.AgvResponse:
-                        return new AgvResponsePacket(data);
-                    default:
-                        // return new ErrorPacket(data);
-                       throw new PacketException("factory", ExceptionCode.NonsupportType);
-                }
-            }
-            catch (PacketException pe)
-            {
-                //Send(new SysResponsePacket(1,buffers[));
-                // throw;
-                if (pe.Code == ExceptionCode.CheckSumError)
-                {
-                    return new ErrorPacket(data);
-                }
-                else if (pe.Code == ExceptionCode.DataMiss && data.Length >= 7)
-                {
-                    return new ErrorPacket(data);
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logs.Error("未知错误:" + ex);
-                throw;
-               // return new ErrorPacket(data);
-            }
-
-        }
+        
 
         protected byte CaculateCheckSum(byte[] data)
         {

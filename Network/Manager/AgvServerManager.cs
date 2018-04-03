@@ -8,6 +8,7 @@ using AGV_V1._0.Event;
 using AGV_V1._0.NLog;
 using Cowboy.Sockets;
 using AGV_V1._0.Network.Server.APM;
+using AGV_V1._0.Network.AgvNetwork.Packet;
 
 namespace AGVSocket.Network
 {
@@ -89,7 +90,7 @@ namespace AGVSocket.Network
             
             try
             {
-                ReceiveBasePacket rbp = ReceiveBasePacket.Factory(type, buffers);
+                ReceiveBasePacket rbp = PacketFactory.CreateReceivePacket(type, buffers);
                 //bp.ShowMessage += OnMessageEvent;
                 //bp.ErrorMessage += OnErrorEvent;
                 //bp.DataMessage += OnDataMessageEvent;
