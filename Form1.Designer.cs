@@ -210,6 +210,7 @@
             this.pic.Size = new System.Drawing.Size(100, 50);
             this.pic.TabIndex = 0;
             this.pic.TabStop = false;
+            this.pic.DoubleClick += new System.EventHandler(this.pic_DoubleClick);
             // 
             // tableLayoutPanel1
             // 

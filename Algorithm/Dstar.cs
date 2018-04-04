@@ -233,11 +233,12 @@ namespace AGV_V1._0.Algorithm
                   
               }
          }//end of k_min
-        private List<MyPoint> findpath(Close[,]map,int gx,int gy)
+          public List<MyPoint> findpath(Close[,]map,int gx,int gy)
         {
             List<MyPoint> route = new List<MyPoint>();
 
-            double[] mink = new double[1]; mink[0] = 100000;
+            double[] mink = new double[1];
+            mink[0] = 100000;
             int[] mi = new int[1]; mi[0] = 0;
             int[] mj = new int[1]; mj[0] = 0;
             int[] neighbori = new int[8];
@@ -261,7 +262,7 @@ namespace AGV_V1._0.Algorithm
                 for (int i = 0; i < 8; i++)
                 {
                     int row = neighbori[i]; int col = neighborj[i];
-                    if ((row <= wp - 1 && row >= 0) && (col <= hp - 1 && col >= 0) && (map[row, col].Node.status != "OBSTACLE"))
+                    if ((row <= hp - 1 && row >= 0) && (col <= wp - 1 && col >= 0) && (map[row, col].Node.status != "OBSTACLE"))
                         k_min(row, col, map[row, col], mink, mi, mj);
                 }
 
@@ -277,7 +278,7 @@ namespace AGV_V1._0.Algorithm
                 Mi[3] = correnti - 1; Mj[3] = correntj - 1;
 
 
-                if (correntj + 1 > hp - 1)
+                if (correntj + 1 > wp - 1)
                     z[0] = "NULL";
                 else
                     z[0] = map[correnti, correntj + 1].Node.status;
@@ -295,14 +296,14 @@ namespace AGV_V1._0.Algorithm
                 z[3] = z[1];
 
 
-                if (correnti + 1 > wp - 1)
+                if (correnti + 1 > hp - 1)
                     y[0] = "NULL";
                 else
                     y[0] = map[correnti + 1, correntj].Node.status;
 
                 y[1] = y[0];
 
-                if (correntj + 1 > hp - 1)
+                if (correntj + 1 > wp - 1)
                     y[2] = "NULL";
                 else
                     y[2] = map[correnti, correntj + 1].Node.status;

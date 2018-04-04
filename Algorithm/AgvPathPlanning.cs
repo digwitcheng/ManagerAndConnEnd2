@@ -160,7 +160,6 @@ namespace Agv.PathPlanning
         {
 
             // ChangeMap(elc, width, height);  // 转换寻找路径的可达还是不可达
-            algorithm = new Dstar();
             Node[,] graph = new Node[height, width];
             initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction,graph);
             List<MyPoint> route = algorithm.Search(graph,beginX,beginY,endX,endY,direction);

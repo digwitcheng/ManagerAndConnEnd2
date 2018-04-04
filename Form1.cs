@@ -190,7 +190,6 @@ namespace AGV_V1._0
             Thread.Sleep(100);            
             timer1.Start();
 
-
         }
         void InitialAgv()
         {
@@ -367,7 +366,7 @@ namespace AGV_V1._0
             {
                 for (int j = 0; j < Elc.WidthNum; j++)
                 {
-                    //drawArrow(i, j);
+                    drawArrow(i, j);
                     //绘制表格
                     if (Elc.mapnode[i, j].IsAbleCross)
                     {
@@ -404,8 +403,8 @@ namespace AGV_V1._0
         /// <param name="e"></param>
         public void Draw(Graphics g)
         {
-            newSurface = new Bitmap(surface);
-            Graphics gg = Graphics.FromImage(newSurface);
+            //newSurface = new Bitmap(surface);
+            //Graphics gg = Graphics.FromImage(newSurface);
             ////绘制探测节点
             //for (int i = 0; i < Elc.HeightNum; i++)
             //{
@@ -431,11 +430,11 @@ namespace AGV_V1._0
 
                     int i = listNode[q].X;
                     int j = listNode[q].Y;
-                    gg.FillRectangle(new SolidBrush(Color.Red), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength));
+                    g.FillRectangle(new SolidBrush(Color.Red), new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength));
                     Font font = new Font(new System.Drawing.FontFamily("宋体"), ConstDefine.g_NodeLength / 2);
                     Brush brush = Brushes.DarkMagenta;
                     PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
-                    gg.DrawString(VehicleManager.Instance.GetVehicles()[num].Id + "", font, brush, pf);
+                    g.DrawString(VehicleManager.Instance.GetVehicles()[num].Id + "", font, brush, pf);
 
                 }
             }
@@ -462,7 +461,7 @@ namespace AGV_V1._0
             {
                 for (int i = 0; i < v.Length; i++)
                 {
-                    v[i].Draw(gg);
+                    v[i].Draw(g);
                     v[0].X = 1111;
                 }
             }
@@ -485,7 +484,7 @@ namespace AGV_V1._0
             //vehicle[0].Draw(e.Graphics);
             //vehicle[1].Draw(e.Graphics);
 
-            pic.Image = newSurface;
+            pic.Image = surface;
 
             DrawMsgOnPic();
         }
@@ -804,6 +803,22 @@ namespace AGV_V1._0
 
             //SendPacketThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
             //SendPacketThread.Instance.End();
+        }
+
+        private void pic_DoubleClick(object sender, EventArgs e)
+        {
+            Point clickPoint;
+            clickPoint = pic.PointToClient(Cursor.Position);
+            int cx= clickPoint.Y / ConstDefine.g_NodeLength;
+            int cy = clickPoint.X /ConstDefine.g_NodeLength ;
+            if (cx >= 0 && cx < ConstDefine.g_HeightNum && cy >= 0 && cy < ConstDefine.g_WidthNum)
+            {
+                ElecMap.Instance.mapnode[cx, cy].IsAbleCross = false;
+                ElecMap.Instance.mapnode[cx, cy].RightDifficulty = MapNode.MAX_ABLE_PASS;
+                ElecMap.Instance.mapnode[cx, cy].LeftDifficulty = MapNode.MAX_ABLE_PASS;
+                ElecMap.Instance.mapnode[cx, cy].DownDifficulty = MapNode.MAX_ABLE_PASS;
+                ElecMap.Instance.mapnode[cx, cy].UpDifficulty = MapNode.MAX_ABLE_PASS;
+            } 
         }
     }
 }

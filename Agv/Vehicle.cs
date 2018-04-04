@@ -1,25 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.ComponentModel;
-using System.Data;
-using AGV_V1._0.Properties;
-using Agv.PathPlanning;
-using System.Threading;
+﻿//#define moni
+
+using System;
 using System.Collections.Concurrent;
-using AGV_V1._0.Algorithm;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Timers;
+using Agv.PathPlanning;
 using AGV_V1._0.Agv;
+using AGV_V1._0.Algorithm;
 using AGV_V1._0.Util;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using AGV_V1._0.DataBase;
 using AGVSocket.Network;
 using AGVSocket.Network.EnumType;
-using AGV_V1._0.NLog;
 
 namespace AGV_V1._0
 {
@@ -27,6 +18,8 @@ namespace AGV_V1._0
     class Vehicle
     {
         public AgvInfo agvInfo { get; set; }
+        private readonly VehicleConfiguration config;
+        private Timer timer;
         private int routeIndex = 0;
         public int RouteIndex
         {
@@ -41,7 +34,7 @@ namespace AGV_V1._0
                     }
                     if (value < 0)
                     {
-                        value = 0; 
+                        value = 0;
                     }
                 }
                 else
@@ -52,8 +45,7 @@ namespace AGV_V1._0
                 routeIndex = value;
             }
         }
-
-        private int stopTime = ConstDefine.STOP_TIME;//0406 等待时长，超过则重新规划路线；
+        private int stopTime;
         public int StopTime
         {
             get { return stopTime; }
@@ -82,6 +74,8 @@ namespace AGV_V1._0
             get;
             set;
         }
+        public IAlgorithm algorithm;
+        public int ForwordStep { get; set; }
         public DateTime WaitEndTime;
 
         //public List<myPoint> route;//起点到终点的路线
@@ -179,6 +173,9 @@ namespace AGV_V1._0
         public int BeginY { get; set; }
         public int DestX { get; set; }
         public int DestY { get; set; }
+        public int RealX { get; set; }
+        public int RealY { get; set; }
+
 
         //  public float Distance;//上一个节拍所走的距离；
         // public int stopTime;//停留时钟数
@@ -233,7 +230,8 @@ namespace AGV_V1._0
         public Color showColor = Color.Pink;
 
 
-        private int realTPtr;
+
+        private ConcurrentQueue<MyPoint> crossedPoint = new ConcurrentQueue<MyPoint>();
         public int VirtualTPtr
         {
             get;
@@ -273,7 +271,7 @@ namespace AGV_V1._0
         }
 
 
-        public Vehicle(int x, int y, int v_num, bool arrive, Direction direction)
+        public Vehicle(int x, int y, int v_num, bool arrive, Direction direction, VehicleConfiguration vehicleConfig)
         {
             this.BeginX = x;
             this.BeginY = y;
@@ -282,36 +280,90 @@ namespace AGV_V1._0
             this.Id = v_num;
             this.Arrive = arrive;
             this.Dir = direction;
+            this.config = vehicleConfig;
+            this.timer = new Timer();
+            InitTimer();
+            InitAgv();
         }
-        public Vehicle()
+        void InitAgv()
         {
+            StopTime = config.StopTime;
+            ForwordStep = config.ForwordStep;
+            algorithm = config.PathPlanningAlgorithm;
+        }
+        void InitTimer()
+        {
+            this.timer.Interval = config.TimerInterval;
+            this.timer.Elapsed += Timer_Elapsed;
+            this.timer.Start();
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            UpdateRealLocation();
+
+            SetCurrentNodeOccpyAndOldNodeFree();
 
         }
+        void SetCurrentNodeOccpyAndOldNodeFree()
+        {
+            MyPoint cur = new MyPoint(RealX, RealY);
+            if (crossedPoint.Count > 0)
+            {
+                IEnumerator<MyPoint> it = crossedPoint.GetEnumerator();
+
+                int index = 0;
+                MyPoint crossed = it.Current;
+                while (!cur.Equals(crossed) && it.MoveNext())
+                {
+                    crossed = it.Current;
+                    index++;
+                }
+                if (!cur.Equals(crossed))//遍历结束都没有找到等于当前真实坐标的，说明队列中的点都还没走过
+                {
+                    return;
+                }
+                for (int j = 0; j < index - 1; j++)
+                {
+                    MyPoint realCrossedPoint = null;
+                    bool success = crossedPoint.TryDequeue(out realCrossedPoint);
+                    if (success)
+                    {
+                        ElecMap.Instance.mapnode[realCrossedPoint.X, realCrossedPoint.Y].NodeCanUsed = -1;
+                    }
+                }
+
+
+                //MyPoint[] crossedList=crossedPoint.ToArray();
+                //for (int i = 0; i < crossedList.Length; i++)
+                //{
+                //    MyPoint crossed = crossedList[i];
+                //    if (cur.Equals(crossed))
+                //    {
+                //        for (int j = 0; j < i; j++)
+                //        {
+                //            MyPoint realCrossedPoint = null;
+                //            bool success= crossedPoint.TryDequeue(out realCrossedPoint);
+                //            if (success)
+                //            {
+                //                ElecMap.Instance.mapnode[realCrossedPoint.X, realCrossedPoint.Y].NodeCanUsed = -1;
+                //            }
+                //        }
+                //    }
+                //}
+            }
+
+
+
+        }
+
         //public int TPtr
         //{
-        //    get { return tPtr; }
-        //    set { tPtr = value; }
+        //    get { return TPtr; }
+        //    set { TPtr = value; }
         //}
 
-        /// <summary>
-        /// 重绘函数
-        /// </summary>
-        /// <param name="g"></param>
-        public void Draw(Graphics g)
-        {
 
-            lock (RouteLock)
-            {
-
-                Rectangle rect = new Rectangle(BeginY * ConstDefine.g_NodeLength, (int)BeginX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
-                DrawUtil.FillRectangle(g, showColor, rect);
-
-                PointF p = new PointF((int)((BeginY) * ConstDefine.g_NodeLength), (int)((BeginX) * ConstDefine.g_NodeLength));
-                DrawUtil.DrawString(g, this.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
-
-
-            }
-        }
         public MapNodeType CurNodeTypy()
         {
             return ElecMap.Instance.mapnode[BeginX, BeginY].Type;
@@ -329,35 +381,94 @@ namespace AGV_V1._0
                 {
                     return false;
                 }
-                if (tPtr >= route.Count - 1)
+                if (TPtr >= route.Count - 1)
                 {
                     Elc.mapnode[route[route.Count - 1].X, route[route.Count - 1].Y].NodeCanUsed = this.Id;
-                    Arrive = true;
+                    if (EqualWithRealLocation(route[route.Count - 1].X, route[route.Count - 1].Y))
+                    {
+                        Arrive = true;
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+#if moni
+
+#else
+
+                if (ShouldMove(TPtr + 1) == false)
+                {
+                    BeginX = route[TPtr].X;
+                    BeginY = route[TPtr].Y;
+                    if (this.WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下当前位置
+                    {
+                        Console.WriteLine("Resend Current location");
+                        return true;
+                    }
                     return false;
-                }                
-                //if (ShouldMove(tPtr+1)==false)
-                //{
-                //    if (this.WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下当前位置
-                //    {
-                //        Console.WriteLine("Resend Current location");
-                //        return true;
-                //    }
-                //    return false;
-                //}
-                bool virtulChange = false;
+                }
+#endif
+                List<MyPoint> lockPoint = new List<MyPoint>();
+                for (VirtualTPtr = TPtr + 1; VirtualTPtr < TPtr + config.ForwordStep; VirtualTPtr++)
+                {
+                    if (VirtualTPtr <= route.Count - 1)
+                    {
+                        int tx = (int)route[VirtualTPtr].X;
+                        int ty = (int)route[VirtualTPtr].Y;
+                        Boolean IsCanMoveTo = Elc.IsVehicleCanMove(this, tx, ty);// Elc.mapnode[tx, ty].NodeCanUsed;
+                        if (IsCanMoveTo)
+                        {
+                            lockPoint.Add(new MyPoint(tx, ty));
+                            Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+                if (lockPoint.Count > 0)
+                {
+#if moni
+                    //if (TPtr == 0)
+                    //{
+                    //    ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
+                    //}
+                    ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
+                    TPtr++;
+                    BeginX = route[TPtr].X;
+                    BeginY = route[TPtr].Y;
+#else               
+                    crossedPoint.Enqueue(new MyPoint(BeginX, BeginY));  
+                    TPtr++;
+                    BeginX = route[TPtr].X;
+                    BeginY = route[TPtr].Y;
+                    if (BeginX == EndX && BeginY == EndY)
+                    {
+                        crossedPoint.Enqueue(new MyPoint(BeginX, BeginY));
+                    }
+#endif
+                    return true;
+                }
+                else
+                {
+                    StopTime--;
+                    return false;
+                }
 
 
-                if (tPtr == 0)// ConstDefine.FORWORD_STEP)
+                if (TPtr == 0)// config.ForwordStep)
                 {
 
-                    for (VirtualTPtr = 1; VirtualTPtr < ConstDefine.FORWORD_STEP; VirtualTPtr++)
+                    for (VirtualTPtr = 1; VirtualTPtr < config.ForwordStep; VirtualTPtr++)
                     {
-                        if (tPtr + VirtualTPtr <= route.Count - 1)
+                        if (TPtr + VirtualTPtr <= route.Count - 1)
                         {
                             int tx = (int)route[VirtualTPtr].X;
                             int ty = (int)route[VirtualTPtr].Y;
-                            // Boolean temp = Elc.canMoveToNode(this, tx, ty);
-                            int temp = -1;// Elc.mapnode[tx, ty].NodeCanUsed;
+                            int temp = Elc.mapnode[tx, ty].NodeCanUsed;
                             if (temp > -1)
                             {
                                 Stoped = temp;
@@ -370,20 +481,18 @@ namespace AGV_V1._0
                             }
                         }
                     }
-                    Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = -1;
-                    StopTime = ConstDefine.STOP_TIME;
-                    tPtr++;
+                    StopTime = StopTime;
+                    TPtr++;
 
                 }
-                else if (tPtr > 0)
-                {                   
+                else if (TPtr > 0)
+                {
 
                     if (VirtualTPtr <= route.Count - 1)
                     {
                         int tx = (int)route[VirtualTPtr].X;
                         int ty = (int)route[VirtualTPtr].Y;
-                        // Boolean temp = Elc.canMoveToNode(this, tx, ty);
-                        int temp = -1;// Elc.mapnode[tx, ty].NodeCanUsed;
+                        int temp = Elc.mapnode[tx, ty].NodeCanUsed;
                         if (temp > -1)
                         {
                             Stoped = temp;
@@ -393,52 +502,26 @@ namespace AGV_V1._0
                         else
                         {
                             Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
-                            StopTime = ConstDefine.STOP_TIME;
-                            Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = -1;
-                            tPtr++;
+                            StopTime = StopTime;
+                            TPtr++;
                             VirtualTPtr++;
-                            virtulChange = true;
                         }
 
                     }
                     else
                     {
-                        Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = -1;
-                        StopTime = ConstDefine.STOP_TIME;
-                        tPtr++;
+                        StopTime = StopTime;
+                        TPtr++;
                     }
                 }
-                BeginX = route[tPtr].X;
-                BeginY = route[tPtr].Y;
+                BeginX = route[TPtr].X;
+                BeginY = route[TPtr].Y;
                 return true;
-
-                //if (ShouldMove(route[tPtr].X, route[tPtr].Y))
-                //{
-                //    BeginX = route[tPtr].X;
-                //    BeginY = route[tPtr].Y;
-                //    return true;
-                //}
-                //else
-                //{
-                //    //int tx = (int)route[VirtualTPtr].X;
-                //    //int ty = (int)route[VirtualTPtr].Y;
-                //    //Elc.mapnode[tx, ty].NodeCanUsed = -1;
-                //    //Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = -1;
-                //    //tx = (int)route[VirtualTPtr].X;
-                //    //ty = (int)route[VirtualTPtr].Y;
-                //    //Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
-                //    //Elc.mapnode[route[tPtr].X, route[tPtr].Y].NodeCanUsed = this.Id;
-
-                //    tPtr--;
-                //    if (virtulChange)
-                //    {
-                //        VirtualTPtr--;
-                //    }
-                //    return false;
-                //}
 
             }
         }
+
+
         private enum MoveDirecion { XDirection, YDirection }
         private MoveDirecion curMoveDirection;
         private MoveDirecion nextMoveDirection;
@@ -446,14 +529,7 @@ namespace AGV_V1._0
 
         bool ShouldMove(int nextTPtr)
         {
-            if (agvInfo == null)
-            {
-                return false;
-            }
-            if (agvInfo.Alarm != AlarmState.Normal)
-            {
-                return false;
-            }
+            if (!CheckAgvCorrect()) { return false; }
             if (nextTPtr >= route.Count)
             {
                 return false;
@@ -471,7 +547,7 @@ namespace AGV_V1._0
                     {
                         Console.WriteLine("stoped!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
                         SwerveStoped = true;
-                         curMoveDirection = nextMoveDirection;
+                        curMoveDirection = nextMoveDirection;
                     }
                     else
                     {
@@ -481,17 +557,18 @@ namespace AGV_V1._0
                     }
                 }
             }
-            
+
             int nextX = route[nextTPtr].X;
-            int nextY=route[nextTPtr].Y;
-            double RealX = agvInfo.CurLocation.CurNode.X / 1000.0;
-            double RealY = agvInfo.CurLocation.CurNode.Y / 1000.0;
-            if (Math.Abs(nextX - RealX) < ConstDefine.DEVIATION + ConstDefine.FORWORD_STEP - 1 && Math.Abs(nextY - RealY) < ConstDefine.DEVIATION)//X轴移动
+            int nextY = route[nextTPtr].Y;
+            UpdateRealLocation();
+            //int RealX = (int)Math.Round(agvInfo.CurLocation.CurNode.X / 1000.0);
+            //int RealY = (int)Math.Round(agvInfo.CurLocation.CurNode.Y / 1000.0);
+            if (Math.Abs(nextX - RealX) < config.Deviation + config.ForwordStep - 1 && Math.Abs(nextY - RealY) < config.Deviation)//X轴移动
             {
                 return true;
             }
-            if (Math.Abs(nextX - RealX) < ConstDefine.DEVIATION && Math.Abs(nextY - RealY
-                ) < ConstDefine.DEVIATION + ConstDefine.FORWORD_STEP - 1)//Y轴移动
+            if (Math.Abs(nextX - RealX) < config.Deviation && Math.Abs(nextY - RealY
+                ) < config.Deviation + config.ForwordStep - 1)//Y轴移动
             {
                 return true;
             }
@@ -520,7 +597,14 @@ namespace AGV_V1._0
                 nextMoveDirection = MoveDirecion.XDirection;
             }
         }
-        public bool EqualWithRealLocation(int srcX, int srcY)
+        void UpdateRealLocation()
+        {
+            if (!CheckAgvCorrect()) { return; }
+            RealX = (int)Math.Round(agvInfo.CurLocation.CurNode.X / 1000.0);
+            RealY = (int)Math.Round(agvInfo.CurLocation.CurNode.Y / 1000.0);
+            ElecMap.Instance.mapnode[RealX, RealY].NodeCanUsed = this.Id;
+        }
+        bool CheckAgvCorrect()
         {
             if (agvInfo == null)
             {
@@ -534,14 +618,19 @@ namespace AGV_V1._0
             //{
             //    return false;
             //}
+            return true;
+        }
+        public bool EqualWithRealLocation(int srcX, int srcY)
+        {
+            if (!CheckAgvCorrect()) { return false; }
             double tempX = agvInfo.CurLocation.CurNode.X / 1000.0;
             double tempY = agvInfo.CurLocation.CurNode.Y / 1000.0;
-            if (Math.Abs(srcX - tempX) < ConstDefine.DEVIATION && Math.Abs(srcY - tempY) < ConstDefine.DEVIATION)
+            if (Math.Abs(srcX - tempX) < config.Deviation && Math.Abs(srcY - tempY) < config.Deviation)
             {
                 return true;
             }
-            if (Math.Abs(srcX - tempX) < ConstDefine.DEVIATION && Math.Abs(srcY - tempY
-                ) < ConstDefine.DEVIATION)
+            if (Math.Abs(srcX - tempX) < config.Deviation && Math.Abs(srcY - tempY
+                ) < config.Deviation)
             {
                 return true;
             }
