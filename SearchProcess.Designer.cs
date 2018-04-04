@@ -89,6 +89,7 @@
             this.Location = new System.Drawing.Point(900, 60);
             this.Name = "SearchProcess";
             this.Text = "SearchProcess";
+            this.Load += new System.EventHandler(this.SearchProcess_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.SearchProcess_Paint);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();

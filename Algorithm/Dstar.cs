@@ -12,7 +12,7 @@ namespace AGV_V1._0.Algorithm
 
     class Dstar : IAlgorithm
     {
-        Queue<Close> OpenList = new Queue<Close>();
+        List<Close> OpenList;
         int correnti, correntj;
         private int hp = 10;
         private int wp = 10;
@@ -22,10 +22,10 @@ namespace AGV_V1._0.Algorithm
         private int endY;
 
         //INSERT THE ELEMENT S INTO OPENLIST
-         void insert(Queue<Close> OpenList, Close s)
+         void insert(List<Close> OpenList, Close s)
         {
             s.Node.tag = "OPEN";
-            OpenList.Enqueue(s);
+            PushNodeToOpenList(s);
         }//end of insert
         //GIVING VALUES TO SI,SJ (THE PROBEBLY VALUE OF NEIGHBOURS OF STATE IN [IOLD,JOLD] POSITION)
          void vs(int[] si, int[] sj, int iold, int jold)
@@ -47,7 +47,7 @@ namespace AGV_V1._0.Algorithm
             //si[7] = iold + 1; sj[7] = jold - 1;
         }//end of vs
          //THE PROCESS STEPS IN "CROSS" MOVING TO NIEGHBOURS
-         void crossmove(int si, int sj, Close s, Close old, Queue<Close> OpenList)
+         void crossmove(int si, int sj, Close s, Close old, List<Close> OpenList)
         {
             if (s.Node.tag == "NEW")
             {
@@ -64,7 +64,7 @@ namespace AGV_V1._0.Algorithm
 
 
         //THE PROCESS STEPS IN "HORIZONTALY" OR "VERTICALLY" MOVING TO NIEGHBOURS
-         void linemove(int si, int sj, Close s, Close old, Queue<Close> OpenList)
+         void linemove(int si, int sj, Close s, Close old, List<Close> OpenList)
         {
 
             if (s.Node.tag == "NEW")
@@ -78,53 +78,11 @@ namespace AGV_V1._0.Algorithm
             }
 
         }//end of linemove
-
-         void sortqueue(Queue<Close> OpenList, Close[,] state)
-        {
-            int ind = OpenList.Count;
-
-            double[] kk = new double[ind];
-            int[] ii = new int[ind];
-            int[] jj = new int[ind];
-
-            Close d = new Close();
-
-            for (int i = 0; i < ind; i++)
-            {
-                d = (Close)OpenList.Dequeue();
-                kk[i] = d.G;
-                ii[i] = d.Node.x;
-                jj[i] = d.Node.y;
-            }
-
-            for (int i = 0; i < ind; i++)
-                for (int j = 0; j < ind; j++)
-                {
-                    if (kk[i] < kk[j])
-                    {
-                        double tempk = kk[i];
-                        kk[i] = kk[j];
-                        kk[j] = tempk;
-
-                        int tempi = ii[i];
-                        ii[i] = ii[j];
-                        ii[j] = tempi;
-
-                        int tempj = jj[i];
-                        jj[i] = jj[j];
-                        jj[j] = tempj;
-                    }
-                }
-
-            for (int i = 0; i < ind; i++)
-            {
-                OpenList.Enqueue(state[ii[i], jj[i]]);
-            }
-        }//end of sortqueue
+        
          void setstatus(Close[,] a, int hp, int wp, int gx, int gy, int sx, int sy)
         {
-            for (int j = 0; j < hp; j++)
-                for (int i = 0; i < wp; i++)
+             for (int i = 0; i < hp; i++)
+               for (int j = 0; j < wp; j++)
                 {
                     if (i == gx && j == gy)
                         a[i, j].Node.status = "GOAL";
@@ -140,30 +98,30 @@ namespace AGV_V1._0.Algorithm
         {
             for (int j = 0; j < hp; j++)
                 for (int i = 0; i < wp; i++)
-                    a[i, j].Node.tag = "NEW";
+                    a[j, i].Node.tag = "NEW";
         }//end of settag
 
 
         //SET DIMATION VALUE OF MY NODE
          void setdimval(Close[,] a, int hp, int wp)
         {
-            for (int j = 0; j < hp; j++)
-                for (int i = 0; i < wp; i++)
+            for (int i = 0; i < hp; i++)
+                for (int j = 0; j < wp; j++)
                 {
                     a[i, j].Node.x = i;
-                    a[i, j].Node.y = j;
+                    a[i, j].Node.y =j;
                 }
         }//end of setdimval
 
         void initClose(Close[,] cls, Node[,] graph)
         {
             int i, j;
-            for (i = 0; i < wp; i++)
+            for (i = 0; i < hp; i++)
             {
-                for (j = 0; j < hp; j++)
+                for (j = 0; j < wp; j++)
                 {
                     cls[i, j] = new Close { };
-                    cls[i, j].Node = graph[j, i];               // Close表所指节点
+                    cls[i, j].Node = graph[i, j];               // Close表所指节点
                     cls[i, j].Node.isSearched = -1;// !(graph[i, j].node_Type);  // 是否被访问
                     cls[i, j].From = null;                    // 所来节点
                     cls[i, j].G = 0;  //需要根据前面的点计算
@@ -174,17 +132,36 @@ namespace AGV_V1._0.Algorithm
             //cls[endX, endY].G = AstarUtil.Infinity;     //移步花费代价值
             //cls[beginX, beginY].F = cls[beginX, beginY].H;            //起始点评价初始值
         }
-
+        void PushNodeToOpenList(Close close)
+        {
+            for (int i = OpenList.Count-1; i>=0; i--)
+            {
+                if (close.G < OpenList[i].G)
+                {
+                    continue;
+                }
+                OpenList.Insert(i+1,close);
+                return;
+            }
+            OpenList.Add(close);
+        }
+        Close FetchNodeFromOpenList()
+        {
+            Close temp = OpenList[0];
+            OpenList.RemoveAt(0);
+            return temp;
+        }
         public List<MyPoint> Search(Node[,] graph, int beginX, int beginY, int endX, int endY, Direction beginDir)
         {
+            OpenList = new List<Close>();
             List<MyPoint> route = new List<MyPoint>();
-            wp = graph.GetLength(1);
             hp = graph.GetLength(0);
+            wp = graph.GetLength(1);
             this.beginX = beginX;
             this.beginY = beginY;
             this.endX = endX;
             this.endY = endY;
-            Close[,] close = new Close[wp, hp];
+            Close[,] close = new Close[hp, wp];
             initClose(close, graph);
             close[beginX, beginY].Node.isSearched = 0;
 
@@ -200,12 +177,12 @@ namespace AGV_V1._0.Algorithm
             Close d = new Close();
             int[] si = new int[8];
             int[] sj = new int[8];
-            
 
+            int index = 0;
             do
             {
 
-                d = (Close)OpenList.Dequeue();
+                d = FetchNodeFromOpenList();
                 kold = d.G;
                 iold = d.Node.x;
                 jold = d.Node.y;
@@ -216,20 +193,21 @@ namespace AGV_V1._0.Algorithm
 
                 for (int i = 0; i < 8; i++)
                 {
-                    int col = si[i], row = sj[i];
+                    int row = si[i], col = sj[i];
 
-                    if ((col <= wp - 1 && col >= 0) && (row <= hp - 1 && row >= 0))
+                    if ((row <= hp - 1 && row >= 0) && (col <= wp - 1 && col >= 0))
                     {
-                        if (col != iold && row != jold)
-                            crossmove(col, row, close[col, row], close[iold, jold], OpenList);
+                        if (row != iold && col != jold)
+                            crossmove(row, col, close[row, col], close[iold, jold], OpenList);
 
                         else
-                            linemove(col, row, close[col, row], close[iold, jold], OpenList);
+                            linemove(row, col, close[row, col], close[iold, jold], OpenList);
                     }
                 }
-
                 ind = OpenList.Count;
-                sortqueue(OpenList, close);
+                //graph[iold, jold].isSearched = index;
+                //index++;
+                graph[iold, jold].isSearched = (int)close[iold, jold].G;
 
                 String text =  "[" + iold.ToString() + "," + jold.ToString() + "] " + close[iold, jold].G.ToString() + " - ";
                // Console.WriteLine(text);
@@ -240,7 +218,8 @@ namespace AGV_V1._0.Algorithm
             correnti = iold;
             correntj = jold;
 
-            route= findpath(close, endX, endY);
+
+            route = findpath(close, endX, endY);
 
             return route;
         }
@@ -338,7 +317,6 @@ namespace AGV_V1._0.Algorithm
                     if (mii == Mi[ii] && mjj == Mj[ii])
                         if (y[ii] == "OBSTACLE" && z[ii] == "OBSTACLE")
                         {
-
                             map[mii, mjj].H = 10000;
                             map[mii, mjj].Node.status = "OBSTACLE";
                             insert(OpenList, map[mii, mjj]);
@@ -354,12 +332,11 @@ namespace AGV_V1._0.Algorithm
                             double kold;
                             bool good;
                             good = true;
-                            sortqueue(OpenList, map);
 
                             do
                             {
                                 Close d = new Close();
-                                d = (Close)OpenList.Dequeue();
+                                d = FetchNodeFromOpenList();
                                 kold = d.G;
                                 iold = d.Node.x;
                                 jold = d.Node.y;
@@ -389,7 +366,6 @@ namespace AGV_V1._0.Algorithm
                                                 map[r, c].H = tt;
                                                 map[r, c].G = tt;
                                                 insert(OpenList, map[r, c]);
-                                                sortqueue(OpenList, map);
                                             }
                                             else if (((map[r, c].From == map[iold, jold]) && (map[r, c].H != tt)) || ((map[r, c].From != map[iold, jold]) && ((float)map[r, c].H > (float)tt)))
                                                 if (map[r, c].Node.status != "OBSTACLE")
@@ -400,7 +376,6 @@ namespace AGV_V1._0.Algorithm
                                                     if (map[r, c].Node.tag == "CLOSE")
                                                     {
                                                         insert(OpenList, map[r, c]);
-                                                        sortqueue(OpenList, map);
                                                     }
                                                 }
                                         }
@@ -437,7 +412,6 @@ namespace AGV_V1._0.Algorithm
                                                         if (map[iold, jold].H == 10000)
                                                             map[r, c].H = 10000;
                                                         insert(OpenList, map[r, c]);
-                                                        sortqueue(OpenList, map);
                                                     }
 
                                                     else
@@ -453,7 +427,6 @@ namespace AGV_V1._0.Algorithm
                                                     {
                                                         map[iold, jold].G = tt;
                                                         insert(OpenList, map[iold, jold]);
-                                                        sortqueue(OpenList, map);
                                                     }
                                                     else
                                                     {
@@ -466,7 +439,6 @@ namespace AGV_V1._0.Algorithm
                                                                     if (map[r, c].H > kold)
                                                                     {
                                                                         insert(OpenList, map[r, c]);
-                                                                        sortqueue(OpenList, map);
                                                                     }
                                                                 }
                                                             }
@@ -487,7 +459,7 @@ namespace AGV_V1._0.Algorithm
                             while (end)
                             {
                                 Close d = new Close();
-                                d = (Close)OpenList.Dequeue();
+                                d = FetchNodeFromOpenList();
                                 kold = d.G;
                                 iold = d.Node.x;
                                 jold = d.Node.y;
@@ -516,7 +488,6 @@ namespace AGV_V1._0.Algorithm
                                                     map[r, c].H = map[iold, jold].H + co;
                                                     map[r, c].G = map[r, c].H;
                                                     insert(OpenList, map[r, c]);
-                                                    sortqueue(OpenList, map);
                                                 }
                                                 else if (((map[r, c].From == map[iold, jold]) && ((float)map[r, c].H != (float)tt)) || ((map[r, c].From != map[iold, jold]) && ((float)map[r, c].H > (float)tt)))
                                                 {
@@ -528,7 +499,6 @@ namespace AGV_V1._0.Algorithm
                                                         if (map[r, c].Node.tag == "CLOSE")
                                                         {
                                                             insert(OpenList, map[r, c]);
-                                                            sortqueue(OpenList, map);
                                                         }
                                                     }
                                                 }
@@ -557,7 +527,6 @@ namespace AGV_V1._0.Algorithm
                                                     map[r, c].H = tt;
                                                     map[r, c].G = tt;
                                                     insert(OpenList, map[r, c]);
-                                                    sortqueue(OpenList, map);
                                                 }
                                                 else if ((map[r, c].From == map[iold, jold]) && ((float)map[r, c].H != (float)tt))
                                                 {
@@ -568,7 +537,6 @@ namespace AGV_V1._0.Algorithm
                                                         if (map[r, c].H > 10000)
                                                             map[r, c].H = 10000;
                                                         insert(OpenList, map[r, c]);
-                                                        sortqueue(OpenList, map);
                                                     }
 
                                                 }
@@ -578,13 +546,11 @@ namespace AGV_V1._0.Algorithm
                                                     {
                                                         map[iold, jold].G = map[iold, jold].H;
                                                         insert(OpenList, map[iold, jold]);
-                                                        sortqueue(OpenList, map);
                                                     }
                                                 }
                                                 else if ((map[r, c].From != map[iold, jold]) && ((float)map[iold, jold].H > (float)(map[r, c].H + co)) && (map[r, c].Node.tag == "CLOSE") && (map[r, c].H > (float)kold))
                                                 {
                                                     insert(OpenList, map[r, c]);
-                                                    sortqueue(OpenList, map);
                                                 }
 
                                             }
@@ -596,8 +562,7 @@ namespace AGV_V1._0.Algorithm
                                 else
                                 {
                                     end = false;
-                                    OpenList.Enqueue(map[iold, jold]);
-                                    sortqueue(OpenList, map);
+                                    PushNodeToOpenList(map[iold, jold]);
                                 }
 
                             }

@@ -112,13 +112,13 @@ namespace AGV_V1._0
                     }
                     if (j == 0 || j == width- 1)
                     {
-                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, 0, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
+                        DrawUtil.FillRectangle(g, Color.FromArgb(140, 0, 0, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
                         DrawUtil.DrawString(g, i, nodeLength / 2, Color.Yellow, point_x, point_y);
                     }
 
                     if (graph[i, j].isSearched>=0)
                     {
-                        DrawUtil.FillRectangle(g, Color.FromArgb(180, 0, graph[i,j].isSearched, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
+                        DrawUtil.FillRectangle(g, Color.FromArgb(140, 0,120, 0), point_x, point_y, nodeLength - 2, nodeLength - 2);
                         DrawUtil.DrawString(g, graph[i,j].isSearched, 9,Color.White, point_x, point_y);
 
                     }
@@ -136,13 +136,13 @@ namespace AGV_V1._0
                     {
                         colorR = 25;
                     }
-                    DrawUtil.FillRectangle(g, Color.FromArgb(180, colorR, 0, 0), route[i].Y * nodeLength, route[i].X * nodeLength, nodeLength - 2, nodeLength - 2);
+                    DrawUtil.FillRectangle(g, Color.FromArgb(100, colorR, 0, 0), route[i].Y * nodeLength, route[i].X * nodeLength, nodeLength - 2, nodeLength - 2);
                     
                 }
             }
 
             DrawUtil.FillEllipse(g, Color.Blue, startX*nodeLength, startY*nodeLength, nodeLength - 2, nodeLength - 2);
-            DrawUtil.FillEllipse(g, Color.FromArgb(180, 255, 0, 0), endX*nodeLength, endY*nodeLength, nodeLength - 2, nodeLength - 2);
+            DrawUtil.FillEllipse(g, Color.FromArgb(100, 255, 0, 0), endX*nodeLength, endY*nodeLength, nodeLength - 2, nodeLength - 2);
 
             pic.Image = surface;
 
@@ -156,6 +156,11 @@ namespace AGV_V1._0
         private void timer1_Tick(object sender, EventArgs e)
         {
             LoadView();
+        }
+
+        private void SearchProcess_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

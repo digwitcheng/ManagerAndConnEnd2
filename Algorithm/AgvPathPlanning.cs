@@ -31,7 +31,7 @@ namespace Agv.PathPlanning
         private const int Left = (1 << 2);
         private const int Up = (1 << 3);
 
-        Node[,] graph = null;
+        
         int beginX, beginY, endX, endY; //起始点、终点
         Direction beginDir; //当前搜索方向
 
@@ -45,7 +45,7 @@ namespace Agv.PathPlanning
             this.algorithm = algorithm;
         }
 
-        void initGraph(ElecMap elc, List<MyPoint> scanner, List<MyPoint> lockNode, int v_num, int beginX, int beginY, int endX, int endY, Direction direction)
+        void initGraph(ElecMap elc, List<MyPoint> scanner, List<MyPoint> lockNode, int v_num, int beginX, int beginY, int endX, int endY, Direction direction,Node[,]graph)
         //  public void initGraph(ElecMap elc, List<MyPoint> scanner,ConcurrentQueue<MyPoint> lockNode, int v_num, int sx, int sy, int dx, int dy, Direction direction)
         {
 
@@ -60,9 +60,6 @@ namespace Agv.PathPlanning
             Width = elc.WidthNum;
             //Width = width;
             //Height = height;
-
-            graph = new Node[Height, Width];
-
             for (i = 0; i < Height; i++)
             {
                 for (j = 0; j < Width; j++)
@@ -81,7 +78,7 @@ namespace Agv.PathPlanning
 
                 }
             }
-            if (NodeDirCount(beginX, beginY) <= lockNode.Count&&lockNode.Count>0)
+            if (NodeDirCount(graph,beginX, beginY) <= lockNode.Count&&lockNode.Count>0)
             {
                 lockNode.Remove(lockNode[0]);
             }
@@ -135,7 +132,7 @@ namespace Agv.PathPlanning
             }
         }
        
-        int NodeDirCount(int x, int y)
+        int NodeDirCount(Node[,]graph,int x, int y)
         {
             int count = 0;
             if (graph[x, y].upDifficulty<Node.MAX_ABLE_PASS)
@@ -163,12 +160,14 @@ namespace Agv.PathPlanning
         {
 
             // ChangeMap(elc, width, height);  // 转换寻找路径的可达还是不可达
-            initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
+            algorithm = new Dstar();
+            Node[,] graph = new Node[height, width];
+            initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction,graph);
             List<MyPoint> route = algorithm.Search(graph,beginX,beginY,endX,endY,direction);
             if (route.Count < 1)
             {
                 lockNode.Clear();
-                initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction);
+                initGraph(elc, scannerNode, lockNode, v_num, firstX, firstY, endX, endY, direction,graph);
                 route = algorithm.Search(graph, beginX, beginY, endX, endY, direction);
             }
 

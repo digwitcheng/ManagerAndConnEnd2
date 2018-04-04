@@ -22,8 +22,8 @@ namespace AGV_V1._0.ThreadCode
                 isCanSendNext = value;
             }
         }
-         private static SendPacketThread instance;
-        public static SendPacketThread Instance
+        private static SendPacketThread instance;
+        public static  SendPacketThread Instance
         {
             get
             {

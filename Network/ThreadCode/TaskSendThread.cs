@@ -43,7 +43,7 @@ namespace AGV_V1._0.Network.ThreadCode
         protected override void Run()
         {
             try
-            {                
+            {
                 if (FinishedQueue.Instance.IsHasData())
                 {
                     Vehicle v = FinishedQueue.Instance.Dequeue();

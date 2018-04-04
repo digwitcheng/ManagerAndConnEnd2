@@ -20,5 +20,6 @@ namespace AGV_V1._0.Queue
                 return instance;
             }
         }
+
     }
 }
