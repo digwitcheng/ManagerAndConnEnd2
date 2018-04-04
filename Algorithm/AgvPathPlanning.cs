@@ -154,10 +154,9 @@ namespace Agv.PathPlanning
 
             return count;
         }
-         
-       
-        public List<MyPoint> Search(ElecMap elc, List<MyPoint> scannerNode, List<MyPoint> lockNode, int v_num, int width, int height, int firstX, int firstY, int endX, int endY, Direction direction)
+            public List<MyPoint> Search(ElecMap elc, List<MyPoint> scannerNode, List<MyPoint> lockNode, int v_num, int width, int height, int firstX, int firstY, int endX, int endY, Direction direction,IAlgorithm algorithm)
         {
+            this.algorithm = algorithm;
 
             // ChangeMap(elc, width, height);  // 转换寻找路径的可达还是不可达
             Node[,] graph = new Node[height, width];
@@ -180,7 +179,7 @@ namespace Agv.PathPlanning
             //    route.Insert(0,new MyPoint(beginX, beginY));
             //}
 
-            SearchProcess.SetGraph(graph,route,firstY,firstX,endY,endX);
+           SearchProcess.SetGraph(graph,route,firstY,firstX,endY,endX);
             
             return route;
         }

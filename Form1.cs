@@ -461,7 +461,7 @@ namespace AGV_V1._0
             {
                 for (int i = 0; i < v.Length; i++)
                 {
-                    v[i].Draw(g);
+                    DrawVehicle(g,v[i]);
                     v[0].X = 1111;
                 }
             }
@@ -487,6 +487,30 @@ namespace AGV_V1._0
             pic.Image = surface;
 
             DrawMsgOnPic();
+        }
+        /// <summary>
+        /// 重绘函数
+        /// </summary>
+        /// <param name="g"></param>
+        void DrawVehicle(Graphics g, Vehicle v)
+        {
+
+#if moni
+            Rectangle rect = new Rectangle(v.BeginY * ConstDefine.g_NodeLength, (int)v.BeginX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
+            DrawUtil.FillRectangle(g, v.showColor, rect);
+
+            PointF p = new PointF((int)((v.BeginY) * ConstDefine.g_NodeLength), (int)((v.BeginX) * ConstDefine.g_NodeLength));
+            DrawUtil.DrawString(g, v.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
+#else
+
+                Rectangle rect = new Rectangle(v.RealY * ConstDefine.g_NodeLength, (int)v.RealX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
+                DrawUtil.FillRectangle(g, v.showColor, rect);
+
+                PointF p = new PointF((int)((v.RealY) * ConstDefine.g_NodeLength), (int)((v.RealX) * ConstDefine.g_NodeLength));
+                DrawUtil.DrawString(g, v.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
+#endif
+
+
         }
 
         void drawArrow(int y, int x)
@@ -804,13 +828,14 @@ namespace AGV_V1._0
             //SendPacketThread.Instance.ShowMessage -= OnShowMessageWithPicBox;
             //SendPacketThread.Instance.End();
         }
+        
 
-        private void pic_DoubleClick(object sender, EventArgs e)
+        private void pic_Click(object sender, EventArgs e)
         {
             Point clickPoint;
             clickPoint = pic.PointToClient(Cursor.Position);
-            int cx= clickPoint.Y / ConstDefine.g_NodeLength;
-            int cy = clickPoint.X /ConstDefine.g_NodeLength ;
+            int cx = clickPoint.Y / ConstDefine.g_NodeLength;
+            int cy = clickPoint.X / ConstDefine.g_NodeLength;
             if (cx >= 0 && cx < ConstDefine.g_HeightNum && cy >= 0 && cy < ConstDefine.g_WidthNum)
             {
                 ElecMap.Instance.mapnode[cx, cy].IsAbleCross = false;
@@ -818,7 +843,9 @@ namespace AGV_V1._0
                 ElecMap.Instance.mapnode[cx, cy].LeftDifficulty = MapNode.MAX_ABLE_PASS;
                 ElecMap.Instance.mapnode[cx, cy].DownDifficulty = MapNode.MAX_ABLE_PASS;
                 ElecMap.Instance.mapnode[cx, cy].UpDifficulty = MapNode.MAX_ABLE_PASS;
-            } 
+            }
+            SetMapView();
+            this.Invalidate();
         }
     }
 }

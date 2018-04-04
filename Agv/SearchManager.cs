@@ -14,7 +14,7 @@ namespace AGV_V1._0
     class SearchManager
     {
         ElecMap Elc;
-        AgvPathPlanning astarSearch;
+        AgvPathPlanning algorithm;
         //private readonly object searchLock = new object();
 
         private static SearchManager _instance;
@@ -32,7 +32,7 @@ namespace AGV_V1._0
         public SearchManager()
         {
             Elc = ElecMap.Instance;
-            astarSearch = new AgvPathPlanning(new Dstar());
+            algorithm = new AgvPathPlanning(new Astar());
 
         }
         private int ResearchCount
@@ -43,21 +43,16 @@ namespace AGV_V1._0
         }
         public void ReSearchRoute(Vehicle v)
         {
-            //lock (searchLock)
-            //{
+            //Dstar dstar = (Dstar)v.algorithm;
+            //v.Route = dstar.findpath(v.EndX,v.EndY);
+            //return;
+
             ResearchCount++;
             if (v.Route == null || v.Route.Count <= v.VirtualTPtr)
             {
                 return;
             }
-            //if (ResearchCount > ConstDefine.RESEARCH_COUNT && v.BeginX == route[0].X && v.BeginY == route[0].Y)
-            //{
-            //    this.vehical_state = State.cannotToDestination;
-            //    route = null;
-            //    return;
-            //}
             v.LockNode.Add(v.Route[v.VirtualTPtr]);
-            //Elc.mapnode[route[Virtual_tPtr].X, route[Virtual_tPtr].Y].LockNode = v_num;
             for (int i = 1; i < ConstDefine.FORWORD_STEP - 1; i++)
             {
                 if (v.TPtr + i < v.Route.Count - 1)
@@ -65,13 +60,9 @@ namespace AGV_V1._0
                     Elc.mapnode[v.Route[v.TPtr + i].X, v.Route[v.TPtr + i].Y].NodeCanUsed = -1;
                 }
             }
-            //Elc.mapnode[Route[8].X, Route[8].Y].LockNode = v_num;
             v.BeginX = v.Route[v.TPtr].X;
             v.BeginY = v.Route[v.TPtr].Y;
-            //Task.Factory.StartNew(() => SearchRoute(Elc), TaskCreationOptions.None);
             SearchRoute(v);
-            //}
-            // Elc.mapnode[Route[Virtual_tPtr].X, Route[Virtual_tPtr].Y].LockNode = -1;
         }
         public void SearchRoute(Vehicle v)
         {
@@ -91,7 +82,7 @@ namespace AGV_V1._0
             {
                 scannerNode = Elc.GetScanner();
             }
-            List<MyPoint> routeList = astarSearch.Search(Elc,scannerNode, v.LockNode, v.Id, Elc.WidthNum, Elc.HeightNum, v.BeginX, v.BeginY, v.EndX, v.EndY, v.Dir);
+            List<MyPoint> routeList = algorithm.Search(Elc,scannerNode, v.LockNode, v.Id, Elc.WidthNum, Elc.HeightNum, v.BeginX, v.BeginY, v.EndX, v.EndY, v.Dir,v.algorithm);
             //this.Speed = 0;
             Elc.mapnode[v.BeginX, v.BeginY].NodeCanUsed = v.Id;
             // Elc.mapnode[startX, startY].NodeCanUsed = false;//搜索完,小车自己所在的地方被小车占用           
@@ -108,7 +99,7 @@ namespace AGV_V1._0
                 {
 
                     MyPoint nextEnd = ElecMap.Instance.CalculateScannerPoint(new MyPoint(v.EndX, v.EndY));
-                    List<MyPoint> addRoute = astarSearch.Search(Elc,new List<MyPoint>(), v.LockNode, v.Id, Elc.WidthNum, Elc.HeightNum, v.EndX, v.EndY, nextEnd.X, nextEnd.Y, v.Dir);
+                    List<MyPoint> addRoute = algorithm.Search(Elc,new List<MyPoint>(), v.LockNode, v.Id, Elc.WidthNum, Elc.HeightNum, v.EndX, v.EndY, nextEnd.X, nextEnd.Y, v.Dir,v.algorithm);
                     if (addRoute != null && addRoute.Count > 1)
                     {
                         for (int i = 1; i < addRoute.Count; i++)

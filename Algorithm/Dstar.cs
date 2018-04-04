@@ -19,7 +19,7 @@ namespace AGV_V1._0.Algorithm
         private int beginX;
         private int beginY;
         private int endX;
-        private int endY;
+        private int endY;        
 
         //INSERT THE ELEMENT S INTO OPENLIST
          void insert(List<Close> OpenList, Close s)
@@ -161,12 +161,10 @@ namespace AGV_V1._0.Algorithm
             this.beginY = beginY;
             this.endX = endX;
             this.endY = endY;
-            Close[,] close = new Close[hp, wp];
+            Close[,] close  = new Close[hp, wp];
             initClose(close, graph);
             close[beginX, beginY].Node.isSearched = 0;
-
-            //wp = close.GetLength(0);
-            // hp = close.GetLength(1);
+            
 
             setdimval(close, hp, wp);
             settag(close, hp, wp);
@@ -177,8 +175,7 @@ namespace AGV_V1._0.Algorithm
             Close d = new Close();
             int[] si = new int[8];
             int[] sj = new int[8];
-
-            int index = 0;
+            
             do
             {
 
@@ -254,6 +251,7 @@ namespace AGV_V1._0.Algorithm
             int goali = gx;
             int goalj = gy;
             bool ddd = true;
+            route.Add(new MyPoint(beginX, beginY));
             do
             {
 
@@ -581,10 +579,9 @@ namespace AGV_V1._0.Algorithm
                 pathcoast += map[correnti, correntj].H;
                 route.Add(new MyPoint(correnti, correntj));
 
-                Console.Write("(" + correnti.ToString() + ", " + correntj.ToString() + ") - ");
+               // Console.Write("(" + correnti.ToString() + ", " + correntj.ToString() + ") - ");
 
-            } while (ddd);
-            Console.WriteLine();
+            } while (ddd);            
             return route;
 
         }

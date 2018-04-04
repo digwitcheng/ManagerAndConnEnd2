@@ -238,7 +238,9 @@ namespace AGV_V1._0
             vehicles = new Vehicle[vehicleCount];
             for (int i = 0; i < vehicleCount; i++)
             {
-                vehicles[i] = new Vehicle(FileUtil.sendData[i].BeginX, FileUtil.sendData[i].BeginY, i, false, Direction.Right);
+                VehicleConfiguration config = new VehicleConfiguration();
+                config.PathPlanningAlgorithm = new Dstar();
+                vehicles[i] = new Vehicle(FileUtil.sendData[i].BeginX, FileUtil.sendData[i].BeginY, i, false, Direction.Right, config);
                 //MyPoint endPoint = RouteUtil.RandPoint(ElecMap.Instance);
                 //MyPoint mp = SqlManager.Instance.GetVehicleCurLocationWithId(i);
                 //if (mp != null)
