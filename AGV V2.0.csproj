@@ -90,6 +90,8 @@
     <Compile Include="Algorithm\AgvPathPlanning.cs" />
     <Compile Include="Algorithm\Astar.cs" />
     <Compile Include="Algorithm\Dstar.cs" />
+    <Compile Include="Algorithm\Dstar2\Dstar2.cs" />
+    <Compile Include="Algorithm\Dstar2\Cell.cs" />
     <Compile Include="Algorithm\IAlgorithm.cs" />
     <Compile Include="Algorithm\SearchUtil.cs" />
     <Compile Include="Algorithm\Close.cs" />
@@ -426,6 +428,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

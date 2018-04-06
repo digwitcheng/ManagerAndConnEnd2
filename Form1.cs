@@ -40,9 +40,12 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Tcp;
 using AGVSocket.Network;
+using System.Diagnostics.Contracts;
+using System.Text.RegularExpressions;
 
 namespace AGV_V1._0
 {
+   
     public partial class Form1 : Form
     {
         public const float PANEL_RADIO = 0.7f;   //界面布局，中间场地占屏比
@@ -93,7 +96,8 @@ namespace AGV_V1._0
         {
 
             InitializeComponent();
-           // InitServer();//初始化服务器
+            
+            // InitServer();//初始化服务器
             InitUiView();//绘制界面
             StartThread();//启动发送，接收，搜索等线程
             InitialSystem();
@@ -103,11 +107,17 @@ namespace AGV_V1._0
             SearchProcess sp = new SearchProcess();
             sp.Show();
             sp.SetDesktopLocation(1200, 190);
-        }
 
+            Test();
+
+        }
+        void Test()
+        {
+          
+        }
         private void ReInitWithiRealAgv()
         {
-            
+           
             VehicleManager.Instance.ReInitWithiRealAgv();
         }
 

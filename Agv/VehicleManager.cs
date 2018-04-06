@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AGV_V1._0.Algorithm.Dstar2;
 
 namespace AGV_V1._0
 {

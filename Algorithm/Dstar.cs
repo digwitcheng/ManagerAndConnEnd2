@@ -230,7 +230,7 @@ namespace AGV_V1._0.Algorithm
                   
               }
          }//end of k_min
-          public List<MyPoint> findpath(Close[,]map,int gx,int gy)
+          public List<MyPoint> findpath(Close [,]map,int gx,int gy)
         {
             List<MyPoint> route = new List<MyPoint>();
 
@@ -280,12 +280,10 @@ namespace AGV_V1._0.Algorithm
                     z[0] = "NULL";
                 else
                     z[0] = map[correnti, correntj + 1].Node.status;
-
                 if (correntj - 1 < 0)
                     z[1] = "NULL";
                 else
                     z[1] = map[correnti, correntj - 1].Node.status;
-
                 if (correnti - 1 < 0)
                     z[2] = "NULL";
                 else
