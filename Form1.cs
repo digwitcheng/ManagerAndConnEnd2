@@ -76,7 +76,7 @@ namespace AGV_V1._0
         {2 ,Resources.left_white},             //0010   2
         {1 ,Resources.right_white},            //0001   1
         {0 ,Resources.empty_white},            //0000   0
-        {-1,Resources.obstacle_white}                //ffff   -1
+        {-1,Resources.obstacle_white}           //ffff   -1
         };
 
         public Form1()
@@ -287,8 +287,8 @@ namespace AGV_V1._0
         {
             Elc.InitialElc();
 
-           // this.WindowState = FormWindowState.Maximized;
-            ConstDefine.g_NodeLength = (int)(FORM_WIDTH * PANEL_RADIO) / (ConstDefine.g_WidthNum+1)/2;
+            this.WindowState = FormWindowState.Maximized;
+            ConstDefine.g_NodeLength = (int)(FORM_WIDTH * PANEL_RADIO) / ConstDefine.g_WidthNum;
             MAX_NODE_LENGTH = ConstDefine.g_NodeLength * 2;
             MIN_NODE_LENGTH = ConstDefine.g_NodeLength / 2;
 
@@ -381,8 +381,7 @@ namespace AGV_V1._0
             {
                 for (int j = 0; j < Elc.WidthNum; j++)
                 {
-                    drawArrow(i, j);
-
+                     drawArrow(i, j);                   
                     //绘制标尺
                     if (i == 0 || i == Elc.HeightNum - 1)
                     {
@@ -411,39 +410,36 @@ namespace AGV_V1._0
             newSurface = new Bitmap(surface);
             Graphics gg = Graphics.FromImage(newSurface);
             //绘制探测节点
-            for (int i = 0; i < Elc.HeightNum; i++)
-            {
-                for (int j = 0; j < Elc.WidthNum; j++)
-                {
-                    if (Elc.mapnode[i, j].NodeCanUsed > -1)
-                    {
-                        Rectangle rect = new Rectangle(Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1, ConstDefine.g_NodeLength + 2, ConstDefine.g_NodeLength + 2);
-                        DrawUtil.FillRectangle(gg, Color.DarkOliveGreen, rect);
-                        PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
-                        DrawUtil.DrawString(gg,Elc.mapnode[i, j].NodeCanUsed, ConstDefine.g_NodeLength / 2, Color.Black, pf);
+            //for (int i = 0; i < Elc.HeightNum; i++)
+            //{
+            //    for (int j = 0; j < Elc.WidthNum; j++)
+            //    {
+            //        if (Elc.mapnode[i, j].NodeCanUsed > -1)
+            //        {
+            //            Rectangle rect = new Rectangle(Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1, ConstDefine.g_NodeLength + 2, ConstDefine.g_NodeLength + 2);
+            //            DrawUtil.FillRectangle(gg, Color.DarkOliveGreen, rect);
+            //            PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
+            //            DrawUtil.DrawString(gg, Elc.mapnode[i, j].NodeCanUsed, ConstDefine.g_NodeLength / 2, Color.Black, pf);
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
 
-            // 绘制锁住的节点            
-            for (int num = 0; num < VehicleManager.Instance.GetVehicles().Length; num++)
-            {
-                List<MyPoint> listNode = new List<MyPoint>(VehicleManager.Instance.GetVehicles()[num].LockNode);
-                for (int q = 0; q < listNode.Count; q++)
-                {
+            //// 绘制锁住的节点            
+            //for (int num = 0; num < VehicleManager.Instance.GetVehicles().Length; num++)
+            //{
+            //    List<MyPoint> listNode = new List<MyPoint>(VehicleManager.Instance.GetVehicles()[num].LockNode);
+            //    for (int q = 0; q < listNode.Count; q++)
+            //    {
+            //        int i = listNode[q].X;
+            //        int j = listNode[q].Y;
 
-                    int i = listNode[q].X;
-                    int j = listNode[q].Y;
-
-                    Rectangle rect = new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength);
-                    DrawUtil.FillRectangle(gg, Color.Red, rect);
-                    PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
-                    DrawUtil.DrawString(gg, VehicleManager.Instance.GetVehicles()[num].Id, ConstDefine.g_NodeLength / 2, Color.DarkMagenta, pf);
-
-
-                }
-            }
+            //        Rectangle rect = new Rectangle(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y, ConstDefine.g_NodeLength, ConstDefine.g_NodeLength);
+            //        DrawUtil.FillRectangle(gg, VehicleManager.Instance.GetVehicles()[num].showColor, rect);
+            //        PointF pf = new PointF(Elc.mapnode[i, j].X-2, Elc.mapnode[i, j].Y-1);
+            //        DrawUtil.DrawString(gg, VehicleManager.Instance.GetVehicles()[num].Id, ConstDefine.g_NodeLength / 2, Color.DarkMagenta, pf);
+            //    }
+            //}
 
             ////绘制拥堵的节点
             //for (int i = 0; i < Elc.mapnode.GetLength(0); i++)
@@ -461,16 +457,15 @@ namespace AGV_V1._0
             //    }
             //}
 
-            //绘制小车
-            Vehicle[] v = VehicleManager.Instance.GetVehicles();
-            if (v != null)
-            {
-                for (int i = 0; i < v.Length; i++)
-                {
-                    DrawVehicle(gg,v[i]);
-                    v[0].X = 1111;
-                }
-            }
+            ////绘制小车
+            //Vehicle[] v = VehicleManager.Instance.GetVehicles();
+            //if (v != null)
+            //{
+            //    for (int i = 0; i < v.Length; i++)
+            //    {
+            //        DrawVehicle(gg,v[i]);
+            //    }
+            //}
             //if (first)
             //{
             //    int index = 2;
@@ -506,7 +501,7 @@ namespace AGV_V1._0
                 Rectangle rect = new Rectangle(v.BeginY * ConstDefine.g_NodeLength, (int)v.BeginX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
                 DrawUtil.FillRectangle(g, v.showColor, rect);
 
-                PointF p = new PointF((int)((v.BeginY) * ConstDefine.g_NodeLength), (int)((v.BeginX) * ConstDefine.g_NodeLength));
+                PointF p = new PointF((int)((v.BeginY) * ConstDefine.g_NodeLength-2), (int)((v.BeginX) * ConstDefine.g_NodeLength-2));
                 DrawUtil.DrawString(g, v.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
 #else
 
@@ -541,10 +536,18 @@ namespace AGV_V1._0
             {
                 dir |= Up;
             }
+            //if(Elc.mapnode[y, x].IsAbleCross == true)
+            //{
+            //    dir = -1;
+            //}
+            //else
+            //{
+            //    dir = 0;
+            //}
             Image img = IMAGE_DICT[dir];
             if (img != null)
             {
-                g.DrawImage(img, new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
+                g.DrawImage(img, new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength-1, ConstDefine.g_NodeLength-1));
 
             }
 #else

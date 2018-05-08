@@ -2,8 +2,8 @@
 {
     enum MapNodeType
         {
-            None,                  //0无
-            Road,                  //1道路
+            none,                  //0无
+            road,                  //1道路
             queuingArea,           //2排队区
             queueEntra,            //3排队区入口
             scanner,               //4扫描仪

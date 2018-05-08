@@ -40,25 +40,20 @@ namespace AGV_V1._0
         public void ReSearchRoute(Vehicle v)
         {
             ResearchCount++;
-            if (v.Route == null || v.Route.Count <= v.VirtualTPtr)
+            if (v.Route == null || v.TPtr>= v.Route.Count-1)
             {
                 return;
             }
-            v.LockNode.Add(v.Route[v.VirtualTPtr]);
-            for (int i = 1; i < v.ForwordStep - 1; i++)
+            for (int i = v.TPtr + 2; i < v.TPtr + v.ForwordStep; i++)
             {
-                if (v.TPtr + i < v.Route.Count - 1)
+                if (i <= v.Route.Count - 1)
                 {
-                    Elc.mapnode[v.Route[v.TPtr + i].X, v.Route[v.TPtr + i].Y].NodeCanUsed = -1;
+                    Elc.mapnode[v.Route[i].X, v.Route[i].Y].Free(v.Id);
                 }
             }
-            //Elc.mapnode[Route[8].X, Route[8].Y].LockNode = v_num;
             v.BeginX = v.Route[v.TPtr].X;
             v.BeginY = v.Route[v.TPtr].Y;
-            //Task.Factory.StartNew(() => SearchRoute(Elc), TaskCreationOptions.None);
             SearchRoute(v);
-            //}
-            // Elc.mapnode[Route[Virtual_tPtr].X, Route[Virtual_tPtr].Y].LockNode = -1;
         }
         public void SearchRoute(Vehicle v)
         {
@@ -72,6 +67,12 @@ namespace AGV_V1._0
                 MessageBox.Show("起点或终点超出地图界限");
                 return;
             }
+            if (v.BeginX == v.EndX && v.BeginY == v.EndX)
+            {
+                v.Arrive = true;
+                System.Console.WriteLine("起点==终点");
+                return;
+            }
             ////AstarSearch astarSearch = new AstarSearch(Elc);
             List<MyPoint> scannerNode = new List<MyPoint>();
             if (!Elc.IsSpecialArea(v.BeginX, v.BeginY))
@@ -79,7 +80,7 @@ namespace AGV_V1._0
                 scannerNode = Elc.GetScanner();
             }
             List<MyPoint> routeList = astarSearch.Search(Elc,scannerNode, v.LockNode, v.BeginX, v.BeginY, v.EndX, v.EndY, v.Dir,v.algorithm);
-            Elc.mapnode[v.BeginX, v.BeginY].NodeCanUsed = v.Id;
+            Elc.mapnode[v.BeginX, v.BeginY].Occupyed(v.Id);
             // Elc.mapnode[startX, startY].NodeCanUsed = false;//搜索完,小车自己所在的地方被小车占用           
              if (routeList.Count<1)
             {

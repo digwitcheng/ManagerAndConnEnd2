@@ -251,11 +251,11 @@ namespace AGV_V1._0
                 switch (strType)
                 {
 
-                    case "充电区": mapnode[tdx, tdy].Type = MapNodeType.chargingArea;
+                    case "chargingArea": mapnode[tdx, tdy].Type = MapNodeType.chargingArea;
                         break;
-                    case "道路": mapnode[tdx, tdy].Type = MapNodeType.Road;
+                    case "road": mapnode[tdx, tdy].Type = MapNodeType.road;
                         break;
-                    case "排队区入口": mapnode[tdx, tdy].Type = MapNodeType.queueEntra;
+                    case "queueEntra": mapnode[tdx, tdy].Type = MapNodeType.queueEntra;
                         try
                         {
                             queueEntra.Add(new MyPoint(tdx, tdy));
@@ -266,7 +266,7 @@ namespace AGV_V1._0
                             Logs.Error("排队区入口点增加异常"+ex);
                         }
                         break;
-                    case "扫描仪": mapnode[tdx, tdy].Type = MapNodeType.scanner;
+                    case "scanner": mapnode[tdx, tdy].Type = MapNodeType.scanner;
                         try
                         {
                             scanner.Add(new MyPoint(tdx, tdy));
@@ -282,7 +282,7 @@ namespace AGV_V1._0
                             Logs.Error("地图文件中有相同的扫描仪点"+ex);
                         }
                         break;
-                    case "排队区": mapnode[tdx, tdy].Type = MapNodeType.queuingArea;
+                    case "queuingArea": mapnode[tdx, tdy].Type = MapNodeType.queuingArea;
                         try
                         {
                             queuingArea.Add(new MyPoint(tdx, tdy));
@@ -293,7 +293,7 @@ namespace AGV_V1._0
                             Logs.Error("排队区点增加异常"+ex);
                         }                        
                         break;
-                    case "休息区": mapnode[tdx, tdy].Type = MapNodeType.restArea;
+                    case "restArea": mapnode[tdx, tdy].Type = MapNodeType.restArea;
                         try
                         {
                             restArea.Add(new MyPoint(tdx, tdy));
@@ -304,13 +304,13 @@ namespace AGV_V1._0
                             Logs.Error("休息区点增加异常" + ex);
                         }  
                         break;
-                    case "工位": mapnode[tdx, tdy].Type = MapNodeType.platform;
+                    case "platform": mapnode[tdx, tdy].Type = MapNodeType.platform;
                         break;
-                    case "障碍区": mapnode[tdx, tdy].Type = MapNodeType.obstacle;
+                    case "obstacle": mapnode[tdx, tdy].Type = MapNodeType.obstacle;
                         break;
-                    case "投放口": mapnode[tdx, tdy].Type = MapNodeType.deliveryPort;
+                    case "deliveryPort": mapnode[tdx, tdy].Type = MapNodeType.deliveryPort;
                         break;
-                    case "禁入点": mapnode[tdx, tdy].Type = MapNodeType.forbidNode;
+                    case "forbidNode": mapnode[tdx, tdy].Type = MapNodeType.forbidNode;
                         break;
                     default:
                         MessageBox.Show("未知的节点类型:" + strType);

@@ -12,7 +12,7 @@ namespace AGV_V1._0.Agv
         public VehicleConfiguration()
         {
             TimerInterval = 100;
-            ForwordStep = 5;
+            ForwordStep = 3;
             StopTime = 6;
             Deviation = 0.1f;
             PathPlanningAlgorithm = new Astar();

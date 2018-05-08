@@ -42,13 +42,13 @@ namespace AGV_V1._0.Algorithm
             {
                 for (int q = 0; q < Elc.WidthNum; q++)
                 {
-                    Elc.mapnode[p, q].NodeCanUsed = -1;
+                    Elc.mapnode[p, q].FreeForce();
                 }
             }
             int count = vehicle.Length;
             for (int i = 0; i < count; i++)
             {
-                Elc.mapnode[(vehicle[i].BeginX), (vehicle[i].BeginY)].NodeCanUsed = vehicle[i].Id;
+                Elc.mapnode[(vehicle[i].BeginX), (vehicle[i].BeginY)].Occupyed(vehicle[i].Id);
             }
         }
         public int changeX(int X)

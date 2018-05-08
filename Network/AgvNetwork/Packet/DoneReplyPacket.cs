@@ -33,7 +33,7 @@ namespace AGVSocket.Network.Packet
               // Form1.cm.Send(client20710711.MessageType.reStart, this.AgvId+"");
 
               
-               VehicleManager.Instance.GetVehicles()[id].CurState = State.Free;
+               VehicleManager.Instance.GetVehicles()[id].CurState = State.free;
            }
            //if (doneStyle == OprationState.EmergencyStop || doneStyle == OprationState.Swerved)
            //{

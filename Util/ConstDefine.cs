@@ -37,6 +37,8 @@
         //public const int RESEARCH_COUNT = 10;
         public const int UNLOADING_TIME = 2000;//在投放口停留的时间
 
+        public const int SWERVER_STOP = 5000;
+
 
 
 

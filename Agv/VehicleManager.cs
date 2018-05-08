@@ -56,7 +56,7 @@ namespace AGV_V1._0
         protected override void Run()
         {
 #if moni
-            Thread.Sleep(100);
+            Thread.Sleep(50);
 #else
             Thread.Sleep(ConstDefine.STEP_TIME);
 #endif
@@ -67,6 +67,10 @@ namespace AGV_V1._0
             }
             for (int vnum =0; vnum < vehicles.Length; vnum++)
             {
+                if (vnum == 165)
+                {
+                    int a = 0;
+                }
                 serinum = (byte)(serinum % 255);
                 if (vehicles[vnum].CurState == State.cannotToDestination && vehicles[vnum].Arrive == false)
                 {
@@ -89,7 +93,6 @@ namespace AGV_V1._0
                     vehicles[vnum].CurState = State.unloading;
                     vFinished.Add(vehicles[vnum]);
                     vehicles[vnum].Route.Clear();
-                    vehicles[vnum].LockNode.Clear();
                     continue;
                 }
                 if (vehicles[vnum].Arrive == true)
@@ -99,7 +102,6 @@ namespace AGV_V1._0
                     //vehicle[vnum].vehical_state = State.unloading;
                     vFinished.Add(vehicles[vnum]);
                     vehicles[vnum].Route.Clear();
-                    vehicles[vnum].LockNode.Clear();
 
                     continue;
                 }
@@ -248,7 +250,7 @@ namespace AGV_V1._0
                 int G = rand.Next(20, 225);
                 int B = rand.Next(20, 225);
                 vehicles[i].pathColor = Color.FromArgb(80, R, G, B);
-                vehicles[i].showColor = Color.FromArgb(255, R, G, B);
+                vehicles[i].showColor = Color.FromArgb(155, R, G, B);
             }
 
             vehicleInited = true;

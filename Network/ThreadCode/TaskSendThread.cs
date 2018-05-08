@@ -86,7 +86,7 @@ namespace AGV_V1._0.Network.ThreadCode
             Task.Factory.StartNew(() =>
             {
                 System.Threading.Thread.Sleep(ConstDefine.UNLOADING_TIME);
-                v.CurState = State.Free;
+                v.CurState = State.free;
                 FinishedQueue.Instance.Enqueue(v);
             });
 

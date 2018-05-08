@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Timers;
 using Agv.PathPlanning;
 using AGV_V1._0.Agv;
@@ -231,12 +232,7 @@ namespace AGV_V1._0
 
 
         
-        private ConcurrentQueue<MyPoint> crossedPoint = new ConcurrentQueue<MyPoint>();
-        public int VirtualTPtr
-        {
-            get;
-            set;
-        }
+        private ConcurrentQueue<MyPoint> crossedPoint = new ConcurrentQueue<MyPoint>();       
 
         private int tPtr;
         public int TPtr
@@ -300,10 +296,8 @@ namespace AGV_V1._0
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            UpdateRealLocation();
-
-            SetCurrentNodeOccpyAndOldNodeFree();
-
+           // UpdateRealLocation();
+           // SetCurrentNodeOccpyAndOldNodeFree();
         }
         void SetCurrentNodeOccpyAndOldNodeFree()
         {
@@ -333,7 +327,7 @@ namespace AGV_V1._0
                     bool success = crossedPoint.TryDequeue(out realCrossedPoint);
                     if (success)
                     {
-                        ElecMap.Instance.mapnode[realCrossedPoint.X, realCrossedPoint.Y].NodeCanUsed = -1;
+                        ElecMap.Instance.mapnode[realCrossedPoint.X, realCrossedPoint.Y].Free(this.Id);
                     }
                 }
 
@@ -389,8 +383,8 @@ namespace AGV_V1._0
                 {
 #if moni
                     Arrive = true;
+                    Elc.mapnode[route[route.Count - 1].X, route[route.Count - 1].Y].Occupyed(this.Id);
 #else
-                    Elc.mapnode[route[route.Count - 1].X, route[route.Count - 1].Y].NodeCanUsed = this.Id;
                     if (EqualWithRealLocation(route[route.Count - 1].X, route[route.Count - 1].Y))
                     {
                         Arrive = true;
@@ -402,12 +396,12 @@ namespace AGV_V1._0
                     }
 #endif
                 }
-#if moni
 
-#else
 
                 if (ShouldMove(TPtr + 1) == false)
                 {
+#if moni
+#else
                     BeginX = route[TPtr].X;
                     BeginY = route[TPtr].Y;
                     if (this.WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下当前位置
@@ -415,36 +409,44 @@ namespace AGV_V1._0
                         Console.WriteLine("Resend Current location");
                         return true;
                     }
+#endif
                     return false;
                 }
-#endif
+
                 List<MyPoint> lockPoint = new List<MyPoint>();
-                for (VirtualTPtr = TPtr+1; VirtualTPtr <TPtr + config.ForwordStep; VirtualTPtr++)
+                for (int VirtualTPtr = TPtr+1; VirtualTPtr <TPtr + config.ForwordStep; VirtualTPtr++)
                 {
                     if (VirtualTPtr <= route.Count - 1)
                     {
+                        if (this.Id == 148)
+                        {
+                            int a = 0;
+                        }
                         int tx = (int)route[VirtualTPtr].X;
                         int ty = (int)route[VirtualTPtr].Y;
                         Boolean IsCanMoveTo = Elc.IsVehicleCanMove(this, tx, ty);// Elc.mapnode[tx, ty].NodeCanUsed;
                         if (IsCanMoveTo)
                         {
                             lockPoint.Add(new MyPoint(tx, ty));
-                            Elc.mapnode[tx, ty].NodeCanUsed = this.Id;
+                            Elc.mapnode[tx, ty].Occupyed(this.Id);
                         }
                         else
                         {
+                            //for (int i = 1; i < config.ForwordStep - 1; i++)
+                            //{
+                            //    if (TPtr + i < Route.Count - 1 && Elc.mapnode[(int)route[TPtr + i].X, (int)route[TPtr + i].Y].NodeCanUsed == this.Id)
+                            //    {
+                            //        Elc.mapnode[(int)route[TPtr + i].X, (int)route[TPtr + i].Y].NodeCanUsed = -1;
+                            //    }
+                            //}
                             break;
                         }
                     }
                 }
                 if (lockPoint.Count>0)
                 {
-#if moni
-                    //if (TPtr == 0)
-                    //{
-                    //    ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
-                    //}
-                   ElecMap.Instance.mapnode[BeginX, BeginY].NodeCanUsed = -1;
+#if moni                               
+                    ElecMap.Instance.mapnode[BeginX, BeginY].Free(this.Id);
                     TPtr++;
                     BeginX = route[TPtr].X;
                     BeginY = route[TPtr].Y;
@@ -476,7 +478,7 @@ namespace AGV_V1._0
 
         bool ShouldMove(int nextTPtr)
         {
-            if (!CheckAgvCorrect()) { return false; }
+           
             if (nextTPtr >= route.Count)
             {
                 return false;
@@ -486,6 +488,19 @@ namespace AGV_V1._0
                 return true;
             }
             SetCurAndNextDirection(nextTPtr);
+
+#if moni
+            if (curMoveDirection != nextMoveDirection)
+            {
+                SwerveStop();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+#else
+             if (!CheckAgvCorrect()) { return false; }
             if (nextTPtr > 1)
             {
                 if (curMoveDirection != nextMoveDirection)
@@ -505,6 +520,7 @@ namespace AGV_V1._0
                 }
             }
 
+
             int nextX = route[nextTPtr].X;
             int nextY = route[nextTPtr].Y;
             UpdateRealLocation();
@@ -520,6 +536,7 @@ namespace AGV_V1._0
                 return true;
             }
             return false;
+#endif
 
         }
         //public  void SetCurDirectionEqualNext(byte serinum)
@@ -527,6 +544,15 @@ namespace AGV_V1._0
         //     curMoveDirection = nextMoveDirection;
 
         // }
+        void SwerveStop()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                System.Threading.Thread.Sleep(ConstDefine.SWERVER_STOP);
+                curMoveDirection = nextMoveDirection;
+            });
+
+        }
         void SetCurAndNextDirection(int index)
         {
             if (SwerveStoped == false)
@@ -549,7 +575,7 @@ namespace AGV_V1._0
             if (!CheckAgvCorrect()) { return; }
             RealX = (int)Math.Round(agvInfo.CurLocation.CurNode.X / 1000.0);
             RealY = (int)Math.Round(agvInfo.CurLocation.CurNode.Y / 1000.0);
-            ElecMap.Instance.mapnode[RealX, RealY].NodeCanUsed =this.Id;
+            ElecMap.Instance.mapnode[RealX, RealY].Occupyed(this.Id);
         }
         bool CheckAgvCorrect()
         {

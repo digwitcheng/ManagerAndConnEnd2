@@ -27,13 +27,48 @@ namespace AGV_V1
                     return nodeCanUsed;
                 }
             }
-            set
+        }
+        /// <summary>
+        /// 节点没被其他其他小车占用才能将其设为占用
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public bool Occupyed(int Id)
+        {
+            lock (canUseLock)
             {
-                lock (canUseLock)
+                if (nodeCanUsed == -1)
                 {
-                    nodeCanUsed = value;
+                    nodeCanUsed = Id;
+                    return true;
                 }
+                return false;
             }
+        }
+        /// <summary>
+        /// //只能释放自己所占用的
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public bool Free(int Id)
+        {
+            lock (canUseLock)
+            {
+                if (nodeCanUsed == Id)
+                {
+                    FreeForce();
+                    return true;
+                }
+                return false;
+            }
+        }
+        /// <summary>
+        /// 强制性释放
+        /// </summary>
+        public void FreeForce()
+        {
+           nodeCanUsed = -1;               
+           
         }
 
         // public int LockNode = -1;  //-1节点没有被锁定，大于-1表示被锁定

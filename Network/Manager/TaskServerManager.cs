@@ -1,9 +1,12 @@
-﻿using AGV_V1._0.Event;
+﻿using AGV_V1._0.Agv;
+using AGV_V1._0.Event;
 using AGV_V1._0.Network.Messages;
+using AGV_V1._0.Queue;
 using AGV_V1._0.Util;
 using Cowboy.Sockets;
 using System;
 using System.Text;
+using System.Windows.Forms;
 
 namespace AGV_V1._0.Server.APM
 {
@@ -45,10 +48,26 @@ namespace AGV_V1._0.Server.APM
             Console.WriteLine(str);
             OnMessageEvent(this, new MessageEventArgs(str));
 
-            string pathAgv = ConstDefine.AGV_PATH;
-            SendTo(e.Session.SessionKey, MessageType.AgvFile, pathAgv, false);
+            // string pathAgv = ConstDefine.AGV_PATH;
+            // SendTo(e.Session.SessionKey, MessageType.AgvFile, pathAgv, false);
+            SendInitArrived();
         }
-
+        void SendInitArrived()
+        {
+            Vehicle[] vehicles = VehicleManager.Instance.GetVehicles();
+            if (vehicles == null)
+            {
+                MessageBox.Show("错误！！任务已经连接，但控制系统的小车还没初始化");
+                return;
+            }
+            for (int vnum = 0; vnum < vehicles.Length; vnum++)
+            {
+                vehicles[vnum].Arrive = true;
+                vehicles[vnum].CurState =State.free;
+                FinishedQueue.Instance.Enqueue(vehicles[vnum]);
+                vehicles[vnum].Route.Clear();
+            }
+        }
         public override void server_ClientDisconnected(object sender, TcpClientDisconnectedEventArgs e)
         {
             string str = string.Format("TCP client {0} has disconnected.", e.Session.RemoteEndPoint);

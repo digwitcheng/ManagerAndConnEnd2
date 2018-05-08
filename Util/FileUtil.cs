@@ -27,8 +27,8 @@ namespace AGV_V1._0.Algorithm
             xmlfile = new XmlDocument();
             xmlfile.Load(pathMap);
             //XML2.0:获取地图的格子数
-            XmlNode map_w = xmlfile.SelectSingleNode("config/Map/widthNum");
-            XmlNode map_h = xmlfile.SelectSingleNode("config/Map/heightNum");
+            XmlNode map_w = xmlfile.SelectSingleNode("config/Map/Widthnum");
+            XmlNode map_h = xmlfile.SelectSingleNode("config/Map/Heightnum");
 
             ConstDefine.g_WidthNum = Convert.ToInt32(map_w.InnerText);
             ConstDefine.g_HeightNum = Convert.ToInt32(map_h.InnerText);

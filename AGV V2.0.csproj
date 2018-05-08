@@ -192,7 +192,7 @@
     <Compile Include="Agv\CreateStaticRoute.cs" />
     <Compile Include="Map\MapNode.cs" />
     <Compile Include="Map\MyLocation.cs" />
-    <Compile Include="Algorithm\OldPoint.cs" />
+    <Compile Include="Algorithm\MyPoint.cs" />
     <Compile Include="Agv\RouteUtil.cs" />
     <Compile Include="Map\ElecMap.cs" />
     <Compile Include="Network\Event\MessageEventArgs.cs" />
