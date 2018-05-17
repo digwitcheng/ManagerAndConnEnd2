@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace AGV_V1._0.Algorithm
 {
+    [Serializable]
     /// <summary>
     /// f=g+h  预计花费=起点到当前点+当前点到终点的预计
     /// </summary>

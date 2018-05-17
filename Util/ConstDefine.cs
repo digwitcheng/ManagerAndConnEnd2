@@ -49,6 +49,8 @@
         public const string AGV_PATH = "..\\..\\Agv\\AGV.xml";
         public const string MAP_PATH = "..\\..\\Map\\ElcMap.xml";
         public const string CONFIG_PATH = "..\\..\\NLog\\NLog.config";
+        public const string AGV_STATE_SNAPSHOT = "..\\..\\Agv\\snapshot.txt";
+
     }
    
 

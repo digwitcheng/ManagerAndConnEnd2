@@ -13,13 +13,14 @@ namespace AGV_V1._0
 
         //加一个锁
         private Object myQueueLock = new Object();
+        
 
         //判断队列里是否有数据
         public bool IsHasData()
         {
             bool ret = false;
             lock (this.myQueueLock)
-            {
+            {                
                 ret = (this.myQueue != null && this.myQueue.Count > 0);
             }
             return ret;

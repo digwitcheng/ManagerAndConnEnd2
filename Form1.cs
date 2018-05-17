@@ -27,9 +27,9 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Tcp;
 using AGVSocket.Network;
-
-
-
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+using System.IO.Pipes;
 
 namespace AGV_V1._0
 {
@@ -89,11 +89,57 @@ namespace AGV_V1._0
             InitialSystem();
 
 
+            Go();
+
 
 #if moni
 #else
             ReInitWithiRealAgv();
 #endif
+        }
+        public static async Task Go()
+        {
+            StartServer();
+            List<Task<String>> requests = new List<Task<string>>();
+            for (int i = 0; i <1000; i++)
+            {
+                requests.Add(IssueClientRequestAsync("localhost", "request #+" + i));
+
+            }
+
+            String[] responses = await Task.WhenAll(requests );
+
+            for (int i = 0; i < responses.Length; i++)
+            {
+                Console.WriteLine(responses[i]);
+            }
+        }
+        public static async Task<String> IssueClientRequestAsync(String server,String msg)
+        {
+            using(var pipe=new NamedPipeClientStream(".", "hxc", PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough))
+            {
+
+                
+                pipe.Connect();
+                
+                pipe.ReadMode = PipeTransmissionMode.Message;
+
+                Byte[] request = Encoding.UTF8.GetBytes(msg);
+                await pipe.WriteAsync(request, 0, request.Length);
+
+                Byte[] response = new Byte[1000];
+                int byteRead = await pipe.ReadAsync(response, 0, response.Length);
+                return Encoding.UTF8.GetString(response, 0, byteRead);
+            }
+        }
+        public static async void StartServer()
+        {
+            while (true)
+            {
+                var pipe = new NamedPipeServerStream("hxc",PipeDirection.InOut,-1,PipeTransmissionMode.Message,PipeOptions.Asynchronous|PipeOptions.WriteThrough);
+                await Task.Factory.FromAsync(pipe.BeginWaitForConnection, pipe.EndWaitForConnection,null);
+                Console.WriteLine("kljdkkkkkkk34444444444445555");
+            }
         }
 
         private void ReInitWithiRealAgv()
@@ -228,9 +274,19 @@ namespace AGV_V1._0
         {
             try
             {
-                FileUtil.LoadAgvXml(); //初始化agv配置文件
+                Object o = null;// FileUtil.ReadAgvSnapshot();
+                if (o != null)
+                {
+                    Vehicle[] v = (Vehicle[])o;
+                    VehicleManager.Instance.SetVehicles(v);
+                   
+                }
+                else
+                {
+                    FileUtil.LoadAgvXml(); //初始化agv配置文件
+                    VehicleManager.Instance.InitialVehicle();
+                }
 
-                VehicleManager.Instance.InitialVehicle();
                 VehicleManager.Instance.Start();
                 VehicleManager.Instance.ShowMessage += OnShowMessageDistanceCount;
 
@@ -710,6 +766,11 @@ namespace AGV_V1._0
             DisposeServer();
             Logs.Info("总任务数："+finishCountLabel.Text+" "+distanceTotal.Text);
             EndThread();
+
+            //保存小车快照
+            FileUtil.SaveAgvSnapshot(VehicleManager.Instance.GetVehicles());
+
+
             //Environment.Exit(0); 
 
         }

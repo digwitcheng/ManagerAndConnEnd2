@@ -56,7 +56,7 @@ namespace AGV_V1._0
         protected override void Run()
         {
 #if moni
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
 #else
             Thread.Sleep(ConstDefine.STEP_TIME);
 #endif
@@ -356,6 +356,11 @@ namespace AGV_V1._0
             //}
             //return v;
             return vehicles;
+        }
+        public void SetVehicles(Vehicle[] v)
+        {
+            vehicleInited = true;
+            vehicles = v;
         }
 
 

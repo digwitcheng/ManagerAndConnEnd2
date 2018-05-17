@@ -1,5 +1,8 @@
-﻿namespace AGVSocket.Network
+﻿using System;
+
+namespace AGVSocket.Network
 {
+   
     class CellPoint
     {
         private uint x;

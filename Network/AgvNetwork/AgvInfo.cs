@@ -1,7 +1,9 @@
 ﻿using AGVSocket.Network.EnumType;
+using System;
 
 namespace AGVSocket.Network
 {
+    [Serializable]
     class AgvInfo
     {
         private CurrentLocation curLocation;

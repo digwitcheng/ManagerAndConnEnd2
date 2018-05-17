@@ -167,6 +167,44 @@ namespace AGV_V1._0.Algorithm
             }
         }
 
+        public static Object ReadAgvSnapshot()
+        {
+            try
+            {
+                using (FileStream fileStream = new FileStream(ConstDefine.AGV_STATE_SNAPSHOT, FileMode.Open))
+                {
+                    var objectGraph  = SerializationUtil.DeserializeFromMemory(fileStream);
+                    return objectGraph;
+                }
+                
+            }
+            catch (IOException ex)
+            {
+                Logs.Error("保存agv快照失败:" + ex.Message);
+                return null;
+            }
+        }
+
+        public static void SaveAgvSnapshot(Vehicle[] vehicles)
+        {
+            try
+            {
+                using (FileStream fileStream = new FileStream(ConstDefine.AGV_STATE_SNAPSHOT, FileMode.Create))
+                {
+                    var objectGraph = vehicles;
+                    MemoryStream stream = SerializationUtil.SerializeToMemory(objectGraph);
+                    byte[] buffer = stream.ToArray();
+                    fileStream.Write(buffer, 0, buffer.Length);
+                    stream.Flush();
+                    stream.Close();
+                }
+            }
+            catch(IOException ex)
+            {
+                Logs.Error("保存agv快照失败:"+ex.Message);
+            }
+           
+        }
 
         /// <summary>  
         /// 获取指定节点的值  

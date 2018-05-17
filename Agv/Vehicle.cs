@@ -4,7 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Timers;
+using System.Threading;
 using Agv.PathPlanning;
 using AGV_V1._0.Agv;
 using AGV_V1._0.Algorithm;
@@ -14,15 +14,17 @@ using AGVSocket.Network.EnumType;
 
 namespace AGV_V1._0
 {
-
+    [Serializable]
     class Vehicle
     {
+        
         public AgvInfo agvInfo { get; set; }
         private readonly VehicleConfiguration config;
+        [NonSerialized]
         private Timer timer;
         private int routeIndex = 0;
         public int RouteIndex
-        {
+        {            
             get { return routeIndex; }
             set
             {
@@ -80,14 +82,16 @@ namespace AGV_V1._0
 
         //public List<myPoint> route;//起点到终点的路线
         //public ConcurrentDictionary<int, MyLocation> Route { get; set; }//起点到终点的路线, 键表示时钟指针
-        private static Object RouteLock = new Object();
+        // private static Object RouteLock = new Object();
         //private  int LockNode = -1;  //-1节点没有被锁定，大于-1表示被锁定
+        private readonly ReaderWriterLockSlim objectLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
 
         private static object lockNodeLock = new object();
         private List<MyPoint> lockNode = new List<MyPoint>();
         public List<MyPoint> LockNode
         {
+           
             get
             {
                 return lockNode;
@@ -116,20 +120,28 @@ namespace AGV_V1._0
         private List<MyPoint> route = new List<MyPoint>();
         public List<MyPoint> Route
         {
+            //get
+            //{
+            //    objectLock.EnterReadLock();
+            //    List<MyPoint> temp = route;
+            //    objectLock.ExitReadLock();
+            //    return temp;
+            //}
+            //set
+            //{
+            //    objectLock.EnterWriteLock();
+            //        this.route = value;
+            //    objectLock.ExitWriteLock();
+
+            //}
             get
             {
-                lock (RouteLock)
-                {
-                    return route;
-                }
+                return route;
             }
             set
             {
-                lock (RouteLock)
-                {
-                    this.route = value;
+                this.route = value;
 
-                }
             }
         }
 
@@ -281,7 +293,6 @@ namespace AGV_V1._0
             this.Arrive = arrive;
             this.Dir = direction;
             this.config = vehicleConfig;
-            this.timer = new Timer();
             InitTimer();
             InitAgv();
         }
@@ -293,16 +304,17 @@ namespace AGV_V1._0
         }
         void InitTimer()
         {
-            this.timer.Interval = config.TimerInterval;
-            this.timer.Elapsed += Timer_Elapsed;
-            this.timer.Start();
+            this.timer = new Timer(Timer_Elapsed, null, Timeout.Infinite, Timeout.Infinite);
+            this.timer.Change(0, Timeout.Infinite);
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed(Object o)
         {
             UpdateRealLocation();
 
             SetCurrentNodeOccpyAndOldNodeFree();
+
+            this.timer.Change(config.TimerInterval, Timeout.Infinite);
 
         }
         void SetCurrentNodeOccpyAndOldNodeFree()
@@ -375,8 +387,7 @@ namespace AGV_V1._0
         /// <returns>是否移动了</returns>
         public bool Move(ElecMap Elc)
         {
-            lock (RouteLock)
-            {
+           
                 if (route == null || route.Count < 1)
                 {
                     return false;
@@ -518,7 +529,7 @@ namespace AGV_V1._0
                 BeginY = route[TPtr].Y;
                 return true;
 
-            }
+            
         }
 
 

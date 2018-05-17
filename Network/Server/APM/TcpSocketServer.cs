@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using AGV_V1._0.NLog;
 //using Logrila.Logging;
 

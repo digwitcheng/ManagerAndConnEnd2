@@ -1,5 +1,8 @@
-﻿namespace AGVSocket.Network.EnumType
+﻿using System;
+
+namespace AGVSocket.Network.EnumType
 {
+    [Serializable]
     enum MoveDirection:byte
     {
         /// <summary>

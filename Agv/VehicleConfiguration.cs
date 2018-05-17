@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace AGV_V1._0.Agv
 {
+    [Serializable]
     class VehicleConfiguration
     {
         public VehicleConfiguration()
