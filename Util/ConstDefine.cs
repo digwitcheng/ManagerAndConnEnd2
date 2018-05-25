@@ -8,10 +8,10 @@
 
         public const int UPDATA_SQL_TIME = 50;
 
-        public const int minX =5;
-        public const int maxX =7;
-        public const int minY =6;
-        public const int maxY = 10;
+        public const int minX =0;
+        public const int maxX =10;
+        public const int minY =0;
+        public const int maxY = 11;
         public const int CELL_UNIT = 1000;//格和毫格的转换单位
 
         public const int REMOTE_PORT = 8081;//远程过程调用端口
@@ -29,8 +29,8 @@
         
 
         
-        public const int STEP_TIME = 1000;//小车每走一格的间隔
-        public const int GUI_TIME = 100;//发送给界面的间隔
+        public const int STEP_TIME = 100;//小车每走一格的间隔
+        public const int GUI_TIME = 200;//发送给界面的间隔
         public const int CHECK_CONGESTION = 3000;//检测拥堵情况
         public const int SEARCH_TIME = 3;//搜索路径的间隔
         public const int TASK_TIME = 5;  //处理任务的间隔

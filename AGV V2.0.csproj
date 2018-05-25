@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agv\Direction.cs" />
+    <Compile Include="Agv\MoveType.cs" />
     <Compile Include="Agv\State.cs" />
     <Compile Include="Agv\VehicleConfiguration.cs" />
     <Compile Include="Algorithm\AgvPathPlanning.cs" />

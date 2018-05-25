@@ -21,10 +21,17 @@ namespace AGVSocket.Network.Packet
 
         public override void Receive()
         {
-            Debug.WriteLine(this.AgvId+"完成标识:{0},消息是否正确：{1},序列号:{2}",doneStyle, this.IsCheckSumCorrect,this.SerialNum);
+            if (doneStyle != OprationState.EmergencyStop)
+            {
+                Debug.WriteLine(this.AgvId + "完成标识:{0},消息是否正确：{1},序列号:{2}", doneStyle, this.IsCheckSumCorrect, this.SerialNum);
+            }
            this.ReceiveResponse();
              int id = Convert.ToInt32(this.AgvId);
-           if (doneStyle == OprationState.Loaded)
+            if (doneStyle == OprationState.Swerved)
+            {
+                VehicleManager.Instance.GetVehicles()[id].SwerverFinished = true;
+            }
+            if (doneStyle == OprationState.Loaded)
            {
                    //string str = string.Format("update Vehicle set TrayState={0} where Id={1}",
                    //    (byte)0x05,

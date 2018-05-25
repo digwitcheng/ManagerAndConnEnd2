@@ -93,7 +93,7 @@ namespace AGV_V1._0
                 if (Elc.IsQueueEntra(v.EndX, v.EndY))
                 {
 
-                    MyPoint nextEnd = ElecMap.Instance.CalculateScannerPoint(new MyPoint(v.EndX, v.EndY));
+                    MyPoint nextEnd = ElecMap.Instance.CalculateScannerPoint(new MyPoint(v.EndX, v.EndY,Direction.Right));
                     List<MyPoint> addRoute = astarSearch.Search(Elc,new List<MyPoint>(), v.LockNode, v.EndX, v.EndY, nextEnd.X, nextEnd.Y, v.Dir,v.algorithm);
                     if (addRoute != null && addRoute.Count > 1)
                     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AGV_V1._0.Agv;
+using System;
 
 
 namespace Agv.PathPlanning
@@ -8,6 +9,7 @@ namespace Agv.PathPlanning
     {
       private  int x;
       private  int y;
+      private  Direction dir;
 
         public int Y
         {
@@ -20,17 +22,24 @@ namespace Agv.PathPlanning
             get { return x; }
             set { x = value; }
         }
+        public Direction Dir
+        {
+            get { return dir; }
+            set { dir = value; }
+        }
 
         public MyPoint(MyPoint point)
         {
             this.x = point.x;
             this.y = point.y;
+            this.dir = point.dir;
 
         }
-        public MyPoint(int x, int y)
+        public MyPoint(int x, int y,Direction dir)
         {
             this.x = x;
             this.y = y;
+            this.dir = dir;
         }
         public override bool Equals(object obj)
         {
@@ -47,6 +56,7 @@ namespace Agv.PathPlanning
         {
             return x+1314*y;
         }
+        
 
         //public MyPoint(MyPoint point,int addSpeed)
         //{

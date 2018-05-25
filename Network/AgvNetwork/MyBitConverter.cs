@@ -87,13 +87,7 @@ namespace AGVSocket.Network
             {
                 throw new ArgumentNullException("Toint16 value");
             }
-
-            if ((uint)startIndex >= value[2])
-            {
-                throw new IndexOutOfRangeException("toint16 value length:" + value[2] + "startIndex:" + startIndex);
-            }
-
-            if (startIndex > value[2] - 2)
+            if (startIndex > value.Length - 2)
             {
                 throw new ArgumentException("toint16 value length-2 must be greater than startIndex:"+startIndex);
             }
@@ -101,13 +95,7 @@ namespace AGVSocket.Network
             fixed (byte* pbyte = &value[startIndex])
             {
                 startIndex += 2;
-                if (startIndex % 2 == 0)
-                { // data is aligned 
-                    return *((short*)pbyte);
-                }
-                else
-                {
-                    if (IsLittleEndian)
+                if (IsLittleEndian)
                     {
                         return (short)((*pbyte) | (*(pbyte + 1) << 8));
                     }
@@ -115,7 +103,7 @@ namespace AGVSocket.Network
                     {
                         return (short)((*pbyte << 8) | (*(pbyte + 1)));
                     }
-                }
+                
             }
 
         }
@@ -125,26 +113,13 @@ namespace AGVSocket.Network
             {
                 throw new ArgumentNullException("ToInt32 value");
             }
-
-            if ((uint)startIndex >= value[2])
-            {
-                throw new IndexOutOfRangeException("ToInt32 value length:" + value[2] + "startIndex:" + startIndex);
-            }
-
-            if (startIndex > value[2] - 4)
+            if (startIndex > value.Length - 4)
             {
                 throw new ArgumentException("ToInt32 value length-2 must be greater than startIndex:" + startIndex);
             }
-
             fixed (byte* pbyte = &value[startIndex])
             {
                 startIndex += 4;
-                if (startIndex % 4 == 0)
-                { // data is aligned 
-                    return *((int*)pbyte);
-                }
-                else
-                {
                     if (IsLittleEndian)
                     {
                         return (*pbyte) | (*(pbyte + 1) << 8) | (*(pbyte + 2) << 16) | (*(pbyte + 3) << 24);
@@ -153,7 +128,7 @@ namespace AGVSocket.Network
                     {
                         return (*pbyte << 24) | (*(pbyte + 1) << 16) | (*(pbyte + 2) << 8) | (*(pbyte + 3));
                     }
-                }
+               
             }
             
         }

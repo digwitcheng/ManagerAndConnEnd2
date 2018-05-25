@@ -30,7 +30,7 @@ namespace AGVSocket.Network
             this.desNode = new CellPoint(desX, desY);
             this.speed = MyBitConverter.ToUInt16(data, ref offset);
             this.moveDir = (MoveDirection)data[offset++];
-            this.agvAngle =new AgvDriftAngle( MyBitConverter.ToUInt16(data,ref offset));
+            this.agvAngle =new AgvDriftAngle( MyBitConverter.ToUInt16(data,ref offset));//车头方向采用的是高位在后
         }
     }
 }

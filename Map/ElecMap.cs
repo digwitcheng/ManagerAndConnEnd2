@@ -9,6 +9,7 @@ using AGV_V1._0.Algorithm;
 using AGV_V1._0.NLog;
 using AGV_V1._0.Util;
 using System.IO;
+using AGV_V1._0.Agv;
 
 namespace AGV_V1._0
 {
@@ -258,7 +259,7 @@ namespace AGV_V1._0
                     case "排队区入口": mapnode[tdx, tdy].Type = MapNodeType.queueEntra;
                         try
                         {
-                            queueEntra.Add(new MyPoint(tdx, tdy));
+                            queueEntra.Add(new MyPoint(tdx, tdy, Direction.Left));
                         }
                         catch (Exception ex)
                         {
@@ -269,7 +270,7 @@ namespace AGV_V1._0
                     case "扫描仪": mapnode[tdx, tdy].Type = MapNodeType.scanner;
                         try
                         {
-                            scanner.Add(new MyPoint(tdx, tdy));
+                            scanner.Add(new MyPoint(tdx, tdy, Direction.Left));
                             //增加通过扫描仪的难度，使得计算路径时不会随便经过扫描仪
                             mapnode[tdx, tdy].UpDifficulty += MapNode.DEFAULT_DIFFICULTY;//MapNode.DEFAULT_DIFFICULTYMapNode.DEFAULT_DIFFICULTY(dir[0] == '1' ? MapNode.DEFAULT_DIFFICULTY : MapNode.UNABLE_PASS);
                             mapnode[tdx, tdy].DownDifficulty += MapNode.DEFAULT_DIFFICULTY;//MapNode.DEFAULT_DIFFICULTYMapNode.DEFAULT_DIFFICULTY(dir[1] == '1' ? MapNode.DEFAULT_DIFFICULTY : MapNode.UNABLE_PASS);
@@ -285,7 +286,7 @@ namespace AGV_V1._0
                     case "排队区": mapnode[tdx, tdy].Type = MapNodeType.queuingArea;
                         try
                         {
-                            queuingArea.Add(new MyPoint(tdx, tdy));
+                            queuingArea.Add(new MyPoint(tdx, tdy, Direction.Left));
                         }
                         catch (Exception ex)
                         {
@@ -296,7 +297,7 @@ namespace AGV_V1._0
                     case "休息区": mapnode[tdx, tdy].Type = MapNodeType.restArea;
                         try
                         {
-                            restArea.Add(new MyPoint(tdx, tdy));
+                            restArea.Add(new MyPoint(tdx, tdy, Direction.Down));
                         }
                         catch (Exception ex)
                         {

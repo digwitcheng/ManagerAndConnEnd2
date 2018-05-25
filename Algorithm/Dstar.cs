@@ -613,7 +613,7 @@ namespace AGV_V1._0.Algorithm
                 
                 // Form1.ActiveForm.Refresh();
                 pathcoast += map[correnti, correntj].H;
-                route.Add(new MyPoint(correnti, correntj));
+                route.Add(new MyPoint(correnti, correntj,Direction.Left));
 
                 Console.Write("(" + correnti.ToString() + ", " + correntj.ToString() + ") - ");
 

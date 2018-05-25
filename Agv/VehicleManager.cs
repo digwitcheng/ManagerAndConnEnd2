@@ -114,7 +114,7 @@ namespace AGV_V1._0
                             AgvServerManager.Instance.SendTo(tp,vnum);
                             vehicles[vnum].CurState = State.unloading;
                             vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
-                            Console.WriteLine("send TrayMotion:"+(serinum-1));
+                            Console.WriteLine(vnum+":send TrayMotion:"+(serinum-1));
                         }
                         continue;
                     }      
@@ -148,8 +148,8 @@ namespace AGV_V1._0
 #if moni
                     vehicles[vnum].Move(ElecMap.Instance);
 #else
-                   bool isMove = vehicles[vnum].Move(ElecMap.Instance);
-                    if (isMove)
+                   MoveType moveState = vehicles[vnum].Move(ElecMap.Instance);
+                    if (moveState==MoveType.move)
                         {
                         //int tPtr = vehicles[vnum].TPtr - 1;
                         //if (tPtr >= 0)
@@ -164,11 +164,29 @@ namespace AGV_V1._0
                             AgvServerManager.Instance.SendTo(rp,vnum);
 
                             Console.WriteLine("*--------------------------------------------------------------------------*");
-                            Console.WriteLine(vehicles[vnum].TPtr+":"+x + "," + y + "->" + endX + "," + endY + " ,实际位置：" + vehicles[vnum].agvInfo.CurLocation.CurNode.X / 1000.0 + "," + vehicles[vnum].agvInfo.CurLocation.CurNode.Y / 1000.0+"序列号："+(serinum-1));
+                            Console.WriteLine(vnum+":"+x + "," + y + "->" + endX + "," + endY + " ,实际位置：" + vehicles[vnum].agvInfo.CurLocation.CurNode.X / 1000.0 + "," + vehicles[vnum].agvInfo.CurLocation.CurNode.Y / 1000.0+"序列号："+(serinum-1));
 
                             CheckAlarmState(vnum);
                             vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
+
+                        ElecMap.Instance.mapnode[vehicles[vnum].BeginX, vehicles[vnum].BeginY].TraCongesIntensity = 100;
                         }
+                    //if (moveState == MoveType.Swerve0)
+                    //{
+                    //    SendSwerveCommand(vnum,0);
+                    //}
+                    //if (moveState == MoveType.Swerve90)
+                    //{
+                    //    SendSwerveCommand(vnum, 90);
+                    //}
+                    //if (moveState == MoveType.Swerve180)
+                    //{
+                    //    SendSwerveCommand(vnum, 180);
+                    //}
+                    //if (moveState == MoveType.Swerve270)
+                    //{
+                    //    SendSwerveCommand(vnum, 270);
+                    //}
 #endif
                     moveCount++;
                     OnShowMessage(string.Format("{0:N} 公里", (moveCount * 1.5) / 1000.0));
@@ -188,12 +206,18 @@ namespace AGV_V1._0
             }
 
         }
+        void SendSwerveCommand(int vnum,int angle)
+        {
+            SwervePacket sp = new SwervePacket((byte)(serinum * vnum), (ushort)vnum,new AgvDriftAngle((ushort)angle));
+            AgvServerManager.Instance.SendTo(sp, vnum);
+            Console.WriteLine("send Swerver...");
+        }
         void CheckAlarmState(int vnum)
         {
             if (vehicles[vnum].agvInfo.Alarm == AlarmState.ScanNone || vehicles[vnum].agvInfo.Alarm == AlarmState.CommunicationFault)
             {
-                Logs.Error("通信故障或没扫到码");
-                MessageBox.Show("通信故障或没扫到码");
+                Logs.Error("通信故障或没扫到码"+vehicles[vnum].agvInfo.Alarm.ToString());
+               // MessageBox.Show("通信故障或没扫到码");
             }
         }
         
@@ -271,6 +295,7 @@ namespace AGV_V1._0
                         vehicles[i].BeginX = (int)Math.Round(vehicles[i].agvInfo.CurLocation.CurNode.X/1000.0);
                         vehicles[i].BeginY = (int)Math.Round(vehicles[i].agvInfo.CurLocation.CurNode.Y/1000.0);
                         res = true;
+                        Console.WriteLine("小车编号" + i + "初始化完成,起点("+vehicles[i].BeginX+","+vehicles[i].BeginY+")");
                     }
                 }
                 count++;
@@ -288,16 +313,18 @@ namespace AGV_V1._0
             {
                 return;
             }
-            if (agvId >= vehicles.Length)
-            {
-                Logs.Error("程序预设的agv数量少了");
-                return;
-            }
+            //if (agvId >= vehicles.Length)
+            //{
+            //    Logs.Error("程序预设的agv数量少了");
+            //    return;
+            //}
             if (info == null)
             {
                 return;
             }
+           //
             vehicles[(int)agvId].agvInfo = info;
+           // Console.WriteLine(info.CurLocation.AgvAngle.Angle);
         }
         public void RandomMove(int Id)
         {           

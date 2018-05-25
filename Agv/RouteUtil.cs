@@ -1,13 +1,14 @@
 ﻿using AGV_V1._0.Util;
 using Agv.PathPlanning;
 using System;
+using AGV_V1._0.Agv;
 
 namespace AGV_V1._0.Algorithm
 {
     class RouteUtil
     {
 
-        public static Random rand = new Random(12);//5,/4/4 //((int)DateTime.Now.Ticks);//随机数，随机产生坐标
+        public static Random rand = new Random(3);//5,/4/4 //((int)DateTime.Now.Ticks);//随机数，随机产生坐标
 
         public static MyPoint RandPoint(ElecMap Elc)
         {
@@ -19,7 +20,7 @@ namespace AGV_V1._0.Algorithm
                 y = rand.Next(0, Elc.WidthNum - 1);
             }
 
-            return new MyPoint(x, y);
+            return new MyPoint(x, y, Direction.Left);
         }
         public static MyPoint RandRealPoint(ElecMap Elc)
         {
@@ -30,7 +31,7 @@ namespace AGV_V1._0.Algorithm
                  x = rand.Next(0, Elc.HeightNum - 1);
                  y = rand.Next(0, Elc.WidthNum - 1);
             }
-            return new MyPoint(x, y);
+            return new MyPoint(x, y,Direction.Left);
         }
 
         /// <summary>

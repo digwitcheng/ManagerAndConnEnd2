@@ -135,7 +135,7 @@ namespace AGV_V1._0.Algorithm
             Close p = (close[endX, endY]);
             while (p != null)    //转置路径
             {
-                route.Add(new MyPoint(p.Node.x, p.Node.y));
+                route.Add(new MyPoint(p.Node.x, p.Node.y,p.Node.direction));
                 p = p.From;
             }
             route.Reverse();

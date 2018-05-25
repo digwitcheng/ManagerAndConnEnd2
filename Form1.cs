@@ -27,9 +27,7 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Tcp;
 using AGVSocket.Network;
-
-
-
+using AGVSocket.Network.Packet;
 
 namespace AGV_V1._0
 {
@@ -425,6 +423,14 @@ namespace AGV_V1._0
                         DrawUtil.DrawString(gg,Elc.mapnode[i, j].NodeCanUsed, ConstDefine.g_NodeLength / 2, Color.Black, pf);
 
                     }
+                    if (Elc.mapnode[i, j].TraCongesIntensity == 100)
+                    {
+                        Rectangle rect = new Rectangle(Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1, ConstDefine.g_NodeLength + 2, ConstDefine.g_NodeLength + 2);
+                        DrawUtil.FillRectangle(gg, Color.Red, rect);
+                        PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
+                        DrawUtil.DrawString(gg, Elc.mapnode[i, j].NodeCanUsed, ConstDefine.g_NodeLength / 2, Color.Black, pf);
+                    }
+
                 }
             }
 
@@ -469,8 +475,10 @@ namespace AGV_V1._0
             {
                 for (int i = 0; i < v.Length; i++)
                 {
-                    DrawVehicle(gg,v[i]);
-                    v[0].X = 1111;
+                    if (v[i].agvInfo != null)
+                    {
+                        DrawVehicle(gg, v[i]);
+                    }
                 }
             }
             //if (first)
@@ -512,7 +520,7 @@ namespace AGV_V1._0
                 DrawUtil.DrawString(g, v.Id, ConstDefine.g_NodeLength / 2, Color.Black, p);
 #else
 
-                Rectangle rect = new Rectangle(v.RealY * ConstDefine.g_NodeLength, (int)v.RealX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
+                Rectangle rect = new Rectangle((int)(v.RealY) * ConstDefine.g_NodeLength, (int)v.RealX * ConstDefine.g_NodeLength, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2);
                 DrawUtil.FillRectangle(g, v.showColor, rect);
 
                 PointF p = new PointF((int)((v.RealY) * ConstDefine.g_NodeLength), (int)((v.RealX) * ConstDefine.g_NodeLength));
@@ -765,7 +773,7 @@ namespace AGV_V1._0
             SetMapView();
             this.Invalidate();
         }
-
+        int angle = 0;
         /// <summary>
         /// 随机走
         /// </summary>
@@ -776,6 +784,7 @@ namespace AGV_V1._0
             //InitialAgv();
 
             VehicleManager.Instance.RandomMove(5);
+          
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -787,6 +796,14 @@ namespace AGV_V1._0
         {
             RemotingServices.Disconnect(remotableObject);
         }
-      
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int vnum = 5;
+            angle = (angle + 90) % 360;
+            SwervePacket sp = new SwervePacket((byte)(1 * vnum), (ushort)vnum, new AgvDriftAngle((ushort)angle));
+            Console.WriteLine(angle);
+            AgvServerManager.Instance.SendTo(sp, vnum);
+        }
     }
 }

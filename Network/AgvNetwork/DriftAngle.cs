@@ -6,11 +6,11 @@
     class AgvDriftAngle
     {
         private ushort angle;
-        public ushort Angle { get; set; }
+        public ushort Angle { get { return angle; } }
 
         public AgvDriftAngle(ushort angle)
         {
-            this.Angle = angle;
+            this.angle = angle;
         }
     }
 }

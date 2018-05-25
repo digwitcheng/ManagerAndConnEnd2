@@ -13,13 +13,13 @@ namespace AGV_V1._0.Algorithm
         internal const int MaxLength = 6000;   //用于优先队列（Open表）的数组
 
         public static MyPoint[] dir = new MyPoint[4]{	
-        new MyPoint( 0, 1),   //,Direction.RightDifficulty // East 0
+        new MyPoint( 0, 1,Direction.Left),   //,Direction.RightDifficulty // East 0
 	 //   new myPoint( 1, 1, ),   // South_East 1
-	    new MyPoint( 1, 0),  //,Direction.DownDifficulty // South 2
+	    new MyPoint( 1, 0,Direction.Left),  //,Direction.DownDifficulty // South 2
 	  //  new myPoint(1, -1 ),  // South_West 3
-	    new MyPoint( 0, -1 ), //,Direction.LeftDifficulty // West 4
+	    new MyPoint( 0, -1,Direction.Left ), //,Direction.LeftDifficulty // West 4
 	 //   new myPoint( -1, -1 ), // North_West 5
-        new MyPoint( -1, 0), //,Direction.UpDifficulty  // North 6
+        new MyPoint( -1, 0,Direction.Left), //,Direction.UpDifficulty  // North 6
 	 //   new myPoint( -1, 1)   // North_East 7
         };
         public static void AsatrPush(List<Close> q, Close[,] cls, int x, int y, double g)

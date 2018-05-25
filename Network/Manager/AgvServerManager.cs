@@ -55,14 +55,14 @@ namespace AGVSocket.Network
 
         public override void server_ClientConnected(object sender, Cowboy.Sockets.TcpClientConnectedEventArgs e)
         {
-            string str = string.Format("小车连接成功，", e.Session.RemoteEndPoint);
+            string str = string.Format("小车连接成功，"+e.Session.RemoteEndPoint);
             Console.WriteLine(str);
             OnMessageEvent(this, new MessageEventArgs(str));
         }
 
         public override void server_ClientDisconnected(object sender, Cowboy.Sockets.TcpClientDisconnectedEventArgs e)
         {
-            string str = string.Format("小车断开连接，", e.Session.RemoteEndPoint);
+            string str = string.Format("小车断开连接，"+ e.Session.RemoteEndPoint);
             Console.WriteLine(str);
             OnMessageEvent(this, new MessageEventArgs(str));
         }
@@ -125,9 +125,10 @@ namespace AGVSocket.Network
         {
             try
             {
+               
                 if (vnum == 5)
                 {
-                    vnum = 25;
+                    vnum = 13;
                 }
                 pack.SendTo(_server,vnum);
             }
