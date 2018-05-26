@@ -142,7 +142,7 @@ namespace AGV_V1._0
         {
             get
             {
-                return GetAgvDireciton();
+                return dir; 
             }
             set { dir = value; }
 
@@ -156,6 +156,7 @@ namespace AGV_V1._0
             }
             else
             {
+                Console.WriteLine(agvInfo.CurLocation.AgvAngle.Angle);
                 int numTmp = (int)((agvInfo.CurLocation.AgvAngle.Angle + 45) % 360);
                 int num = (int)(numTmp / 90.0);
                 switch (num)
@@ -441,7 +442,7 @@ namespace AGV_V1._0
                     }
                 if (index >= route.Count)
                 {
-                    index--;
+                    index-=2;
                 }
                 bool canMove = false;
                 Direction virtualDir = route[index+1].Dir;
@@ -648,7 +649,7 @@ namespace AGV_V1._0
         }
         bool AgvCanReceiveRunCommands()
         {
-            Console.WriteLine("agv当前指令执行：" + agvInfo.OrderExec.ToString());
+            Console.WriteLine("agv当前指令执行：" + agvInfo.OrderExec.ToString()+",agv当前方向"+Dir.ToString());
             if (OrderExecState.Run == agvInfo.OrderExec||
                 agvInfo.OrderExec == OrderExecState.Free
                 )
@@ -715,6 +716,7 @@ namespace AGV_V1._0
         void UpdateRealLocation()
         {
             if (!CheckAgvCorrect()) { return; }
+            dir=GetAgvDireciton();
             RealX = (int)Math.Round(agvInfo.CurLocation.CurNode.X / 1000.0);
             RealY = (int)Math.Round(agvInfo.CurLocation.CurNode.Y / 1000.0);
             ElecMap.Instance.mapnode[RealX, RealY].NodeCanUsed = this.Id;
