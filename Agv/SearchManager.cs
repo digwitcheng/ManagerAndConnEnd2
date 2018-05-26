@@ -65,6 +65,7 @@ namespace AGV_V1._0
             v.RouteIndex = 0;
             v.cost = 0;
             v.TPtr = 0;// tFram = 0;
+            v.Finished = false;
            // v.StopTime = v.sto;
             if (!checkXY(v))
             {
@@ -94,6 +95,13 @@ namespace AGV_V1._0
                 {
 
                     MyPoint nextEnd = ElecMap.Instance.CalculateScannerPoint(new MyPoint(v.EndX, v.EndY,Direction.Right));
+                    if (nextEnd.X == v.BeginX && nextEnd.Y == v.BeginY)
+                    {
+                        v.Route = new List<MyPoint>();
+                        v.Arrive = true;
+                        v.CurState = State.Free;
+                        return;
+                    }
                     List<MyPoint> addRoute = astarSearch.Search(Elc,new List<MyPoint>(), v.LockNode, v.EndX, v.EndY, nextEnd.X, nextEnd.Y, v.Dir,v.algorithm);
                     if (addRoute != null && addRoute.Count > 1)
                     {
@@ -101,8 +109,8 @@ namespace AGV_V1._0
                         {
                             v.Route.Add(addRoute[i]);
                         }
-                        //v.EndX = nextEnd.X;
-                        //v.EndY = nextEnd.Y;
+                        v.EndX = nextEnd.X;
+                        v.EndY = nextEnd.Y;
                         v.EndLoc = "ScanArea";
                     }
                 }

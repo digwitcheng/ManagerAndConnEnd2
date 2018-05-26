@@ -423,13 +423,13 @@ namespace AGV_V1._0
                         DrawUtil.DrawString(gg,Elc.mapnode[i, j].NodeCanUsed, ConstDefine.g_NodeLength / 2, Color.Black, pf);
 
                     }
-                    if (Elc.mapnode[i, j].TraCongesIntensity == 100)
-                    {
-                        Rectangle rect = new Rectangle(Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1, ConstDefine.g_NodeLength + 2, ConstDefine.g_NodeLength + 2);
-                        DrawUtil.FillRectangle(gg, Color.Red, rect);
-                        PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
-                        DrawUtil.DrawString(gg, Elc.mapnode[i, j].NodeCanUsed, ConstDefine.g_NodeLength / 2, Color.Black, pf);
-                    }
+                    //if (Elc.mapnode[i, j].TraCongesIntensity == 100)
+                    //{
+                    //    Rectangle rect = new Rectangle(Elc.mapnode[i, j].X - 1, Elc.mapnode[i, j].Y - 1, ConstDefine.g_NodeLength + 2, ConstDefine.g_NodeLength + 2);
+                    //    DrawUtil.FillRectangle(gg, Color.Red, rect);
+                    //    PointF pf = new PointF(Elc.mapnode[i, j].X, Elc.mapnode[i, j].Y);
+                    //    DrawUtil.DrawString(gg, Elc.mapnode[i, j].NodeCanUsed, ConstDefine.g_NodeLength / 2, Color.Black, pf);
+                    //}
 
                 }
             }
@@ -532,8 +532,6 @@ namespace AGV_V1._0
 
         void drawArrow(int y, int x)
         {
-#if moni
-            //模拟地图
             int dir = 0;
             if (Elc.mapnode[y, x].RightDifficulty < MapNode.MAX_ABLE_PASS)
             {
@@ -551,23 +549,26 @@ namespace AGV_V1._0
             {
                 dir |= Up;
             }
-            Image img = IMAGE_DICT[dir];
+            if (Elc.mapnode[y, x].IsAbleCross==false)
+            {
+                dir = 0;
+            }
+                Image img = IMAGE_DICT[dir];
             if (img != null)
             {
                 g.DrawImage(img, new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
+            }
 
-            }
-#else
-            //实体地图
-            if (Elc.mapnode[y, x].IsAbleCross)
-            {
-                g.DrawImage(IMAGE_DICT[15], new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
-            }
-            else
-            {
-                g.DrawImage(IMAGE_DICT[0], new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
-            }
-#endif
+            ////实体地图
+            //if (Elc.mapnode[y, x].IsAbleCross)
+            //{
+            //    g.DrawImage(IMAGE_DICT[15], new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
+            //}
+            //else
+            //{
+            //    g.DrawImage(IMAGE_DICT[0], new Rectangle(Elc.mapnode[y, x].X - 1, Elc.mapnode[y, x].Y - 1, ConstDefine.g_NodeLength - 2, ConstDefine.g_NodeLength - 2));
+            //}
+
         }
 
         bool first = true;
@@ -783,7 +784,7 @@ namespace AGV_V1._0
         {
             //InitialAgv();
 
-            VehicleManager.Instance.RandomMove(5);
+            VehicleManager.Instance.RandomMove(4);
           
         }
 

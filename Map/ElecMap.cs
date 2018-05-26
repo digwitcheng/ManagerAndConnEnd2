@@ -203,7 +203,7 @@ namespace AGV_V1._0
                 string strType = gridnode[p].InnerText.ToString().Trim();
                 XmlAttribute xa = gridnode[p].Attributes["direction"];
 
-#if moni
+
                 if (xa!=null)
                 {
                     string dir = xa.InnerText.ToString().Trim();                   
@@ -236,19 +236,13 @@ namespace AGV_V1._0
                     }
 
                 }
-#else
-                if (tdx >= ConstDefine.minX && tdx <= ConstDefine.maxX && tdy >= ConstDefine.minY && tdy <= ConstDefine.maxY)
-                {
-                    mapnode[tdx, tdy].IsAbleCross = true;
-                    mapnode[tdx, tdy].Type = MapNodeType.Road;
-                }
-                else
+                if (tdx < ConstDefine.minX || tdx > ConstDefine.maxX ||tdy < ConstDefine.minY || tdy > ConstDefine.maxY)//屏蔽其他范围之外的
                 {
                     mapnode[tdx, tdy].IsAbleCross = false;
                     mapnode[tdx, tdy].Type = MapNodeType.obstacle;
                 }
                 
-#endif
+                
                 switch (strType)
                 {
 

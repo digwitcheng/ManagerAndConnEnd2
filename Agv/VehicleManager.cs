@@ -27,7 +27,7 @@ namespace AGV_V1._0
         private bool vehicleInited = false;
         private double moveCount = 0;//统计移动的格数，当前地图一格1.5米
         public const int REINIT_COUNT = 20;
-        private const int WAIT_TIME = 8;//  等待超时后还没有翻盘完成的消息就重发翻盘报文
+        private const int WAIT_TIME = 4;//  等待超时后还没有翻盘完成的消息就重发翻盘报文
 
         private static Random rand = new Random(1);//5,/4/4 //((int)DateTime.Now.Ticks);//随机数，随机产生坐标
 
@@ -65,19 +65,19 @@ namespace AGV_V1._0
             {
                 return;
             }
-            for (int vnum =4; vnum < vehicles.Length; vnum++)
+            for (int vnum =4; vnum < vehicles.Length-1; vnum++)
             {
                 serinum = (byte)(serinum % 255);
                 if (vehicles[vnum].CurState == State.cannotToDestination && vehicles[vnum].Arrive == false)
                 {
                     vehicles[vnum].Arrive = true;
                     vFinished.Add(vehicles[vnum]);
-                    vehicles[vnum].Route.Clear();
+
                     string str = string.Format("小车" + vnum + ":{0},{1}->{2},{3}没有搜索到路径，", vehicles[vnum].BeginX, vehicles[vnum].BeginY, vehicles[vnum].EndX, vehicles[vnum].EndY);
                     OnShowMessage(this, new MessageEventArgs(str));
                     continue;
                 }
-                if (vehicles[vnum].Route == null || vehicles[vnum].Route.Count <1)
+                if (vehicles[vnum].Finished == true)
                 {
                     continue;
                 }
@@ -113,20 +113,38 @@ namespace AGV_V1._0
                             TrayPacket tp = new TrayPacket((byte)(serinum *vnum), (ushort)vnum, TrayMotion.TopLeft);
                             AgvServerManager.Instance.SendTo(tp,vnum);
                             vehicles[vnum].CurState = State.unloading;
-                            vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
+                            vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME*2);
                             Console.WriteLine(vnum+":send TrayMotion:"+(serinum-1));
                         }
                         continue;
                     }      
                     
                    
-                }         
-                if (vehicles[vnum].Arrive == true && vehicles[vnum].CurState == State.Free)
+                }
+                //if (vehicles[vnum].Arrive == true && vehicles[vnum].CurState == State.unloading)
+                //{
+                //    if (vehicles[vnum].WaitEndTime < DateTime.Now)//超过等待时间还不能走，则重新发送一下倒货
+                //    {
+                //        if (vehicles[vnum].EqualWithRealLocation(vehicles[vnum].BeginX, vehicles[vnum].BeginY))
+                //        {
+                //            if (vehicles[vnum].agvInfo.AgvMotion == AgvMotionState.StopedNode)
+                //            {
+                //                TrayPacket tp = new TrayPacket((byte)(serinum * vnum), (ushort)vnum, TrayMotion.TopLeft);
+                //                AgvServerManager.Instance.SendTo(tp, vnum);
+                //                vehicles[vnum].CurState = State.unloading;
+                //                vehicles[vnum].WaitEndTime = DateTime.Now.AddSeconds(WAIT_TIME);
+                //                Console.WriteLine(vnum + ":resend TrayMotion:" + (serinum - 1));
+                //            }
+                //            continue;
+                //        }
+                //    }
+                //}
+               if (vehicles[vnum].Arrive == true && vehicles[vnum].CurState == State.Free)
                 {    
-                    vFinished.Add(vehicles[vnum]);
-                    vehicles[vnum].Route.Clear();
-                    vehicles[vnum].LockNode.Clear();
-                    continue;
+                     vFinished.Add(vehicles[vnum]);
+                     vehicles[vnum].LockNode.Clear();
+                    vehicles[vnum].Finished=true;
+                     continue;
                 }        
 #endif
                 if (vehicles[vnum].StopTime < 0)
@@ -206,6 +224,13 @@ namespace AGV_V1._0
             }
 
         }
+        //void ClearCrossedNode(int vnum)
+        //{
+        //    for (int i = 0; i < vehicles[vnum].Route.Count-1; i++)
+        //    {
+        //        ElecMap.Instance.mapnode[vehicles[vnum].Route[i].X, vehicles[vnum].Route[i].Y].NodeCanUsed = -1;
+        //    }
+        //}
         void SendSwerveCommand(int vnum,int angle)
         {
             SwervePacket sp = new SwervePacket((byte)(serinum * vnum), (ushort)vnum,new AgvDriftAngle((ushort)angle));
@@ -327,9 +352,9 @@ namespace AGV_V1._0
            // Console.WriteLine(info.CurLocation.AgvAngle.Angle);
         }
         public void RandomMove(int Id)
-        {           
-            
-            MyPoint mpEnd = RouteUtil.RandRealPoint(ElecMap.Instance);
+        {
+
+            MyPoint mpEnd =new MyPoint(3,3,Direction.Right);// RouteUtil.RandRealPoint(ElecMap.Instance);
             while (mpEnd.X == vehicles[Id].BeginX && mpEnd.Y == vehicles[Id].BeginY)
             {
                 mpEnd = RouteUtil.RandRealPoint(ElecMap.Instance);

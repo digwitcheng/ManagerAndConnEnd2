@@ -55,6 +55,7 @@ namespace AGV_V1._0
         private int stoped = -1;//大于0表示被某个小车锁死，停止了。
         public int Stoped { get; set; }
 
+        public bool Finished { get; set; }
         //判断小车是否到终点
         public bool Arrive
         {
@@ -156,7 +157,7 @@ namespace AGV_V1._0
             }
             else
             {
-                Console.WriteLine(agvInfo.CurLocation.AgvAngle.Angle);
+               // Console.WriteLine(agvInfo.CurLocation.AgvAngle.Angle);
                 int numTmp = (int)((agvInfo.CurLocation.AgvAngle.Angle + 45) % 360);
                 int num = (int)(numTmp / 90.0);
                 switch (num)
@@ -308,23 +309,25 @@ namespace AGV_V1._0
         void SetCurrentNodeOccpyAndOldNodeFree()
         {
             MyPoint cur = new MyPoint(RealX, RealY, dir);
-            if (null!=route&&route.Count > 0)
+           // Console.WriteLine(RealX + "," + RealY);
+            if (null!= Route && Route.Count > 0)
             {
+               
                 int index = 0;
-                for (; index < route.Count; index++)
+                for (; index < Route.Count; index++)
                 {
-                    if (cur.Equals(route[index]))
+                    if (cur.Equals(Route[index]))
                     {
                         break;
                     }
                 }
-                if (index >= route.Count) return;//没有找到
-                ElecMap.Instance.mapnode[route[index].X, route[index].Y].NodeCanUsed = Id;
+                if (index >= Route.Count) return;//没有找到
+                //Console.WriteLine(index);
                 for (int j = 0; j < index; j++)
                 {
-                 ElecMap.Instance.mapnode[route[j].X,route[j].Y].NodeCanUsed = -1;                
+                  ElecMap.Instance.mapnode[Route[j].X, Route[j].Y].NodeCanUsed = -1;
                 }
-
+                //ElecMap.Instance.mapnode[Route[index].X, Route[index].Y].NodeCanUsed = Id;
             }
 
 
@@ -430,9 +433,8 @@ namespace AGV_V1._0
                     return MoveType.cannotReceiveRunCommands;
                 }
 #endif
-                MyPoint cur = new MyPoint(RealX, RealY, dir);
-                
-                    int index = 0;
+                MyPoint cur = new MyPoint(RealX, RealY, dir);                
+                    int index =0;
                     for (; index < route.Count; index++)
                     {
                         if (cur.Equals(route[index]))
@@ -440,16 +442,18 @@ namespace AGV_V1._0
                             break;
                         }
                     }
-                if (index >= route.Count)
+                if (index>= route.Count-1)
                 {
-                    index-=2;
+                    index = route.Count- config.ForwordStep;
                 }
+               
                 bool canMove = false;
                 Direction virtualDir = route[index+1].Dir;
                 for (VirtualTPtr = index + 1; VirtualTPtr < index + config.ForwordStep; VirtualTPtr++)
                 {
                     if (VirtualTPtr <= route.Count - 1)
                     {
+                       
                         int tx = (int)route[VirtualTPtr].X;
                         int ty = (int)route[VirtualTPtr].Y;
                         Direction tDir = route[VirtualTPtr].Dir;
@@ -649,7 +653,7 @@ namespace AGV_V1._0
         }
         bool AgvCanReceiveRunCommands()
         {
-            Console.WriteLine("agv当前指令执行：" + agvInfo.OrderExec.ToString()+",agv当前方向"+Dir.ToString());
+           // Console.WriteLine("agv当前指令执行：" + agvInfo.OrderExec.ToString()+",agv当前方向"+Dir.ToString());
             if (OrderExecState.Run == agvInfo.OrderExec||
                 agvInfo.OrderExec == OrderExecState.Free
                 )
